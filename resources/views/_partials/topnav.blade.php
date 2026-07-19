@@ -8,13 +8,13 @@
             </div>
 
             <div class="hidden md:flex items-center gap-8 lg:gap-10">
-                <a href="#" class="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 text-sm lg:text-base">Home</a>
-                <a href="#" class="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 text-sm lg:text-base">How it Work</a>
-                <a href="#" class="text-gray-700 hover:text-emerald-600 font-medium transition-colors duration-200 text-sm lg:text-base">Ministry</a>
+                <a href="#" class="text-gray-700 hover:text-violet-600 font-medium transition-colors duration-200 text-sm lg:text-base">Home</a>
+                <a href="#" class="text-gray-700 hover:text-violet-600 font-medium transition-colors duration-200 text-sm lg:text-base">How it Work</a>
+                <a href="#" class="text-gray-700 hover:text-violet-600 font-medium transition-colors duration-200 text-sm lg:text-base">Ministry</a>
             </div>
 
             <div class="hidden md:block">
-                <a href="#" class="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full text-sm lg:text-base transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5">
+                <a href="#" class="inline-flex items-center px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-full text-sm lg:text-base transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5">
                     Take Assessment
                 </a>
             </div>
@@ -32,11 +32,11 @@
 
     <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white">
         <div class="px-4 py-4 space-y-3">
-            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 font-medium rounded-lg transition-colors duration-200">Home</a>
-            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 font-medium rounded-lg transition-colors duration-200">How it Work</a>
-            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-emerald-600 hover:bg-emerald-50 font-medium rounded-lg transition-colors duration-200">Ministry</a>
+            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-violet-600 hover:bg-violet-50 font-medium rounded-lg transition-colors duration-200">Home</a>
+            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-violet-600 hover:bg-violet-50 font-medium rounded-lg transition-colors duration-200">How it Work</a>
+            <a href="#" class="block px-4 py-2.5 text-gray-700 hover:text-violet-600 hover:bg-violet-50 font-medium rounded-lg transition-colors duration-200">Ministry</a>
             <div class="pt-2">
-                <a href="#" class="block text-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm">
+                <a href="#" class="block text-center px-5 py-2.5 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-full text-sm transition-all duration-200 shadow-sm">
                     Take Assessment
                 </a>
             </div>
