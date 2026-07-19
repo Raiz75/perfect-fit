@@ -229,10 +229,58 @@
             }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
             cards.forEach(card => observer.observe(card));
 
-            const carousel = document.getElementById('ministryCarousel');
-            if (carousel && typeof bootstrap !== 'undefined') {
-                new bootstrap.Carousel(carousel, { interval: 5000 });
-            }
+            (function () {
+                const carousel = document.getElementById('ministryCarousel');
+                if (!carousel) return;
+                const items = carousel.querySelectorAll('.carousel-item');
+                const indicators = carousel.querySelectorAll('.carousel-indicators button');
+                let current = 0;
+                let timer = null;
+
+                function goTo(index) {
+                    items.forEach((el, i) => {
+                        el.classList.toggle('active', i === index);
+                    });
+                    indicators.forEach((el, i) => {
+                        el.classList.toggle('active', i === index);
+                        if (i === index) {
+                            el.style.opacity = '1';
+                            el.style.background = '#8c52ff';
+                        } else {
+                            el.style.opacity = '';
+                            el.style.background = '#d0c4e8';
+                        }
+                    });
+                    current = index;
+                }
+
+                function next() {
+                    goTo((current + 1) % items.length);
+                }
+
+                function prev() {
+                    goTo((current - 1 + items.length) % items.length);
+                }
+
+                carousel.querySelector('.carousel-control-next').addEventListener('click', function (e) {
+                    e.preventDefault(); next(); resetTimer();
+                });
+                carousel.querySelector('.carousel-control-prev').addEventListener('click', function (e) {
+                    e.preventDefault(); prev(); resetTimer();
+                });
+                indicators.forEach(function (btn, idx) {
+                    btn.addEventListener('click', function () {
+                        goTo(idx);
+                        resetTimer();
+                    });
+                });
+
+                function resetTimer() {
+                    if (timer) clearInterval(timer);
+                    timer = setInterval(next, 5000);
+                }
+                resetTimer();
+            })();
         });
     </script>
 </body>
