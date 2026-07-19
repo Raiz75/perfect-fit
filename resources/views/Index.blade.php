@@ -6,10 +6,11 @@
     <title>Perfit</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
+        html { scroll-padding-top: 80px; }
         html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
         .float-img { position: absolute; z-index: 1; animation: sway 6s ease-in-out infinite; object-fit: cover; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-        .float-img:nth-child(1) { width: 700px; height: 500px; top: 8%; right: 8%; animation-delay: 0s; }
-        .float-img:nth-child(2) { width: 500px; height: 300px; top: 40%; right: 30%; animation-delay: -1.8s; }
+        .float-img:nth-child(1) { width: 700px; height: 500px; top: 12%; right: 8%; animation-delay: 0s; }
+        .float-img:nth-child(2) { width: 500px; height: 300px; top: 42%; right: 30%; animation-delay: -1.8s; }
         @keyframes sway { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 
         .step-card { opacity: 0; transform: translateY(60px) scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
@@ -42,7 +43,7 @@
     @include('_partials.topnav')
 
     <main>
-        <section class="min-vh-100 d-flex flex-column flex-lg-row align-items-start overflow-hidden bg-cover bg-center position-relative" style="background-image: url('{{ asset('images/banner.png') }}'); padding-top: 120px;">
+        <section id="home" class="min-vh-100 d-flex flex-column flex-lg-row align-items-start overflow-hidden bg-cover bg-center position-relative" style="background-image: url('{{ asset('images/banner.png') }}'); padding-top: 120px;">
             <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
             <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
 
@@ -59,7 +60,7 @@
             </div>
         </section>
 
-        <section class="py-5 position-relative overflow-hidden" style="background: #faf8ff;">
+        <section id="how-it-works" class="py-5 position-relative overflow-hidden" style="background: #faf8ff;">
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background-image: radial-gradient(circle, #8c52ff08 1px, transparent 1px); background-size: 24px 24px; pointer-events: none;"></div>
             <div class="position-absolute" style="width: 500px; height: 500px; border-radius: 50%; background: radial-gradient(circle, #8c52ff08 0%, transparent 70%); top: -200px; right: -150px; pointer-events: none;"></div>
             <div class="position-absolute" style="width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, #e2cffa15 0%, transparent 70%); bottom: -150px; left: -100px; pointer-events: none;"></div>
@@ -126,7 +127,7 @@
             </div>
         </section>
 
-        <section class="py-5 position-relative overflow-hidden" style="background: linear-gradient(180deg, #fff 0%, #f8f4ff 100%);">
+        <section id="ministries" class="py-5 position-relative overflow-hidden" style="background: linear-gradient(180deg, #fff 0%, #f8f4ff 100%);">
             <div class="position-absolute top-0 end-0 w-50 h-50 opacity-25" style="background: radial-gradient(circle, #8c52ff20 0%, transparent 70%); pointer-events: none;"></div>
             <div class="position-absolute bottom-0 start-0 w-50 h-50 opacity-40" style="background: radial-gradient(circle, #e2cffa 0%, transparent 70%); pointer-events: none;"></div>
             <div class="container position-relative">
@@ -214,10 +215,40 @@
         </section>
     </main>
 
+    @include('_partials.footer')
+
     @stack('scripts')
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href !== '#') {
+                        e.preventDefault();
+                        const el = document.querySelector(href);
+                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            const toggler = document.getElementById('navbarToggler');
+            const menu = document.getElementById('navbarMenu');
+            if (toggler && menu) {
+                toggler.addEventListener('click', function () {
+                    const isOpen = menu.classList.toggle('show');
+                    this.setAttribute('aria-expanded', isOpen);
+                    this.classList.toggle('collapsed', !isOpen);
+                });
+                document.querySelectorAll('.nav-scroll').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        menu.classList.remove('show');
+                        toggler.classList.add('collapsed');
+                        toggler.setAttribute('aria-expanded', 'false');
+                    });
+                });
+            }
+
             const cards = document.querySelectorAll('.step-card');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {

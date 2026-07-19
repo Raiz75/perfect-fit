@@ -66,7 +66,7 @@ Current new project only has default Laravel tables: `users`, `password_reset_to
 |---|---|---|---|
 | **Landing Page Hero** | ✅ | ✅ | Banner + PERFIT title + CTA |
 | **Landing Page Modals** (user type, church code, language) | ✅ | ❌ | 3 overlay modals with localStorage |
-| **Ministry Carousel** (23 ministries, infinite loop) | ✅ | ❌ | Vanilla JS carousel with clone technique |
+| **Ministry Carousel** (23 ministries, infinite loop) | ✅ | ✅ | Vanilla JS carousel with clone technique |
 | **Random Bible Verse** (dove animation + overlay) | ✅ | ❌ | 28 hardcoded verses |
 | **How It Works Section** | ✅ | ✅ | 6-step timeline |
 | **5-Phase Assessment** | ✅ | ❌ | Wizard with localStorage persistence |
