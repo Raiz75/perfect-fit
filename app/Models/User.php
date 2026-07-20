@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'church_code',
+        'church_name',
     ];
 
     /**
@@ -45,5 +47,30 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function demographicRestrictions()
+    {
+        $this->hasMany(DemographicRestriction::class);
+    }
+
+    public function skillRestrictions()
+    {
+        $this->hasMany(SkillRestriction::class);
+    }
+
+    public function skillQuestions()
+    {
+        $this->hasMany(SkillQuestion::class);
+    }
+
+    public function interestAndPassionQuestions()
+    {
+        $this->hasMany(InterestAndPassionQuestion::class);
+    }
+
+    public function behavioralQuestions()
+    {
+        $this->hasMany(BehavioralQuestion::class);
     }
 }
