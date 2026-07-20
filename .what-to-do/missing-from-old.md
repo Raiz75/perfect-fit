@@ -66,71 +66,71 @@
 
 ---
 
-## 2. Backend Implementation (❌ All Missing)
+## 2. Backend Implementation (🔧 In Progress)
 
-### 2.1 Controllers Needed
-
-Create controllers under `app/Http/Controllers/`. Suggested structure:
+### 2.1 Controllers (✅ Auth Done, ❌ Rest Missing)
 
 ```
 app/Http/Controllers/
+├── FrontendController.php           # ✅ Landing, ministries, privacy-policy pages
 ├── Auth/
-│   ├── LoginController.php          # admin sign-in
-│   ├── RegisterController.php       # admin sign-up (copies defaults from admin #1)
-│   ├── ForgotPasswordController.php # send temp password via email
-│   ├── ResetPasswordController.php  # update password
-│   └── LogoutController.php         # destroy session
-├── AssessmentController.php         # get all data by churchCode
-├── ReportController.php             # create + filter + export reports
-├── AdminPanelController.php         # load admin panel data
-├── RestrictionController.php        # save/reset restrictions
-├── QuestionController.php           # save/reset questions
-├── SettingsController.php           # church name, change password
-└── MinistryController.php           # ministry info page data
+│   ├── LoginController.php          # ✅ sign-in + session check
+│   ├── RegisterController.php       # ✅ sign-up + email check + verify code + church code validation + default copy
+│   ├── ForgotPasswordController.php # ✅ send temp password via email
+│   └── LogoutController.php         # ✅ session destroy
+├── AssessmentController.php         # ❌ get all data by churchCode
+├── ReportController.php             # ❌ create + filter + export reports
+├── AdminPanelController.php         # ❌ load admin panel data
+├── RestrictionController.php        # ❌ save/reset restrictions
+├── QuestionController.php           # ❌ save/reset questions
+├── SettingsController.php           # ❌ church name, change password
+└── MinistryController.php           # ❌ ministry info page data
 ```
 
 ### 2.2 Old PHP → Laravel Endpoint Mapping
 
-| Old PHP File | Method | Laravel Route | Suggested Controller Method | Notes |
-|-------------|--------|---------------|---------------------------|-------|
-| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | Use Laravel's built-in auth or custom session |
-| `php-signUp.php` | POST | `/admin/register` | `Auth\RegisterController::register` | Must copy defaults from admin ID 1 (see `DefaultDataSeeder`) |
-| `php-checkEmail.php` | POST | `/admin/check-email` | `Auth\RegisterController::checkEmail` | JSON response for async validation |
-| `php-sendVerification.php` | POST | `/admin/send-verification` | `Auth\RegisterController::sendVerification` | Generate 6-digit code, send via mail |
-| `php-forgotPass.php` | POST | `/admin/forgot-password` | `Auth\ForgotPasswordController::sendTempPassword` | Generate temp password, mail it |
-| `php-validateChurchCode.php` | POST | `/admin/validate-church-code` | `Auth\RegisterController::validateChurchCode` | BINARY comparison for case-sensitive code |
-| `php-sessionTest.php` | GET | `/admin/session-check` | `Auth\LoginController::checkSession` | Returns admin email or redirects |
-| `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | |
-| `php-getDbData.php` | POST | `/api/assessment-data` | `AssessmentController::getData` | Returns all ministries, restrictions, questions by churchCode |
-| `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | Saves volunteer assessment |
-| `php-adminFilter.php` | GET | `/admin/reports` | `ReportController::filter` | Returns filtered reports + counts |
-| `php-generateAdminReport.php` | GET | `/admin/reports/export` | `ReportController::export` | Returns JSON for PDF generation |
-| `php-loadAdminPanel.php` | GET | `/admin/panel-data` | `AdminPanelController::load` | All restrictions + questions for editing |
-| `php-saveRestriction.php` | POST | `/admin/restrictions` | `RestrictionController::save` | Saves demographics, skills, questions edits |
-| `php-resetRestriction.php` | POST | `/admin/restrictions/reset` | `RestrictionController::reset` | Resets to admin ID 1 defaults |
-| `php-changeChurchName.php` | POST | `/admin/settings/church-name` | `SettingsController::updateChurchName` | |
-| `php-updatePass.php` | POST | `/admin/settings/password` | `SettingsController::updatePassword` | |
+| Old PHP File | Method | Laravel Route | Controller Method | Status | Notes |
+|-------------|--------|---------------|-------------------|--------|-------|
+| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | ✅ | Session-based auth |
+| `php-signUp.php` | POST | `/admin/register` | `Auth\RegisterController::register` | ✅ | Copies defaults from admin ID 1 |
+| `php-checkEmail.php` | POST | `/admin/check-email` | `Auth\RegisterController::checkEmail` | ✅ | JSON response |
+| `php-sendVerification.php` | POST | `/admin/send-verification` | `Auth\RegisterController::sendVerification` | ✅ | Sends VerificationCodeMail |
+| `php-forgotPass.php` | POST | `/admin/forgot-password` | `Auth\ForgotPasswordController::sendTempPassword` | ✅ | Sends TemporaryPasswordMail |
+| `php-validateChurchCode.php` | POST | `/admin/validate-church-code` | `Auth\RegisterController::validateChurchCode` | ✅ | BINARY comparison |
+| — | POST | `/admin/verify-code` | `Auth\RegisterController::verifyCode` | ✅ | Server-side code verification |
+| `php-sessionTest.php` | GET | `/admin/session-check` | `Auth\LoginController::checkSession` | ✅ | Returns admin or 401 |
+| `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | ✅ | |
+| `php-getDbData.php` | POST | `/api/assessment-data` | `AssessmentController::getData` | ❌ | Phase 2 |
+| `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | ❌ | Phase 2 |
+| `php-adminFilter.php` | GET | `/admin/reports` | `ReportController::filter` | ❌ | Phase 3 |
+| `php-generateAdminReport.php` | GET | `/admin/reports/export` | `ReportController::export` | ❌ | Phase 3 |
+| `php-loadAdminPanel.php` | GET | `/admin/panel-data` | `AdminPanelController::load` | ❌ | Phase 3 |
+| `php-saveRestriction.php` | POST | `/admin/restrictions` | `RestrictionController::save` | ❌ | Phase 3 |
+| `php-resetRestriction.php` | POST | `/admin/restrictions/reset` | `RestrictionController::reset` | ❌ | Phase 3 |
+| `php-changeChurchName.php` | POST | `/admin/settings/church-name` | `SettingsController::updateChurchName` | ❌ | Phase 3 |
+| `php-updatePass.php` | POST | `/admin/settings/password` | `SettingsController::updatePassword` | ❌ | Phase 3 |
 
 ### 2.3 Auth Implementation Notes
 
-- Use **Laravel's session-based auth** (not API tokens) since this is a server-rendered app
-- The old system used `$_SESSION['admin_email']` — replace with `Auth::user()`
-- Middleware: create an `AdminMiddleware` for protected routes
-- The old system has a special `admin@admin` account that cannot reset defaults (`noToAdmin` class in frontend shows/hides buttons)
-- Registration must copy default restrictions/questions from admin ID 1 after creating a new user
-- Church code must be 9-char alphanumeric, case-sensitive (use `BINARY` for lookups)
+- ✅ Uses **Laravel's session-based auth** (not API tokens)
+- ✅ Old `$_SESSION['admin_email']` replaced with `Auth::user()`
+- ✅ `AdminMiddleware` created — registered as `admin` alias in `bootstrap/app.php`
+- ❌ `admin@admin` special user logic (hide "Reset" buttons) — frontend only, Phase 3
+- ✅ Registration copies defaults from admin ID 1 via `RegisterController::copyDefaults()`
+- ✅ Church code 9-char, case-sensitive, `BINARY` comparison in `validateChurchCode()`
 
 ### 2.4 Service Classes to Create
 
 ```
 app/Services/
-├── AssessmentService.php       # Business logic for assessment phases
-├── MinistryMatchingService.php # Rule-based filter for ministry matching
-├── OpenAIService.php           # Server-side GPT-4o-mini integration
-├── PDFExportService.php        # Report PDF generation
-├── EmailService.php            # Verification codes, password resets
-└── DefaultCopyService.php      # Copies defaults from admin #1 when registering
+├── AssessmentService.php       # ❌ Business logic for assessment phases — Phase 2
+├── MinistryMatchingService.php # ❌ Rule-based filter for ministry matching — Phase 2
+├── OpenAIService.php           # ❌ Server-side GPT-4o-mini integration — Phase 4
+├── PDFExportService.php        # ❌ Report PDF generation — Phase 3
+└── DefaultCopyService.php      # 🔧 Moved into RegisterController::copyDefaults() — already done inline
 ```
+
+**Note:** Email sending is handled directly via Laravel Mailables (`app/Mail/`) — no separate EmailService needed.
 
 **Key details for `MinistryMatchingService.php`:**
 - Phase 1-2 processing: demographic restrictions filter → skill restrictions filter
@@ -153,23 +153,17 @@ app/Services/
   - `behavioral_questions` (145 records)
 - Use `replicate()` or raw `insert()` for performance
 
-### 2.5 Email Integration
+### 2.5 Email Integration (✅ Complete)
 
-- Old system used **PHPMailer** with SMTP credentials in `php-config.php`
-- **Laravel equivalent:** Use Laravel's built-in Mail facade with Gmail SMTP driver
-- `.env` settings needed:
-  ```
-  MAIL_MAILER=smtp
-  MAIL_HOST=smtp.gmail.com
-  MAIL_PORT=587
-  MAIL_USERNAME=raizeningalla@gmail.com
-  MAIL_PASSWORD=rdxf bmln oirv jshw
-  MAIL_ENCRYPTION=tls
-  ```
-- Create Mailable classes: `VerificationCodeMail`, `TemporaryPasswordMail`
-- Two email flows:
-  1. **Sign-up verification:** Generate 6-digit code → send email → verify before creating account
-  2. **Forgot password:** Generate temporary password → send email → immediate login
+- ✅ Uses **Laravel's built-in Mail facade** (no PHPMailer)
+- ✅ `.env` configured with Gmail SMTP credentials
+- ✅ `config/mail.php` — added `encryption` key to smtp mailer
+- ✅ Mailable classes created:
+  - `app/Mail/VerificationCodeMail.php` → `resources/views/emails/verification-code.blade.php`
+  - `app/Mail/TemporaryPasswordMail.php` → `resources/views/emails/temporary-password.blade.php`
+- ✅ Two email flows working:
+  1. **Sign-up:** Generate 6-digit code → email → server-side verify via `/admin/verify-code` → create account
+  2. **Forgot password:** Generate temp password → email → immediate login with temp password
 
 ### 2.6 OpenAI Integration
 
@@ -185,21 +179,21 @@ app/Services/
 
 ---
 
-## 3. Frontend Implementation (❌ All Missing)
+## 3. Frontend Implementation (🔧 In Progress)
 
-### 3.1 Pages to Build
+### 3.1 Pages Built
 
-| Page | Route | Old File | Complexity | Notes |
-|------|-------|----------|------------|-------|
-| Landing | `/` | `index.html` | 🔶 Medium | Hero + modals + carousel + bible verse + how-it-works |
-| Assessment | `/assessment` | `assessment.html` | 🔴 High | 5-phase wizard with localStorage persistence |
-| Admin Login | `/admin/login` | `admin.html` | 🟢 Low | Login + signup + forgot password forms |
-| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | 🔴 High | Charts, filters, report table, PDF export |
-| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` (section) | 🔶 Medium | Contenteditable tables |
-| Admin Questions | `/admin/questions` | `adminPanel.html` (section) | 🔶 Medium | Contenteditable EN/TL tables |
-| Admin Settings | `/admin/settings` | `adminPanel.html` (section) | 🟢 Low | Church name, code, password |
-| Ministries Info | `/ministries` | `ministry.html` | 🟢 Low | Existing blade needs content |
-| Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🟢 Low | Static page |
+| Page | Route | Old File | Status | Notes |
+|------|-------|----------|--------|-------|
+| Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
+| Assessment | `/assessment` | `assessment.html` | ❌ | Phase 2 |
+| Admin Login | `/admin/login` | `admin.html` | ✅ | Login/signup sliding forms + verify popup + forgot password modal. All calls use `Accept: application/json`. |
+| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | 🔧 | Placeholder with stats cards + logout button (Phase 3 for full panel) |
+| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ❌ | Phase 3 |
+| Admin Questions | `/admin/questions` | `adminPanel.html` | ❌ | Phase 3 |
+| Admin Settings | `/admin/settings` | `adminPanel.html` | ❌ | Phase 3 |
+| Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
+| Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
 ### 3.2 Assessment Wizard (Highest Complexity)
 
@@ -304,89 +298,90 @@ Suggestion: Create a `MinistryDescriptionsSeeder` or store descriptions in `reso
 
 ---
 
-## 4. Routes to Create
+## 4. Routes (Actual Current State)
 
 ```php
-// web.php
+// routes/web.php — Current state (run php artisan route:list to see all)
 
-// Public routes
-Route::get('/', [FrontendController::class, 'index'])->name('home');
-Route::get('/ministries', [FrontendController::class, 'ministries'])->name('ministries');
-Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
+// Public routes (✅ 3 routes)
+Route::get('/',                         [FrontendController::class, 'index'])->name('home');
+Route::get('/ministries',               [FrontendController::class, 'ministries'])->name('ministries');
+Route::get('/privacy-policy',           [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
 
-// Assessment (public)
-Route::prefix('api')->group(function () {
-    Route::post('/assessment-data', [AssessmentController::class, 'getData']);
-    Route::post('/user-reports', [ReportController::class, 'store']);
-    Route::post('/generate-profile', [AssessmentController::class, 'generateProfile']);
+// Admin auth — no middleware (guest access) (✅ 8 routes)
+Route::prefix('admin')->group(function () {
+    GET  /login                           Auth\LoginController@showLoginForm         admin.login
+    POST /login                           Auth\LoginController@login
+    POST /check-email                     Auth\RegisterController@checkEmail
+    POST /send-verification               Auth\RegisterController@sendVerification
+    POST /verify-code                     Auth\RegisterController@verifyCode          ← server-side code check
+    POST /register                        Auth\RegisterController@register
+    POST /validate-church-code            Auth\RegisterController@validateChurchCode
+    POST /forgot-password                 Auth\ForgotPasswordController@sendTempPassword
+    GET  /session-check                   Auth\LoginController@checkSession
 });
 
-// Admin auth (guest)
-Route::prefix('admin')->middleware('guest')->group(function () {
-    Route::get('/login', [Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [Auth\LoginController::class, 'login']);
-    Route::get('/register', [Auth\RegisterController::class, 'showRegistrationForm'])->name('admin.register');
-    Route::post('/register', [Auth\RegisterController::class, 'register']);
-    Route::post('/check-email', [Auth\RegisterController::class, 'checkEmail']);
-    Route::post('/send-verification', [Auth\RegisterController::class, 'sendVerification']);
-    Route::get('/forgot-password', [Auth\ForgotPasswordController::class, 'showForm']);
-    Route::post('/forgot-password', [Auth\ForgotPasswordController::class, 'sendTempPassword']);
-    Route::post('/validate-church-code', [Auth\RegisterController::class, 'validateChurchCode']);
+// Admin panel — middleware('admin') (✅ 2 routes)
+Route::prefix('admin')->middleware('admin')->group(function () {
+    GET  /dashboard                       Closure → view('admin.dashboard')          admin.dashboard
+    POST /logout                          Auth\LogoutController@logout
 });
 
-// Admin panel (authenticated)
-Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/dashboard', [AdminPanelController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/panel-data', [AdminPanelController::class, 'load']);
-    Route::get('/reports', [ReportController::class, 'filter']);
-    Route::get('/reports/export', [ReportController::class, 'export']);
-    Route::post('/restrictions', [RestrictionController::class, 'save']);
-    Route::post('/restrictions/reset', [RestrictionController::class, 'reset']);
-    Route::get('/session-check', [Auth\LoginController::class, 'checkSession']);
-    Route::post('/logout', [Auth\LogoutController::class, 'logout']);
-    Route::post('/settings/church-name', [SettingsController::class, 'updateChurchName']);
-    Route::post('/settings/password', [SettingsController::class, 'updatePassword']);
-});
+// ❌ Still needed (Phases 2-4):
+// api/assessment-data, api/user-reports, api/generate-profile
+// admin/panel-data, admin/reports, admin/reports/export
+// admin/restrictions, admin/restrictions/reset
+// admin/settings/church-name, admin/settings/password
 ```
 
 ---
 
 ## 5. Additional Configuration
 
-### 5.1 `.env` additions
+### 5.1 `.env` — Mail (✅ Done)
 ```
-OPENAI_API_KEY=sk-proj-...
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=raizeningalla@gmail.com
-MAIL_PASSWORD=rdxf bmln oirv jshw
+MAIL_PASSWORD="rdxf bmln oirv jshw"          ← quoted because of spaces
 MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="raizeningalla@gmail.com"
+MAIL_FROM_NAME="${APP_NAME}"
 ```
 
-### 5.2 Composer packages
-```bash
-composer require openai-php/laravel       # OpenAI integration
-composer require barryvdh/laravel-dompdf  # PDF generation (alt to jsPDF)
-composer require laravel/socialite         # If adding OAuth later
+### 5.2 `.env` — Still needed
+```
+OPENAI_API_KEY=sk-proj-...                    # Phase 4
 ```
 
-### 5.3 NPM packages (frontend)
+### 5.3 Composer packages
 ```bash
-npm install chart.js chartjs-plugin-datalabels  # Dashboard charts
-npm install jspdf jspdf-autotable               # PDF export (or use server-side DOMPDF)
-npm install axios                                # HTTP client (already used per package.json)
+# Already installed: none needed for mail (Laravel built-in)
+composer require openai-php/laravel       # ❌ Phase 4 — OpenAI integration
+composer require barryvdh/laravel-dompdf  # ❌ Phase 3 — PDF generation
+composer require laravel/socialite         # ❌ Maybe later
+```
+
+### 5.4 NPM packages
+```bash
+npm install chart.js chartjs-plugin-datalabels  # ❌ Phase 3 — Dashboard charts
+npm install jspdf jspdf-autotable               # ❌ Phase 3 — PDF export (or use server-side DOMPDF)
+npm install axios                                # ✅ Already in package.json
 ```
 
 ---
 
 ## 6. Implementation Priority Order
 
-### Phase 1: Foundation
-1. ✅ Migrations & Seeders (DONE)
-2. ❌ Create all Blade layouts (master layout with nav, footer)
-3. ❌ Auth controllers + views (login/register/password reset)
-4. ❌ Admin middleware
+### Phase 1: Foundation (✅ Complete)
+1. ✅ Migrations & Seeders
+2. ✅ Master layout (`_layouts/master.blade.php`) with nav + footer
+3. ✅ Auth controllers + views (login/register/forgot-password with sliding forms + modals)
+4. ✅ Admin middleware + route registration
+5. ✅ Email integration (Laravel Mail + Gmail SMTP + Mailable classes + email Blade views)
+6. ✅ FrontendController + public routes (landing, ministries, privacy-policy)
+7. ✅ Landing page modals (user type, church code, language, bible verse) — all buttons wired
 
 ### Phase 2: Core Assessment
 5. ❌ AssessmentController (data endpoint)
@@ -404,17 +399,15 @@ npm install axios                                # HTTP client (already used per
 
 ### Phase 4: Enhancement
 15. ❌ OpenAI profile generation (server-side)
-16. ❌ Email notifications
-17. ❌ Ministry info page (static content from old `ministry.html`)
-18. ❌ Privacy policy page
-19. ❌ Image assets copy
+16. ❌ Ministry info page (static content from old `ministry.html`)
+17. ❌ Privacy policy page (full content)
+18. ❌ Image assets copy (remaining images)
 
 ### Phase 5: Polish
-20. ❌ CSRF protection (Laravel auto-handles via @csrf)
-21. ❌ Input validation (Form Requests)
-22. ❌ Error handling + user feedback
-23. ❌ Session timeout handling
-24. ❌ Responsive design testing
+19. ❌ Form Request validation
+20. ❌ Error handling + user feedback
+21. ❌ Session timeout handling
+22. ❌ Responsive design testing
 
 ---
 
