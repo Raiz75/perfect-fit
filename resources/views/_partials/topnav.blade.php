@@ -20,7 +20,7 @@
                     <a class="nav-link px-3 py-2 rounded-pill nav-scroll" href="#ministries" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">Ministries</a>
                 </li>
                 <li class="nav-item ms-md-2">
-                    <a href="#home" class="btn rounded-pill px-4 border-0 text-white" style="background: #8c52ff;">
+                    <a class="btn primary-btn-perfit" onclick="openModal('overlayUser')">
                         Take Assessment
                     </a>
                 </li>
