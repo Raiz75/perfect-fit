@@ -7,77 +7,296 @@
 @push('head')
     <link rel="icon" type="image/png" href="{{ asset('images/icn-logo.png') }}">
     <style>
-        :root { --purple: #8c52ff; }
-        .auth-card { border-radius: 25px; overflow: hidden; box-shadow: 0 20px 60px rgba(140, 82, 255, 0.15); border: 1px solid var(--purple); }
+        :root { --purple: #8c52ff; --purple-dark: #6a3dd9; --purple-glow: rgba(140, 82, 255, 0.35); }
+
+        .bg-animated {
+            background: linear-gradient(135deg, #faf8ff 0%, #f0e6ff 50%, #e8d5ff 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease infinite;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .float-shape {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+        .float-shape:nth-child(1) {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--purple), transparent);
+            top: -10%; left: -8%;
+            animation: floatA 14s ease-in-out infinite;
+        }
+        .float-shape:nth-child(2) {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, #b388ff, transparent);
+            bottom: -8%; right: -6%;
+            animation: floatB 18s ease-in-out infinite;
+        }
+        .float-shape:nth-child(3) {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, var(--purple), transparent);
+            top: 40%; left: -4%;
+            animation: floatA 16s ease-in-out infinite reverse;
+        }
+        .float-shape:nth-child(4) {
+            width: 150px; height: 150px;
+            background: radial-gradient(circle, #d4b3ff, transparent);
+            bottom: 20%; right: -3%;
+            animation: floatB 12s ease-in-out infinite reverse;
+        }
+        @keyframes floatA {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+        @keyframes floatB {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-30px, 30px) scale(1.08); }
+            66% { transform: translate(20px, -30px) scale(0.92); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(140, 82, 255, 0.2);
+            border-radius: 28px;
+            box-shadow:
+                0 20px 60px rgba(140, 82, 255, 0.12),
+                0 8px 20px rgba(140, 82, 255, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            overflow: hidden;
+            animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes cardEntrance {
+            0% { opacity: 0; transform: translateY(40px) scale(0.96); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
         .forms-wrapper { width: 200%; display: flex; transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); }
         #container.show-signup .forms-wrapper { transform: translateX(-50%); }
         .form-section { width: 50%; }
-        .input-group-custom { border: 2px solid var(--purple); border-radius: 12px; display: flex; align-items: center; background: #fff; }
-        .input-group-custom input { border: 2px solid transparent; background: #f8f9fa; border-radius: 12px; outline: none; width: 100%; padding: 14px 18px; font-size: 14px; }
-        .input-group-custom input:focus { border-color: var(--purple) !important; }
-        .input-group-custom img { height: 28px; width: 28px; margin: 10px; cursor: pointer; flex-shrink: 0; }
-        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); z-index: 100; justify-content: center; align-items: center; }
+
+        .logo-entrance {
+            animation: logoFade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes logoFade {
+            0% { opacity: 0; transform: translateY(-20px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .form-section > * {
+            opacity: 0;
+            animation: formFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .form-section > *:nth-child(1) { animation-delay: 0.3s; }
+        .form-section > *:nth-child(2) { animation-delay: 0.42s; }
+        .form-section > *:nth-child(3) { animation-delay: 0.54s; }
+        .form-section > *:nth-child(4) { animation-delay: 0.66s; }
+        .form-section > *:nth-child(5) { animation-delay: 0.78s; }
+        @keyframes formFadeIn {
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group-custom {
+            border: 2px solid rgba(140, 82, 255, 0.25);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.6);
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+        .input-group-custom:focus-within {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 4px var(--purple-glow);
+            background: #fff;
+        }
+        .input-group-custom input {
+            border: none;
+            background: transparent;
+            border-radius: 14px;
+            outline: none;
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+        .input-group-custom input::placeholder {
+            color: #b0a0c8;
+            transition: color 0.3s;
+        }
+        .input-group-custom:focus-within input::placeholder {
+            color: #c0b0d8;
+        }
+        .eye-icon {
+            margin: 10px; cursor: pointer; flex-shrink: 0;
+            opacity: 0.5; color: var(--purple);
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .eye-icon:hover { opacity: 1; }
+
+        .toggle-link {
+            position: relative;
+            transition: color 0.2s;
+        }
+        .toggle-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--purple);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toggle-link:hover::after { width: 100%; }
+
+        .pill-indicator {
+            display: inline-flex;
+            background: rgba(140, 82, 255, 0.1);
+            border-radius: 50rem;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+        .pill-indicator button {
+            border: none;
+            background: transparent;
+            padding: 8px 24px;
+            border-radius: 50rem;
+            font-weight: 600;
+            font-size: 13px;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .pill-indicator button.active {
+            background: var(--purple);
+            color: #fff;
+            box-shadow: 0 4px 12px var(--purple-glow);
+        }
+
+        .go-home-btn {
+            transition: all 0.25s !important;
+        }
+        .go-home-btn:hover {
+            background: #f0e6ff !important;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100;
+            justify-content: center; align-items: center;
+            animation: overlayIn 0.3s ease;
+        }
         .modal-overlay.show { display: flex; }
-        .auth-modal-box { background: #fff; padding: 2.5rem; border-radius: 20px; text-align: center; width: 90%; max-width: 360px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        @keyframes overlayIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .auth-modal-box {
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 2.5rem; border-radius: 24px; text-align: center;
+            width: 90%; max-width: 360px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+            animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @media (max-width: 480px) {
+            .form-section { padding: 24px 20px !important; }
+        }
     </style>
 @endpush
 
 @section('content')
-    <div class="min-vh-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #faf8ff 0%, #f0e6ff 100%); padding: 20px; position: relative;">
-        <h1 class="position-absolute fw-bold" style="top: 6%; color: var(--purple); font-size: 2.5rem;">Admin Login</h1>
+    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-animated" style="padding: 20px; position: relative; overflow: hidden;">
+        <div class="float-shape"></div>
+        <div class="float-shape"></div>
+        <div class="float-shape"></div>
+        <div class="float-shape"></div>
 
-        <div class="auth-card bg-white" id="container">
+        <div class="text-center logo-entrance" style="position: absolute; top: 5%; z-index: 2;">
+            <img src="{{ asset('images/logo.png') }}" alt="PERFIT" style="height: 48px; margin-bottom: 4px;">
+        </div>
+
+        <div class="glass-card" style="max-width: 460px; width: 100%;" id="container">
             <div class="forms-wrapper">
                 <div class="form-section p-4 p-md-5 d-flex flex-column align-items-center">
-                    <h2 class="fw-bold mb-4" style="color: var(--purple);">Welcome Back</h2>
+                    <div class="pill-indicator">
+                        <button class="active" disabled>Sign In</button>
+                        <button disabled>Sign Up</button>
+                    </div>
                     <form id="signinForm" class="w-100">
                         <div class="input-group-custom mb-3">
                             <input type="email" name="email" placeholder="Email" required>
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signinPass" placeholder="Password" required>
-                            <img src="{{ asset('images/icn-closedEyes.png') }}" alt="toggle" onclick="togglePassword('signinPass', this)">
+                            <span class="eye-icon" onclick="togglePassword('signinPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
                         </div>
-                        <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3">Sign In</button>
+                        <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign In</button>
                     </form>
-                    <div class="w-100 text-center mt-3">
-                        <a id="forgotPasswordLink" class="text-decoration-none fw-semibold" style="color: var(--purple); cursor: pointer; font-size: 14px;">Forgot Password?</a>
+                    <div class="w-100 text-center mt-4">
+                        <a id="forgotPasswordLink" class="text-decoration-none fw-semibold toggle-link" style="color: var(--purple); cursor: pointer; font-size: 13px;">Forgot Password?</a>
                     </div>
-                    <div class="mt-4 text-center" style="color: var(--purple); font-size: 14px;">
-                        Don't have an account? <a id="showSignup" class="fw-semibold text-decoration-none" style="color: var(--purple); cursor: pointer;">Sign Up</a>
+                    <div class="mt-4 text-center" style="color: #a0a0b8; font-size: 13px;">
+                        Don't have an account?
+                        <a id="showSignup" class="fw-semibold text-decoration-none toggle-link" style="color: var(--purple); cursor: pointer;">Sign Up</a>
                     </div>
                 </div>
 
                 <div class="form-section p-4 p-md-5 d-flex flex-column align-items-center">
-                    <h2 class="fw-bold mb-4" style="color: var(--purple);">Create Account</h2>
+                    <div class="pill-indicator">
+                        <button disabled>Sign In</button>
+                        <button class="active" disabled>Sign Up</button>
+                    </div>
                     <form id="signupForm" class="w-100">
                         <div class="input-group-custom mb-3">
                             <input type="email" name="email" placeholder="Email" required>
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signupPass" placeholder="Password" required>
-                            <img src="{{ asset('images/icn-closedEyes.png') }}" alt="toggle" onclick="togglePassword('signupPass', this)">
+                            <span class="eye-icon" onclick="togglePassword('signupPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" id="confirmPass" placeholder="Confirm Password" required>
-                            <img src="{{ asset('images/icn-closedEyes.png') }}" alt="toggle" onclick="togglePassword('confirmPass', this)">
+                            <span class="eye-icon" onclick="togglePassword('confirmPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
                         </div>
-                        <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3">Sign Up</button>
+                        <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign Up</button>
                     </form>
-                    <div class="mt-4 text-center" style="color: var(--purple); font-size: 14px;">
-                        Already have an account? <a id="showSignin" class="fw-semibold text-decoration-none" style="color: var(--purple); cursor: pointer;">Sign In</a>
+                    <div class="mt-4 text-center" style="color: #a0a0b8; font-size: 13px;">
+                        Already have an account?
+                        <a id="showSignin" class="fw-semibold text-decoration-none toggle-link" style="color: var(--purple); cursor: pointer;">Sign In</a>
                     </div>
                 </div>
             </div>
-            <button class="w-100 border-0 py-3 fw-semibold" onclick="goHome()" style="background: #faf8ff; color: var(--purple); cursor: pointer; font-size: 14px; border-top: 1px solid #eee;">Go Home</button>
+            <button class="w-100 border-0 py-3 fw-semibold go-home-btn" onclick="goHome()" style="background: rgba(250,248,255,0.6); color: var(--purple); cursor: pointer; font-size: 13px; border-top: 1px solid rgba(140,82,255,0.1);">Back to Home</button>
         </div>
 
         <div class="modal-overlay" id="verifyPopup">
             <div class="auth-modal-box">
                 <h3 class="fw-bold mb-2" style="color: var(--purple);">Email Verification</h3>
                 <p class="text-muted mb-3" style="font-size: 14px;">Enter the 6-digit code sent to your email.</p>
-                <input type="text" id="verifyCode" maxlength="6" class="text-center form-control w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 8px; font-size: 18px; padding: 10px; letter-spacing: 4px; font-weight: bold; color: var(--purple);">
-                <div class="d-flex justify-content-center gap-2">
+                <input type="text" id="verifyCode" maxlength="6" class="text-center w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 10px; font-size: 18px; padding: 12px; letter-spacing: 6px; font-weight: bold; color: var(--purple); background: rgba(255,255,255,0.5); outline: none; display: block;">
+                <div class="d-flex justify-content-center gap-3">
                     <button class="btn primary-btn-perfit" onclick="cancelVerification()" style="padding-left: 1.5rem; padding-right: 1.5rem;">Back</button>
                     <button class="btn primary-btn-perfit" onclick="checkVerificationCode()" style="padding-left: 1.5rem; padding-right: 1.5rem;">Verify</button>
                 </div>
@@ -88,8 +307,8 @@
             <div class="auth-modal-box">
                 <h3 class="fw-bold mb-2" style="color: var(--purple);">Reset Password</h3>
                 <p class="text-muted mb-3" style="font-size: 14px;">Enter your registered email to receive a temporary password.</p>
-                <input type="email" id="resetEmail" placeholder="Enter your email" class="form-control w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 8px; padding: 10px; text-align: center;">
-                <div class="d-flex justify-content-center gap-2">
+                <input type="email" id="resetEmail" placeholder="Enter your email" class="w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 10px; padding: 12px; text-align: center; background: rgba(255,255,255,0.5); outline: none; display: block;">
+                <div class="d-flex justify-content-center gap-3">
                     <button class="btn primary-btn-perfit" onclick="closeForgotPopup()" style="padding-left: 1.5rem; padding-right: 1.5rem;">Back</button>
                     <button class="btn primary-btn-perfit" onclick="sendTemporaryPassword()" style="padding-left: 1.5rem; padding-right: 1.5rem;">Send</button>
                 </div>
@@ -109,14 +328,16 @@
             Livewire.dispatch('notify', { text, type });
         }
 
-        function togglePassword(id, img) {
+        function togglePassword(id, el) {
             const input = document.getElementById(id);
+            const open = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>';
+            const closed = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-4.333 0 -8.333 -2.333 -11 -7c1.272 -2.226 2.924 -4.08 4.892 -5.544m4.108 -1.456c5.333 0 9.333 2.333 12 7c-.859 1.504 -1.874 2.887 -3.058 4.117"/><path d="M3 3l18 18"/></svg>';
             if (input.type === 'password') {
                 input.type = 'text';
-                img.src = '{{ asset("images/icn-openEyes.png") }}';
+                el.innerHTML = closed;
             } else {
                 input.type = 'password';
-                img.src = '{{ asset("images/icn-closedEyes.png") }}';
+                el.innerHTML = open;
             }
         }
 
