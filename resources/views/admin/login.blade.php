@@ -147,8 +147,8 @@
         .gotoHome:hover { background: var(--light-purple); }
         .message {
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            top: 30px;
+            right: 30px;
             width: 300px;
             padding: 14px 20px;
             border-radius: 8px;
@@ -212,30 +212,6 @@
         .btn-row button:hover { background: var(--light-purple); color: var(--purple); }
         .btn-row button.secondary { background: #fff; color: var(--purple); }
         .btn-row button.secondary:hover { background: #f5f5f5; }
-        .overlay-load {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-            z-index: 110;
-            justify-content: center;
-            align-items: center;
-        }
-        .overlay-load.show { display: flex; }
-        .loader-container { text-align: center; }
-        .loader {
-            border: 6px solid var(--light-purple);
-            border-top: 6px solid var(--purple);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 16px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-container p { color: #fff; font-size: 1.1rem; font-weight: 500; }
         @media (max-width: 480px) {
             .form-section { padding: 30px 20px; }
             h2 { font-size: 22px; }
@@ -293,13 +269,6 @@
 
     <div class="message" id="message"></div>
 
-    <div class="overlay-load" id="overlayLoad">
-        <div class="loader-container">
-            <div class="loader"></div>
-            <p>Loading, Please wait.</p>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="verifyPopup">
         <div class="modal-box">
             <h3>Email Verification</h3>
@@ -329,7 +298,6 @@
         const signinForm = document.getElementById('signinForm');
         const signupForm = document.getElementById('signupForm');
         const message = document.getElementById('message');
-        const overlayLoad = document.getElementById('overlayLoad');
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
         function showMessage(text, type) {
@@ -351,8 +319,7 @@
         }
 
         function goHome() {
-            overlayLoad.classList.add('show');
-            setTimeout(() => { window.location.href = '/'; }, 1500);
+            window.location.href = '/';
         }
 
         document.getElementById('showSignup').addEventListener('click', () => container.classList.add('show-signup'));
@@ -372,10 +339,7 @@
             .then(data => {
                 if (data.success) {
                     showMessage(data.message, 'success');
-                    setTimeout(() => {
-                        overlayLoad.classList.add('show');
-                        setTimeout(() => { window.location.href = '/admin/dashboard'; }, 1500);
-                    }, 1500);
+                    setTimeout(() => { window.location.href = '/admin/dashboard'; }, 1000);
                 } else {
                     showMessage(data.message, 'error');
                 }

@@ -288,13 +288,6 @@
         </div>
     </div>
 
-    <div class="overlay-load" id="overlayLoad">
-        <div class="loader-container">
-            <div class="loader"></div>
-            <p>Loading, Please wait.</p>
-        </div>
-    </div>
-
     <button class="dove-trigger" onclick="generateRandomVerse()" id="randomVerse">
         <img src="{{ asset('images/doveStatic.png') }}" alt="Dove">
         <p id="randomVerseP">Tap the dove for a verse</p>
@@ -302,22 +295,6 @@
 @endsection
 
 @push('scripts')
-<style>
-    .overlay-load {
-        display: none; position: fixed; top:0;left:0;width:100%;height:100%;
-        background:rgba(0,0,0,0.4); backdrop-filter:blur(5px); z-index:110;
-        justify-content:center; align-items:center;
-    }
-    .overlay-load.show { display: flex; }
-    .loader-container { text-align: center; }
-    .loader {
-        border: 6px solid #f0e6ff; border-top: 6px solid #8c52ff;
-        border-radius: 50%; width: 60px; height: 60px;
-        margin: 0 auto 16px; animation: spin 1s linear infinite;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .loader-container p { color: #fff; font-size: 1.1rem; font-weight: 500; }
-</style>
 <script>
     const verses = [
         {title:"1 Corinthians 12:4-5",text:"There are different kinds of gifts, but the same Spirit distributes them. There are different kinds of service, but the same Lord."},
@@ -344,11 +321,7 @@
     function setUser(type) {
         if (type === 'leader') {
             closeModal('overlayUser');
-            document.getElementById('overlayLoad').classList.add('show');
-            setTimeout(function() {
-                document.getElementById('overlayLoad').classList.remove('show');
-                window.location.href = '/admin/login';
-            }, 1500);
+            window.location.href = '/admin/login';
         } else if (type === 'volunteer') {
             closeModal('overlayUser');
             openModal('overlayChurch');
@@ -387,12 +360,8 @@
             return;
         }
         closeModal('overlayLang');
-        document.getElementById('overlayLoad').classList.add('show');
-        setTimeout(function() {
-            document.getElementById('overlayLoad').classList.remove('show');
-            localStorage.setItem('selectedLanguage', lang);
-            window.location.href = '/assessment';
-        }, 1500);
+        localStorage.setItem('selectedLanguage', lang);
+        window.location.href = '/assessment';
     }
 
     function generateRandomVerse() {
