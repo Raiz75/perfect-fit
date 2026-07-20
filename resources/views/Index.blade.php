@@ -1,64 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfit</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <style>
-        html { scroll-padding-top: 80px; }
-        html, body { margin: 0 !important; padding: 0 !important; overflow-x: hidden !important; }
-        .float-img { position: absolute; z-index: 1; animation: sway 6s ease-in-out infinite; object-fit: cover; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-        .float-img:nth-child(1) { width: 700px; height: 500px; top: 12%; right: 8%; animation-delay: 0s; }
-        .float-img:nth-child(2) { width: 500px; height: 300px; top: 42%; right: 30%; animation-delay: -1.8s; }
-        @keyframes sway { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@extends('_layouts.master')
 
-        .step-card { opacity: 0; transform: translateY(60px) scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .step-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
-        .step-card:nth-child(1) { transition-delay: 0s; }
-        .step-card:nth-child(2) { transition-delay: 0.15s; }
-        .step-card:nth-child(3) { transition-delay: 0.3s; }
-        .step-card:nth-child(4) { transition-delay: 0.45s; }
-        .step-card:nth-child(5) { transition-delay: 0.6s; }
-        .step-card:nth-child(6) { transition-delay: 0.75s; }
+@section('title', 'PERFIT')
 
-        .step-dot { animation: breathe 3s ease-in-out infinite; }
-        @keyframes breathe {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(140, 82, 255, 0.3); transform: scale(1); }
-            50% { box-shadow: 0 0 0 12px rgba(140, 82, 255, 0); transform: scale(1.08); }
-        }
+@push('head')
+<style>
+    html { scroll-padding-top: 80px; }
+    body { overflow-x: hidden !important; }
+    .float-img { position: absolute; z-index: 1; animation: sway 6s ease-in-out infinite; object-fit: cover; border-radius: 1rem; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+    .float-img:nth-child(1) { width: 700px; height: 500px; top: 12%; right: 8%; animation-delay: 0s; }
+    .float-img:nth-child(2) { width: 500px; height: 300px; top: 42%; right: 30%; animation-delay: -1.8s; }
+    @keyframes sway { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
 
-        #ministryCarousel .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(140, 82, 255, 0.12) !important; }
-        #ministryCarousel .carousel-control-prev:hover, #ministryCarousel .carousel-control-next:hover { background: #8c52ff !important; }
-        #ministryCarousel .carousel-control-prev:hover svg, #ministryCarousel .carousel-control-next:hover svg { stroke: #fff; }
-        .carousel-indicators [data-bs-target] { border-radius: 50% !important; }
-        .carousel-indicators .active { background: #8c52ff !important; opacity: 1 !important; width: 24px !important; border-radius: 10px !important; }
+    .step-card { opacity: 0; transform: translateY(60px) scale(0.95); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+    .step-card.revealed { opacity: 1; transform: translateY(0) scale(1); }
+    .step-card:nth-child(1) { transition-delay: 0s; }
+    .step-card:nth-child(2) { transition-delay: 0.15s; }
+    .step-card:nth-child(3) { transition-delay: 0.3s; }
+    .step-card:nth-child(4) { transition-delay: 0.45s; }
+    .step-card:nth-child(5) { transition-delay: 0.6s; }
+    .step-card:nth-child(6) { transition-delay: 0.75s; }
 
-        @media (max-width: 1023px) { .float-img { display: none !important; } .hero-content { margin-left: auto; margin-right: auto; text-align: center; align-items: center; } }
-        @media (min-width: 1024px) { .hero-content { margin-left: 4.5rem; } }
-        @media (min-width: 1280px) { .hero-content { margin-left: 8.5rem; } }
-    </style>
-</head>
-<body>
-    @include('_partials.topnav')
+    .step-dot { animation: breathe 3s ease-in-out infinite; }
+    @keyframes breathe {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(140, 82, 255, 0.3); transform: scale(1); }
+        50% { box-shadow: 0 0 0 12px rgba(140, 82, 255, 0); transform: scale(1.08); }
+    }
 
-    <main>
-        <section id="home" class="min-vh-100 d-flex flex-column flex-lg-row align-items-start overflow-hidden bg-cover bg-center position-relative" style="background-image: url('{{ asset('images/banner.png') }}'); padding-top: 120px;">
-            <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
-            <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
+    #ministryCarousel .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(140, 82, 255, 0.12) !important; }
+    #ministryCarousel .carousel-control-prev:hover, #ministryCarousel .carousel-control-next:hover { background: #8c52ff !important; }
+    #ministryCarousel .carousel-control-prev:hover svg, #ministryCarousel .carousel-control-next:hover svg { stroke: #fff; }
+    .carousel-indicators [data-bs-target] { border-radius: 50% !important; }
+    .carousel-indicators .active { background: #8c52ff !important; opacity: 1 !important; width: 24px !important; border-radius: 10px !important; }
 
-            <div class="hero-content d-flex flex-column align-items-center text-center text-lg-start" style="max-width: 560px; position: relative; z-index: 10;">
-                <h1 class="display-1 fw-bold mb-3" style="color: #8c52ff;">
-                    PERFIT
-                </h1>
-                <p class="text-muted mb-4" style="font-size: 1.125rem; max-width: 480px;">
-                    PERFIT uses AI to match church volunteers with the right ministry roles, making service more meaningful and coordination effortless for leaders.
-                </p>
-                <a href="#" class="btn btn-lg rounded-pill text-white border-0 px-5" style="background: #8c52ff;">
-                    Take Assessment
-                </a>
-            </div>
-        </section>
+    .modal-overlay {
+        display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); backdrop-filter: blur(6px); z-index: 100;
+        justify-content: center; align-items: center;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+        background: white; padding: 2.5rem; border-radius: 20px; text-align: center;
+        width: 90%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); position: relative;
+    }
+    .modal-box h3 { color: #8c52ff; font-weight: 700; margin-bottom: 0.75rem; }
+    .modal-box p { color: #666; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .modal-btn {
+        display: block; width: 80%; margin: 0.75rem auto; padding: 12px;
+        border: 2px solid #8c52ff; border-radius: 12px; font-size: 1.1rem;
+        background: #8c52ff; color: white; cursor: pointer; transition: 0.3s;
+    }
+    .modal-btn:hover { background: #f0e6ff; color: #8c52ff; }
+    .modal-close {
+        position: absolute; top: 12px; right: 16px; border: none; background: none;
+        font-size: 1.5rem; color: #999; cursor: pointer; line-height: 1;
+    }
+    .modal-close:hover { color: #333; }
+    .modal-input {
+        width: 90%; padding: 12px; border: 2px solid #8c52ff; border-radius: 10px;
+        font-size: 1.3rem; text-align: center; letter-spacing: 4px; font-weight: bold;
+        color: #8c52ff; margin: 0.5rem auto 1rem; display: block; outline: none;
+    }
+    .privacy-row { font-size: 0.8rem; color: #999; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .privacy-row a { color: #8c52ff; cursor: pointer; text-decoration: underline; }
+    .dove-trigger {
+        position: fixed; bottom: 24px; left: 24px; z-index: 50;
+        background: none; border: none; cursor: pointer; text-align: center; width: 100px;
+    }
+    .dove-trigger img { width: 60px; transition: transform 0.3s; }
+    .dove-trigger img:hover { transform: scale(1.15); }
+    .dove-trigger p { font-size: 0.7rem; color: #aaa; margin: 4px 0 0; }
+    .verse-overlay.show { display: flex; }
+    .verse-dove { width: 80px; margin: 0 auto; display: none; }
+    .verse-box { opacity: 0; transition: opacity 1s; margin-top: 1rem; }
+    .verse-box.show { opacity: 1; }
+    .verse-box h4 { color: #8c52ff; margin-bottom: 0.5rem; }
+    .verse-box p { font-style: italic; line-height: 1.6; }
+
+    @media (max-width: 1023px) { .float-img { display: none !important; } .hero-content { margin-left: auto; margin-right: auto; text-align: center; align-items: center; } }
+    @media (min-width: 1024px) { .hero-content { margin-left: 4.5rem; } }
+    @media (min-width: 1280px) { .hero-content { margin-left: 8.5rem; } }
+</style>
+@endpush
+
+@section('content')
+<main>
+    <section id="home" class="min-vh-100 d-flex flex-column flex-lg-row align-items-start overflow-hidden bg-cover bg-center position-relative" style="background-image: url('{{ asset('images/banner.png') }}'); padding-top: 120px;">
+        <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
+        <img src="{{ asset('images/bg.png') }}" alt="" class="float-img">
+
+        <div class="hero-content d-flex flex-column align-items-center text-center text-lg-start" style="max-width: 560px; position: relative; z-index: 10;">
+            <h1 class="display-1 fw-bold mb-3" style="color: #8c52ff;">
+                PERFIT
+            </h1>
+            <p class="text-muted mb-4" style="font-size: 1.125rem; max-width: 480px;">
+                PERFIT uses AI to match church volunteers with the right ministry roles, making service more meaningful and coordination effortless for leaders.
+            </p>
+            <button class="btn btn-lg rounded-pill text-white border-0 px-5" style="background: #8c52ff;" onclick="openModal('overlayUser')">
+                Take Assessment
+            </button>
+        </div>
+    </section>
 
         <section id="how-it-works" class="py-5 position-relative overflow-hidden" style="background: #faf8ff;">
             <div class="position-absolute top-0 start-0 w-100 h-100" style="background-image: radial-gradient(circle, #8c52ff08 1px, transparent 1px); background-size: 24px 24px; pointer-events: none;"></div>
@@ -215,104 +256,217 @@
         </section>
     </main>
 
-    @include('_partials.footer')
+    <div class="modal-overlay" id="overlayUser">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('overlayUser')">&times;</button>
+            <h3>Choose User Type</h3>
+            <button class="modal-btn" onclick="setUser('leader')">Leader</button>
+            <button class="modal-btn" onclick="setUser('volunteer')">Volunteer</button>
+        </div>
+    </div>
 
-    @stack('scripts')
+    <div class="modal-overlay" id="overlayChurch">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('overlayChurch')">&times;</button>
+            <h3>Enter Church Code</h3>
+            <p>Enter your church code to apply your pastor's settings.</p>
+            <input type="text" class="modal-input" id="inputedChurchCode" placeholder="Code" maxlength="9">
+            <button class="modal-btn" onclick="selectLang()">Next</button>
+        </div>
+    </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('a[href^="#"]').forEach(function (link) {
-                link.addEventListener('click', function (e) {
-                    const href = this.getAttribute('href');
-                    if (href !== '#') {
-                        e.preventDefault();
-                        const el = document.querySelector(href);
-                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+    <div class="modal-overlay" id="overlayLang">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('overlayLang')">&times;</button>
+            <h3>Choose Language</h3>
+            <button class="modal-btn" onclick="setLang('en')">English</button>
+            <button class="modal-btn" onclick="setLang('tl')">Tagalog</button>
+            <div class="privacy-row">
+                <input type="checkbox" id="privacyPolicy">
+                <label for="privacyPolicy">I accept the <a href="{{ route('privacy-policy') }}">Privacy Policy</a></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay verse-overlay" id="doveOverlay">
+        <div class="modal-box">
+            <img src="{{ asset('images/doveStatic.png') }}" class="verse-dove" id="dynamicDove" style="display:block;">
+            <div class="verse-box show" id="verseDiv">
+                <h4 id="verseTitle">Title 1:1</h4>
+                <p id="verse">Verse message</p>
+                <button class="modal-btn" onclick="verseDone()">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-load" id="overlayLoad">
+        <div class="loader-container">
+            <div class="loader"></div>
+            <p>Loading, Please wait.</p>
+        </div>
+    </div>
+
+    <button class="dove-trigger" onclick="generateRandomVerse()" id="randomVerse">
+        <img src="{{ asset('images/doveStatic.png') }}" alt="Dove">
+        <p id="randomVerseP">Tap the dove for a verse</p>
+    </button>
+@endsection
+
+@push('scripts')
+<style>
+    .overlay-load {
+        display: none; position: fixed; top:0;left:0;width:100%;height:100%;
+        background:rgba(0,0,0,0.4); backdrop-filter:blur(5px); z-index:110;
+        justify-content:center; align-items:center;
+    }
+    .overlay-load.show { display: flex; }
+    .loader-container { text-align: center; }
+    .loader {
+        border: 6px solid #f0e6ff; border-top: 6px solid #8c52ff;
+        border-radius: 50%; width: 60px; height: 60px;
+        margin: 0 auto 16px; animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .loader-container p { color: #fff; font-size: 1.1rem; font-weight: 500; }
+</style>
+<script>
+    const verses = [
+        {title:"1 Corinthians 12:4-5",text:"There are different kinds of gifts, but the same Spirit distributes them. There are different kinds of service, but the same Lord."},
+        {title:"Romans 12:6",text:"We have different gifts, according to the grace given to each of us. If your gift is prophesying, then prophesy in accordance with your faith."},
+        {title:"Ephesians 2:10",text:"For we are God's handiwork, created in Christ Jesus to do good works, which God prepared in advance for us to do."},
+        {title:"1 Peter 4:10",text:"Each of you should use whatever gift you have received to serve others, as faithful stewards of God's grace in its various forms."},
+        {title:"Jeremiah 1:5",text:"Before I formed you in the womb I knew you, before you were born I set you apart; I appointed you as a prophet to the nations."},
+        {title:"Colossians 3:23",text:"Whatever you do, work at it with all your heart, as working for the Lord, not for human masters."},
+        {title:"Proverbs 16:9",text:"In their hearts humans plan their course, but the Lord establishes their steps."},
+        {title:"Isaiah 6:8",text:"Then I heard the voice of the Lord saying, 'Whom shall I send? And who will go for us?' And I said, 'Here am I. Send me!'"},
+        {title:"Matthew 5:16",text:"Let your light shine before others, that they may see your good deeds and glorify your Father in heaven."},
+        {title:"Philippians 2:13",text:"For it is God who works in you to will and to act in order to fulfill his good purpose."},
+        {title:"1 Corinthians 12:27",text:"Now you are the body of Christ, and each one of you is a part of it."},
+        {title:"Galatians 6:9",text:"Let us not become weary in doing good, for at the proper time we will reap a harvest if we do not give up."},
+        {title:"John 15:16",text:"You did not choose me, but I chose you and appointed you so that you might go and bear fruit—fruit that will last."},
+        {title:"Hebrews 13:20-21",text:"Now may the God of peace equip you with everything good for doing his will, and may he work in us what is pleasing to him."},
+        {title:"2 Timothy 1:6",text:"Fan into flame the gift of God, which is in you."},
+        {title:"Joshua 1:9",text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."},
+    ];
+
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    function setUser(type) {
+        if (type === 'leader') {
+            closeModal('overlayUser');
+            document.getElementById('overlayLoad').classList.add('show');
+            setTimeout(function() {
+                document.getElementById('overlayLoad').classList.remove('show');
+                window.location.href = '/admin/login';
+            }, 1500);
+        } else if (type === 'volunteer') {
+            closeModal('overlayUser');
+            openModal('overlayChurch');
+        }
+    }
+
+    function selectLang() {
+        const code = document.getElementById('inputedChurchCode').value.trim();
+        if (!code) {
+            alert('Please enter a church code.');
+            return;
+        }
+        fetch('/admin/validate-church-code', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+            body: JSON.stringify({ church_code: code })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.exists) {
+                localStorage.setItem('churchCode', code);
+                closeModal('overlayChurch');
+                openModal('overlayLang');
+                document.getElementById('inputedChurchCode').value = '';
+            } else {
+                alert('Invalid church code.');
+            }
+        })
+        .catch(function() { alert('Error validating church code.'); });
+    }
+
+    function setLang(lang) {
+        if (!document.getElementById('privacyPolicy').checked) {
+            document.querySelector('.privacy-row').style.color = 'red';
+            setTimeout(function() { document.querySelector('.privacy-row').style.color = '#999'; }, 2000);
+            return;
+        }
+        closeModal('overlayLang');
+        document.getElementById('overlayLoad').classList.add('show');
+        setTimeout(function() {
+            document.getElementById('overlayLoad').classList.remove('show');
+            localStorage.setItem('selectedLanguage', lang);
+            window.location.href = '/assessment';
+        }, 1500);
+    }
+
+    function generateRandomVerse() {
+        const idx = Math.floor(Math.random() * verses.length);
+        document.getElementById('verseTitle').textContent = verses[idx].title;
+        document.getElementById('verse').textContent = verses[idx].text;
+        openModal('doveOverlay');
+    }
+
+    function verseDone() { closeModal('doveOverlay'); }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    e.preventDefault();
+                    const el = document.querySelector(href);
+                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        const toggler = document.getElementById('navbarToggler');
+        const menu = document.getElementById('navbarMenu');
+        if (toggler && menu) {
+            toggler.addEventListener('click', function () {
+                const isOpen = menu.classList.toggle('show');
+                this.setAttribute('aria-expanded', isOpen);
+                this.classList.toggle('collapsed', !isOpen);
+            });
+            document.querySelectorAll('.nav-scroll').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    menu.classList.remove('show');
+                    toggler.classList.add('collapsed');
+                    toggler.setAttribute('aria-expanded', 'false');
                 });
             });
+        }
 
-            const toggler = document.getElementById('navbarToggler');
-            const menu = document.getElementById('navbarMenu');
-            if (toggler && menu) {
-                toggler.addEventListener('click', function () {
-                    const isOpen = menu.classList.toggle('show');
-                    this.setAttribute('aria-expanded', isOpen);
-                    this.classList.toggle('collapsed', !isOpen);
-                });
-                document.querySelectorAll('.nav-scroll').forEach(function (link) {
-                    link.addEventListener('click', function () {
-                        menu.classList.remove('show');
-                        toggler.classList.add('collapsed');
-                        toggler.setAttribute('aria-expanded', 'false');
-                    });
-                });
-            }
+        const cards = document.querySelectorAll('.step-card');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.classList.add('revealed'); obs.unobserve(entry.target); }
+            });
+        }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
+        cards.forEach(card => obs.observe(card));
 
-            const cards = document.querySelectorAll('.step-card');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('revealed');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.2, rootMargin: '0px 0px -50px 0px' });
-            cards.forEach(card => observer.observe(card));
-
-            (function () {
-                const carousel = document.getElementById('ministryCarousel');
-                if (!carousel) return;
-                const items = carousel.querySelectorAll('.carousel-item');
-                const indicators = carousel.querySelectorAll('.carousel-indicators button');
-                let current = 0;
-                let timer = null;
-
-                function goTo(index) {
-                    items.forEach((el, i) => {
-                        el.classList.toggle('active', i === index);
-                    });
-                    indicators.forEach((el, i) => {
-                        el.classList.toggle('active', i === index);
-                        if (i === index) {
-                            el.style.opacity = '1';
-                            el.style.background = '#8c52ff';
-                        } else {
-                            el.style.opacity = '';
-                            el.style.background = '#d0c4e8';
-                        }
-                    });
-                    current = index;
-                }
-
-                function next() {
-                    goTo((current + 1) % items.length);
-                }
-
-                function prev() {
-                    goTo((current - 1 + items.length) % items.length);
-                }
-
-                carousel.querySelector('.carousel-control-next').addEventListener('click', function (e) {
-                    e.preventDefault(); next(); resetTimer();
-                });
-                carousel.querySelector('.carousel-control-prev').addEventListener('click', function (e) {
-                    e.preventDefault(); prev(); resetTimer();
-                });
-                indicators.forEach(function (btn, idx) {
-                    btn.addEventListener('click', function () {
-                        goTo(idx);
-                        resetTimer();
-                    });
-                });
-
-                function resetTimer() {
-                    if (timer) clearInterval(timer);
-                    timer = setInterval(next, 5000);
-                }
-                resetTimer();
-            })();
-        });
-    </script>
-</body>
-</html>
+        (function () {
+            const c = document.getElementById('ministryCarousel');
+            if (!c) return;
+            const items = c.querySelectorAll('.carousel-item');
+            const dots = c.querySelectorAll('.carousel-indicators button');
+            let cur = 0, timer = null;
+            function go(i) { items.forEach((el,idx) => el.classList.toggle('active', idx===i)); dots.forEach((el,idx) => { el.classList.toggle('active', idx===i); el.style.opacity = idx===i ? '1' : ''; el.style.background = idx===i ? '#8c52ff' : '#d0c4e8'; }); cur = i; }
+            function n() { go((cur+1)%items.length); }
+            function p() { go((cur-1+items.length)%items.length); }
+            function rt() { if(timer) clearInterval(timer); timer = setInterval(n, 5000); }
+            c.querySelector('.carousel-control-next').addEventListener('click', function(e) { e.preventDefault(); n(); rt(); });
+            c.querySelector('.carousel-control-prev').addEventListener('click', function(e) { e.preventDefault(); p(); rt(); });
+            dots.forEach(function(btn, idx) { btn.addEventListener('click', function() { go(idx); rt(); }); });
+            rt();
+        })();
+    });
+</script>
+@endpush
