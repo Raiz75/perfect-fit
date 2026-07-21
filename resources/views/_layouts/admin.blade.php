@@ -17,10 +17,10 @@
     <div class="sidebarOverlay" id="sidebarOverlay"></div>
 
     <div class="adminPage">
-        @include('_partials.adminSide.sideNav')
+        <x-admin-sidebar />
 
         <div class="adminRight">
-            @include('_partials.adminSide.topNav')
+            <x-admin-top-nav :title="$title ?? 'PERFIT'" />
 
             <main class="adminContent" id="adminContent">
                 @yield('content')
@@ -29,46 +29,7 @@
     </div>
 
     @stack('scripts')
-
-    <script>
-        // Desktop sidebar toggle
-        const sidebar = document.getElementById('adminSidebar');
-        const toggleBtn = document.getElementById('sidebarToggle');
-
-        if (toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', function() {
-                sidebar.classList.toggle('collapsed');
-            });
-        }
-
-        // Mobile hamburger toggle
-        const hamburger = document.getElementById('mobileHamburger');
-        const overlay = document.getElementById('sidebarOverlay');
-
-        if (hamburger && sidebar && overlay) {
-            hamburger.addEventListener('click', function() {
-                sidebar.classList.toggle('mobileOpen');
-                overlay.classList.toggle('show');
-            });
-
-            overlay.addEventListener('click', function() {
-                sidebar.classList.remove('mobileOpen');
-                overlay.classList.remove('show');
-            });
-        }
-
-        // Logout form
-        document.getElementById('sidebarLogoutForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            fetch(this.action, {
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content }
-            }).then(res => res.json()).then(data => {
-                if (data.success) window.location.href = '/admin/login';
-            });
-        });
-    </script>
-
+    @vite(['resources/js/admin.js'])
     @livewireScripts
 </body>
 </html>

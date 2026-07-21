@@ -2,30 +2,29 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\CopyDefaults;
 use App\Mail\VerificationCodeMail;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\CheckEmailRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\SendVerificationRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
-    public function checkEmail(Request $request)
+    public function checkEmail(CheckEmailRequest $request)
     {
-        $request->validate(['email' => 'required|email']);
-
         $exists = User::where('email', $request->email)->exists();
 
         return response()->json(['exists' => $exists]);
     }
 
-    public function sendVerification(Request $request)
+    public function sendVerification(SendVerificationRequest $request)
     {
-        $request->validate(['email' => 'required|email']);
-
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
         session(['verification_code' => $code, 'verification_email' => $request->email]);
 
@@ -37,13 +36,8 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request, CopyDefaults $copyDefaults)
     {
-        $request->validate([
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-        ]);
-
         $admin = User::create([
             'name' => $request->email,
             'email' => $request->email,
@@ -52,7 +46,7 @@ class RegisterController extends Controller
             'church_name' => null,
         ]);
 
-        $this->copyDefaults($admin->id);
+        $copyDefaults->handle($admin->id);
 
         return response()->json([
             'success' => true,
@@ -110,27 +104,5 @@ class RegisterController extends Controller
         } while (DB::selectOne('SELECT id FROM users WHERE BINARY church_code = ?', [$code]));
 
         return $code;
-    }
-
-    private function copyDefaults(int $newUserId): void
-    {
-        $tables = [
-            'demographic_restrictions' => ['user_id', 'ministry_id', 'gender', 'age_min', 'age_max', 'marital_status', 'baptized', 'time_in_faith'],
-            'skill_restrictions' => ['user_id', 'ministry_id', 'music', 'technology', 'writing', 'technical', 'speaking', 'accounting', 'mentoring', 'bible_knowledge'],
-            'skill_questions' => ['user_id', 'skill_id', 'question_number', 'question_en', 'question_tl'],
-            'interest_and_passion_questions' => ['user_id', 'ministry_category_id', 'question_number', 'question_en', 'question_tl'],
-            'behavioral_questions' => ['user_id', 'ministry_id', 'question_number', 'question_en', 'question_tl'],
-        ];
-
-        foreach ($tables as $table => $columns) {
-            $rows = DB::table($table)->where('user_id', 1)->get();
-            foreach ($rows as $row) {
-                $insert = [];
-                foreach ($columns as $col) {
-                    $insert[$col] = $col === 'user_id' ? $newUserId : $row->$col;
-                }
-                DB::table($table)->insert($insert);
-            }
-        }
     }
 }

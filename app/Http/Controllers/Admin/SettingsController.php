@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class SettingsController extends Controller
@@ -36,17 +38,10 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function updatePassword(Request $request)
+    public function updatePassword(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed', 'regex:/[A-Z]/', 'regex:/\d/', 'regex:/[^A-Za-z0-9]/'],
-        ], [
-            'current_password.current_password' => 'Wrong current password.',
-        ]);
-
         $user = Auth::user();
-        $user->password = $request->new_password;
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
         return response()->json([
