@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\RestrictionController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -30,9 +31,8 @@ Route::prefix('admin')->group(function () {
 
 // Admin panel (authenticated)
 Route::prefix('admin')->middleware('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('admin.dashboard.data');
     Route::get('/restrictions', function () {
         return redirect()->route('admin.restrictions.demographics');
     })->name('admin.restrictions');

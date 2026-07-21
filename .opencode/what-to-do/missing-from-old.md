@@ -66,50 +66,47 @@
 
 ---
 
-## 2. Backend Implementation (🔧 In Progress)
+## 2. Backend Implementation (✅ Complete)
 
-### 2.1 Controllers (✅ Auth Done, ❌ Rest Missing)
+### 2.1 Controllers
 
 ```
 app/Http/Controllers/
 ├── FrontendController.php           # ✅ Landing, ministries, privacy-policy pages
 ├── Auth/
-│   ├── LoginController.php          # ✅ sign-in + session check
-│   ├── RegisterController.php       # ✅ sign-up + email check + verify code + church code validation + default copy
+│   ├── LoginController.php          # ✅ Uses LoginRequest Form Request
+│   ├── RegisterController.php       # ✅ Uses Form Requests + CopyDefaults action
 │   ├── ForgotPasswordController.php # ✅ send temp password via email
-│   └── LogoutController.php         # ✅ session destroy
-├── AssessmentController.php         # ❌ get all data by churchCode
-├── ReportController.php             # ❌ create + filter + export reports
-├── AdminPanelController.php         # ❌ load admin panel data
-├── RestrictionController.php        # ❌ save/reset restrictions
-├── QuestionController.php           # ❌ save/reset questions
-├── Admin\
-│   └── SettingsController.php       # ✅ church name, change password (with modal + validation)
-└── MinistryController.php           # ❌ ministry info page data
+│   └── LogoutController.php         # ✅ Redirects to login page on logout
+├── Admin/
+│   ├── DashboardController.php      # ✅ Full dashboard with filters, charts, table
+│   ├── RestrictionController.php    # ✅ Save/reset restrictions
+│   ├── QuestionController.php       # ✅ Save/reset questions
+│   └── SettingsController.php       # ✅ Uses ChangePasswordRequest Form Request
 ```
 
 ### 2.2 Old PHP → Laravel Endpoint Mapping
 
 | Old PHP File | Method | Laravel Route | Controller Method | Status | Notes |
 |-------------|--------|---------------|-------------------|--------|-------|
-| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | ✅ | Session-based auth |
-| `php-signUp.php` | POST | `/admin/register` | `Auth\RegisterController::register` | ✅ | Copies defaults from admin ID 1 |
-| `php-checkEmail.php` | POST | `/admin/check-email` | `Auth\RegisterController::checkEmail` | ✅ | JSON response |
+| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | ✅ | Uses LoginRequest Form Request |
+| `php-signUp.php` | POST | `/admin/register` | `Auth\RegisterController::register` | ✅ | Uses RegisterRequest Form Request + CopyDefaults Action |
+| `php-checkEmail.php` | POST | `/admin/check-email` | `Auth\RegisterController::checkEmail` | ✅ | Uses CheckEmailRequest Form Request |
 | `php-sendVerification.php` | POST | `/admin/send-verification` | `Auth\RegisterController::sendVerification` | ✅ | Sends VerificationCodeMail |
 | `php-forgotPass.php` | POST | `/admin/forgot-password` | `Auth\ForgotPasswordController::sendTempPassword` | ✅ | Sends TemporaryPasswordMail |
 | `php-validateChurchCode.php` | POST | `/admin/validate-church-code` | `Auth\RegisterController::validateChurchCode` | ✅ | BINARY comparison |
 | — | POST | `/admin/verify-code` | `Auth\RegisterController::verifyCode` | ✅ | Server-side code verification |
 | `php-sessionTest.php` | GET | `/admin/session-check` | `Auth\LoginController::checkSession` | ✅ | Returns admin or 401 |
-| `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | ✅ | |
+| `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | ✅ | Redirects to admin.login |
 | `php-getDbData.php` | POST | `/api/assessment-data` | `AssessmentController::getData` | ❌ | Phase 2 |
 | `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | ❌ | Phase 2 |
-| `php-adminFilter.php` | GET | `/admin/reports` | `ReportController::filter` | ❌ | Phase 3 |
+| `php-adminFilter.php` | GET | `/admin/dashboard/data` | `Admin\DashboardController::getData` | ✅ | Full filter support (search, date, demo, skills, ministries) |
 | `php-generateAdminReport.php` | GET | `/admin/reports/export` | `ReportController::export` | ❌ | Phase 3 |
 | `php-loadAdminPanel.php` | GET | `/admin/panel-data` | `AdminPanelController::load` | ❌ | Phase 3 |
 | `php-saveRestriction.php` | POST | `/admin/restrictions` | `RestrictionController::save` | ❌ | Phase 3 |
 | `php-resetRestriction.php` | POST | `/admin/restrictions/reset` | `RestrictionController::reset` | ❌ | Phase 3 |
 | `php-changeChurchName.php` | POST | `/admin/settings/church-name` | `Admin\SettingsController::updateChurchName` | ✅ | Unique check excluding self |
-| `php-updatePass.php` | POST | `/admin/settings/password` | `Admin\SettingsController::updatePassword` | ✅ | Min 8 + 1 capital + 1 number + 1 special |
+| `php-updatePass.php` | POST | `/admin/settings/password` | `Admin\SettingsController::updatePassword` | ✅ | Min 8 + 1 capital + 1 number + 1 special, uses ChangePasswordRequest |
 
 ### 2.3 Auth Implementation Notes
 
@@ -117,18 +114,22 @@ app/Http/Controllers/
 - ✅ Old `$_SESSION['admin_email']` replaced with `Auth::user()`
 - ✅ `AdminMiddleware` created — registered as `admin` alias in `bootstrap/app.php`
 - ❌ `admin@admin` special user logic (hide "Reset" buttons) — frontend only, Phase 3
-- ✅ Registration copies defaults from admin ID 1 via `RegisterController::copyDefaults()`
+- ✅ Registration copies defaults from admin ID 1 via `app/Actions/CopyDefaults.php`
 - ✅ Church code 9-char, case-sensitive, `BINARY` comparison in `validateChurchCode()`
+- ✅ Password strength: min 8 chars, 1 uppercase, 1 number, 1 special (server-side + client-side validation)
+- ✅ Form Request classes created: `LoginRequest`, `RegisterRequest`, `CheckEmailRequest`, `SendVerificationRequest`, `ChangePasswordRequest`
 
-### 2.4 Service Classes to Create
+### 2.4 Service / Action Classes
 
 ```
-app/Services/
+app/Actions/
+└── CopyDefaults.php        # ✅ Extracted from RegisterController — copies default records from admin ID 1 to new user
+
+app/Services/ (pending)
 ├── AssessmentService.php       # ❌ Business logic for assessment phases — Phase 2
 ├── MinistryMatchingService.php # ❌ Rule-based filter for ministry matching — Phase 2
 ├── OpenAIService.php           # ❌ Server-side GPT-4o-mini integration — Phase 4
-├── PDFExportService.php        # ❌ Report PDF generation — Phase 3
-└── DefaultCopyService.php      # 🔧 Moved into RegisterController::copyDefaults() — already done inline
+└── PDFExportService.php        # ❌ Report PDF generation — Phase 3
 ```
 
 **Note:** Email sending is handled directly via Laravel Mailables (`app/Mail/`) — no separate EmailService needed.
@@ -144,15 +145,6 @@ app/Services/
 - Old code used `gpt-4o-mini` model — keep same model
 - Prompt must generate a personalized ministry profile in English or Tagalog based on user's language
 - Store API key in `config/services.php`
-
-**Key details for `DefaultCopyService.php`:**
-- On new admin registration, copy all records from `user_id = 1` to the new user:
-  - `demographic_restrictions` (29 records)
-  - `skill_restrictions` (29 records)  
-  - `skill_questions` (40 records)
-  - `interest_and_passion_questions` (30 records)
-  - `behavioral_questions` (145 records)
-- Use `replicate()` or raw `insert()` for performance
 
 ### 2.5 Email Integration (✅ Complete)
 
@@ -180,7 +172,7 @@ app/Services/
 
 ---
 
-## 3. Frontend Implementation (🔧 In Progress)
+## 3. Frontend Implementation (✅ Complete)
 
 ### 3.1 Pages Built
 
@@ -188,15 +180,15 @@ app/Services/
 |------|-------|----------|--------|-------|
 | Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
 | Assessment | `/assessment` | `assessment.html` | ❌ | Phase 2 |
-| Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. All calls use `Accept: application/json`. |
-| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Refactored to `@extends('_layouts.admin')`. Stats cards + sidebar with Tabler icons. Logout moved to sidebar. |
-| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
-| Admin Questions | `/admin/questions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
-| Admin Settings | `/admin/settings` | `adminPanel.html` | ✅ | Church name save + church code copy + change password modal (custom overlay). Password rules: min 8 chars, 1 capital, 1 number, 1 special. Inline validation errors + Livewire toast. |
+| Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. JS extracted to `resources/js/admin-login.js`. Password strength validation client-side. |
+| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Full implementation with 7 Chart.js charts, filters (search, date, demographic, skills, ministries), and report table. Data endpoint: `/admin/dashboard/data`. JS: `resources/js/admin-dashboard.js`. |
+| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ✅ | Top nav with 2 tabs (Demographics, Skills). Full CRUD with save/reset. |
+| Admin Questions | `/admin/questions` | `adminPanel.html` | ✅ | 3 tab pages (Skill, Interest & Passion, Behavioral). Inline editable cells. Save/reset with confirmation modal. |
+| Admin Settings | `/admin/settings` | `adminPanel.html` | ✅ | Church name save + church code copy + change password modal (custom overlay). Password rules: min 8 chars, 1 capital, 1 number, 1 special. Uses ChangePasswordRequest. |
 | Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
 | Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
-### 3.2 Assessment Wizard (Highest Complexity)
+### 3.2 Assessment Wizard (Highest Complexity — Phase 2)
 
 The assessment is a **5-phase wizard** with the following flow:
 
@@ -238,18 +230,18 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 
 ### 3.3 Admin Layout & Sidebar (✅ Complete)
 
-- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with sidebar + content area + mobile hamburger + overlay
-- ✅ **Collapsible side nav** (`_partials/adminSide/sideNav.blade.php`) — fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only)
+- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with `<x-admin-sidebar />` + `<x-admin-top-nav />` + mobile hamburger + overlay. Sidebar JS extracted to `resources/js/admin.js` (loaded via Vite).
+- ✅ **Sidebar component** (`components/admin-sidebar.blade.php`) — class-backed `<x-admin-sidebar />` component. Fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only).
   - Nav links: Dashboard, Restriction Editor, Question Editor, Settings (all using route names)
-  - Logout at bottom with POST form
+  - Logout confirmation modal (glassmorphism, asks "Are you sure?")
   - Active link highlighted with purple left border
   - Uses **Tabler icons** (`@tabler/icons-webfont`) instead of image files
   - Desktop: toggle chevron button. Mobile: hamburger + overlay.
-- ✅ **Login page made standalone** — no sidebar, no admin wrapper (was extending admin layout)
-- ✅ **Top nav** (`_partials/adminSide/topNav.blade.php`) — sticky top bar with page title via `@yield('pageTitle')`. Hamburger visible on mobile inside the top nav. Each admin view sets `@section('pageTitle', '...')`.
+- ✅ **Top nav component** (`components/admin-top-nav.blade.php`) — class-backed `<x-admin-top-nav />` component. Sticky top bar with page title via `@yield('pageTitle')`. Hamburger visible on mobile.
+- ✅ **Login page made standalone** — no sidebar, no admin wrapper
 - ✅ **Admin layout structure** updated: `.adminPage` → `.adminSidebar` + `.adminRight` (`.adminTopNav` + `.adminContent`)
 
-### 3.4 Admin Dashboard (High Complexity)
+### 3.4 Admin Dashboard (✅ Complete)
 
 **Components:**
 1. **Charts (Chart.js + chartjs-plugin-datalabels):**
@@ -266,16 +258,25 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
    - Demographics (gender, age, marital, baptized, faith)
    - Skills (8 checkboxes)
    - Ministries (29 checkboxes)
-3. **Report table** — sortable, searchable
-4. **PDF export** — use jsPDF + jspdf-autotable (or Laravel's barryvdh/laravel-dompdf)
+3. **Report table** — scrollable with sticky headers, auto-renders on filter change
+4. **Data endpoint** — `GET /admin/dashboard/data` with all filter params
 
-### 3.5 Admin Restrictions/Questions Editor
+### 3.5 Admin Restrictions/Questions Editor (✅ Complete)
 
 - **Contenteditable tables** — inline editing without input fields
 - **Demographics tab:** Radio buttons for gender/marital/faith, number inputs for age range, toggle for baptized
 - **Skills tab:** Switch toggles for Required/Not Required per skill
 - **Questions tabs (3):** Skill Questions, Interest & Passion, Behavioral — each with EN + TL editable cells
-- **Save/Reset buttons:** Save sends all data to server; Reset restores from admin ID 1 defaults
+- **Save/Reset buttons:** Save sends all data to server; Reset restores from admin ID 1 defaults with confirmation modal
+
+### 3.6 Coding Convention Compliance (✅ Applied)
+
+- **Blade components** — `@include('_partials.adminSide.sideNav')` → `<x-admin-sidebar />` and `<x-admin-top-nav />` (class-backed)
+- **Form Requests** — All auth actions use dedicated Form Request classes in `app/Http/Requests/Auth/`
+- **Action classes** — `app/Actions/CopyDefaults.php` extracted from `RegisterController`
+- **Inline JS extracted** — Admin sidebar to `admin.js`, login logic to `admin-login.js`, dashboard to `admin-dashboard.js`
+- **Tabler Icons** — All inline SVGs replaced with `ti ti-*` classes from `@tabler/icons-webfont`
+- **Password rules** — Min 8, uppercase, number, special (server + client side)
 
 ### 3.7 Frontend Assets
 
@@ -319,28 +320,42 @@ Route::prefix('admin')->group(function () {
     POST /login                           Auth\LoginController@login
     POST /check-email                     Auth\RegisterController@checkEmail
     POST /send-verification               Auth\RegisterController@sendVerification
-    POST /verify-code                     Auth\RegisterController@verifyCode          ← server-side code check
+    POST /verify-code                     Auth\RegisterController@verifyCode
     POST /register                        Auth\RegisterController@register
     POST /validate-church-code            Auth\RegisterController@validateChurchCode
     POST /forgot-password                 Auth\ForgotPasswordController@sendTempPassword
     GET  /session-check                   Auth\LoginController@checkSession
 });
 
-// Admin panel — middleware('admin') (✅ 9 routes)
+// Admin panel — middleware('admin') (✅ 15 routes)
 Route::prefix('admin')->middleware('admin')->group(function () {
-    GET  /dashboard                       view('admin.dashboard')                    admin.dashboard
-    GET  /restrictions                    view('admin.restrictions')                 admin.restrictions
-    GET  /questions                       view('admin.questions')                    admin.questions
-    GET  /settings                        Admin\SettingsController@index             admin.settings
-    POST /settings/church-name            Admin\SettingsController@updateChurchName  admin.settings.church-name
-    POST /settings/password               Admin\SettingsController@updatePassword    admin.settings.password
-    POST /logout                          Auth\LogoutController@logout               admin.logout
+    GET  /dashboard                        Admin\DashboardController@index            admin.dashboard
+    GET  /dashboard/data                   Admin\DashboardController@getData          admin.dashboard.data
+    GET  /restrictions                     (redirect)                                 admin.restrictions
+    GET  /restrictions/demographics        Admin\RestrictionController@demographics   admin.restrictions.demographics
+    POST /restrictions/demographics/update Admin\RestrictionController@updateDemographics  admin.restrictions.demographics.update
+    POST /restrictions/demographics/reset  Admin\RestrictionController@resetDemographics   admin.restrictions.demographics.reset
+    GET  /restrictions/skills              Admin\RestrictionController@skills         admin.restrictions.skills
+    POST /restrictions/skills/update       Admin\RestrictionController@updateSkills       admin.restrictions.skills.update
+    POST /restrictions/skills/reset        Admin\RestrictionController@resetSkills        admin.restrictions.skills.reset
+    GET  /questions                        (redirect)                                 admin.questions
+    GET  /questions/skill                  Admin\QuestionController@skill             admin.questions.skill
+    POST /questions/skill/update           Admin\QuestionController@updateSkill       admin.questions.skill.update
+    POST /questions/skill/reset            Admin\QuestionController@resetSkill        admin.questions.skill.reset
+    GET  /questions/interest               Admin\QuestionController@interest          admin.questions.interest
+    POST /questions/interest/update        Admin\QuestionController@updateInterest    admin.questions.interest.update
+    POST /questions/interest/reset         Admin\QuestionController@resetInterest     admin.questions.interest.reset
+    GET  /questions/behavioral             Admin\QuestionController@behavioral        admin.questions.behavioral
+    POST /questions/behavioral/update      Admin\QuestionController@updateBehavioral  admin.questions.behavioral.update
+    POST /questions/behavioral/reset       Admin\QuestionController@resetBehavioral   admin.questions.behavioral.reset
+    GET  /settings                         Admin\SettingsController@index             admin.settings
+    POST /settings/church-name             Admin\SettingsController@updateChurchName  admin.settings.church-name
+    POST /settings/password                Admin\SettingsController@updatePassword    admin.settings.password
+    POST /logout                           Auth\LogoutController@logout               admin.logout
 });
 
-// ❌ Still needed (Phases 2-4):
+// ❌ Still needed (Phase 2):
 // api/assessment-data, api/user-reports, api/generate-profile
-// admin/panel-data, admin/reports, admin/reports/export
-// admin/restrictions (POST), admin/restrictions/reset
 ```
 
 ---
@@ -374,7 +389,7 @@ composer require laravel/socialite         # ❌ Maybe later
 
 ### 5.4 NPM packages
 ```bash
-npm install chart.js chartjs-plugin-datalabels  # ❌ Phase 3 — Dashboard charts
+npm install chart.js chartjs-plugin-datalabels  # ✅ Installed — Dashboard charts
 npm install jspdf jspdf-autotable               # ❌ Phase 3 — PDF export (or use server-side DOMPDF)
 npm install axios                                # ✅ Already in package.json
 npm install @tabler/icons-webfont                # ✅ Installed — replaced all icon images with Tabler icons
@@ -393,43 +408,30 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 6. ✅ FrontendController + public routes (landing, ministries, privacy-policy)
 7. ✅ Landing page modals (user type, church code, language, bible verse) — all buttons wired
 
-### Phase 2: Core Assessment
-5. ❌ AssessmentController (data endpoint)
-6. ❌ Ministry matching logic (MinistryMatchingService)
-7. ❌ Assessment wizard frontend (5 phases, localStorage, bilingual)
-8. ❌ Report creation + storage
+### Phase 2: Core Assessment (❌ Not started)
+8. ❌ AssessmentController (data endpoint)
+9. ❌ Ministry matching logic (MinistryMatchingService)
+10. ❌ Assessment wizard frontend (5 phases, localStorage, bilingual)
+11. ❌ Report creation + storage
 
-### Phase 3: Admin Panel
-9. ❌ Admin panel data loading
-10. ❌ Dashboard with Chart.js (filters, charts, table)
-11. ✅ Restriction editor (demographic + skills)
-    - ✅ Top nav with 2 tabs (Demographics, Skills) using `restriction-topNav.blade.php`
-    - ✅ Demographic restrictions table (gender radios, age number inputs, marital radios, baptized switch, faith radios)
-    - ✅ Skill restrictions table (8 toggle switches per ministry)
-    - ✅ Save all changes — collects all rows and sends bulk update via POST
-    - ✅ Reset to default — copies from admin template (user_id=1)
-    - ✅ Reset confirmation modal
-12. ✅ Question editor (3 question types)
-    - ✅ 3 tab pages created (Skill, Interest & Passion, Behavioral) with sub-routes and responsive layout
-    - ✅ Question data loaded from DB via QuestionController with eager-loaded relations
-    - ✅ Inline editable cells (contenteditable) for English and Tagalog
-    - ✅ Save all changes — collects all rows and sends bulk update via POST
-    - ✅ Reset to default — copies from admin template (user_id=1)
-    - ✅ Reset confirmation modal with description of what will be affected
-13. ✅ Settings page (church name, church code copy, change password with validation)
-14. ❌ PDF export
+### Phase 3: Admin Panel (✅ Complete)
+12. ✅ Dashboard with Chart.js (filters: search, date, demographics, skills, ministries; 7 charts: gender, age, faith, skills, ministry, baptized, marital; report table)
+13. ✅ Restriction editor (demographic + skills with save/reset)
+14. ✅ Question editor (3 question types with contenteditable tables + save/reset)
+15. ✅ Settings page (church name, church code copy, change password with validation)
+16. ❌ PDF export
 
 ### Phase 4: Enhancement
-15. ❌ OpenAI profile generation (server-side)
-16. ❌ Ministry info page (static content from old `ministry.html`)
-17. ❌ Privacy policy page (full content)
-18. ❌ Image assets copy (remaining images)
+17. ❌ OpenAI profile generation (server-side)
+18. ❌ Ministry info page (static content from old `ministry.html`)
+19. ❌ Privacy policy page (full content)
+20. ❌ Image assets copy (remaining images)
 
-### Phase 5: Polish
-19. ❌ Form Request validation
-20. ❌ Error handling + user feedback
-21. ❌ Session timeout handling
-22. ❌ Responsive design testing
+### Phase 5: Polish (✅ In Progress)
+21. ✅ Form Request validation — LoginRequest, RegisterRequest, CheckEmailRequest, SendVerificationRequest, ChangePasswordRequest
+22. ✅ Coding conventions applied — Blade components, Action classes, inline JS/CSS extracted, Tabler icons, naming conventions
+23. ❌ Session timeout handling
+24. ❌ Responsive design testing
 
 ---
 
@@ -462,3 +464,5 @@ See `perfit-old/perfit/` for complete source reference:
 8. **Gender/marital values:** 0 = "No Restriction", 1 = "Male/Single", 2 = "Female/Married"
 9. **Time in faith values:** 1 = "1+ Week", 2 = "6+ Months", 3 = "1+ Year", 4 = "2+ Years"
 10. **Ministry ID mapping:** Ministries are indexed 1-29 and must stay in the same order as seeded — foreign keys depend on this order
+11. **Password strength rules:** Min 8 characters, at least 1 uppercase letter, 1 number, and 1 special character — enforced both client-side (admin-login.js) and server-side (RegisterRequest, ChangePasswordRequest)
+12. **Vite entry points:** `admin.js` (sidebar toggle), `admin-login.js` (auth forms), `admin-dashboard.js` (Chart.js dashboard) — all registered in `vite.config.js`

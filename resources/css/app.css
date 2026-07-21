@@ -655,3 +655,14 @@ td.editable:focus {
     background: #f5f5f5 !important;
     color: #333 !important;
 }
+
+/* =========================================
+   Chart Containers
+   ========================================= */
+.chart-container {
+    border: 1px solid #f0e6ff;
+    border-radius: 12px;
+    padding: 16px;
+    background: #faf8ff;
+    position: relative;
+}
