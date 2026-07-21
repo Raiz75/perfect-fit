@@ -12,11 +12,11 @@ class InterestAndPassionQuestion extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function ministryCategory()
     {
-        $this->belongsTo(MinistryCategory::class);
+        return $this->belongsTo(MinistryCategory::class);
     }
 }

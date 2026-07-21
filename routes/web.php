@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -37,15 +38,15 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/questions', function () {
         return redirect()->route('admin.questions.skill');
     })->name('admin.questions');
-    Route::get('/questions/skill', function () {
-        return view('admin.questions.skill');
-    })->name('admin.questions.skill');
-    Route::get('/questions/interest', function () {
-        return view('admin.questions.interest');
-    })->name('admin.questions.interest');
-    Route::get('/questions/behavioral', function () {
-        return view('admin.questions.behavioral');
-    })->name('admin.questions.behavioral');
+    Route::get('/questions/skill', [QuestionController::class, 'skill'])->name('admin.questions.skill');
+    Route::post('/questions/skill/update', [QuestionController::class, 'updateSkill'])->name('admin.questions.skill.update');
+    Route::post('/questions/skill/reset', [QuestionController::class, 'resetSkill'])->name('admin.questions.skill.reset');
+    Route::get('/questions/interest', [QuestionController::class, 'interest'])->name('admin.questions.interest');
+    Route::post('/questions/interest/update', [QuestionController::class, 'updateInterest'])->name('admin.questions.interest.update');
+    Route::post('/questions/interest/reset', [QuestionController::class, 'resetInterest'])->name('admin.questions.interest.reset');
+    Route::get('/questions/behavioral', [QuestionController::class, 'behavioral'])->name('admin.questions.behavioral');
+    Route::post('/questions/behavioral/update', [QuestionController::class, 'updateBehavioral'])->name('admin.questions.behavioral.update');
+    Route::post('/questions/behavioral/reset', [QuestionController::class, 'resetBehavioral'])->name('admin.questions.behavioral.reset');
     Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
     Route::post('/settings/church-name', [SettingsController::class, 'updateChurchName'])->name('admin.settings.church-name');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.password');

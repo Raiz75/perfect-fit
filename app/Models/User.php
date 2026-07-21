@@ -51,26 +51,26 @@ class User extends Authenticatable
 
     public function demographicRestrictions()
     {
-        $this->hasMany(DemographicRestriction::class);
+        return $this->hasMany(DemographicRestriction::class);
     }
 
     public function skillRestrictions()
     {
-        $this->hasMany(SkillRestriction::class);
+        return $this->hasMany(SkillRestriction::class);
     }
 
     public function skillQuestions()
     {
-        $this->hasMany(SkillQuestion::class);
+        return $this->hasMany(SkillQuestion::class);
     }
 
     public function interestAndPassionQuestions()
     {
-        $this->hasMany(InterestAndPassionQuestion::class);
+        return $this->hasMany(InterestAndPassionQuestion::class);
     }
 
     public function behavioralQuestions()
     {
-        $this->hasMany(BehavioralQuestion::class);
+        return $this->hasMany(BehavioralQuestion::class);
     }
 }

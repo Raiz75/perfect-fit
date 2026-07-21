@@ -10,11 +10,11 @@ class MinistryCategory extends Model
 
     public function ministries()
     {
-        $this->hasMany(Ministry::class);
+        return $this->hasMany(Ministry::class);
     }
 
     public function interestAndPassionQuestions()
     {
-        $this->hasMany(InterestAndPassionQuestion::class);
+        return $this->hasMany(InterestAndPassionQuestion::class);
     }
 }

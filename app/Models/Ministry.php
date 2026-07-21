@@ -10,21 +10,21 @@ class Ministry extends Model
 
     public function category()
     {
-        $this->belongsTo(MinistryCategory::class, 'ministry_category_id');
+        return $this->belongsTo(MinistryCategory::class, 'ministry_category_id');
     }
 
     public function demographicRestrictions()
     {
-        $this->hasMany(DemographicRestriction::class);
+        return $this->hasMany(DemographicRestriction::class);
     }
 
     public function skillRestrictions()
     {
-        $this->hasMany(SkillRestriction::class);
+        return $this->hasMany(SkillRestriction::class);
     }
 
     public function behavioralQuestions()
     {
-        $this->hasMany(BehavioralQuestion::class);
+        return $this->hasMany(BehavioralQuestion::class);
     }
 }

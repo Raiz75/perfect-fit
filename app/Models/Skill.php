@@ -10,6 +10,6 @@ class Skill extends Model
 
     public function skillQuestions()
     {
-        $this->hasMany(SkillQuestion::class);
+        return $this->hasMany(SkillQuestion::class);
     }
 }

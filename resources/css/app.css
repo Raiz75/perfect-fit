@@ -382,6 +382,104 @@ html {
 }
 
 /* =========================================
+   Modal Overlay (shared component)
+   ========================================= */
+.modalOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1050;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+}
+
+.modalBox {
+    background: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: modalIn 0.2s ease-out;
+}
+
+@keyframes modalIn {
+    from { transform: scale(0.95) translateY(10px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modalBoxHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 0;
+}
+
+.modalCloseBtn {
+    background: none;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    color: #666;
+    padding: 0 4px;
+}
+
+.modalCloseBtn:hover { color: #000; }
+
+.modalBoxBody {
+    padding: 20px 24px;
+}
+
+.modalBoxBody p {
+    margin: 0;
+    color: #555;
+    line-height: 1.6;
+}
+
+.modalBoxBody ul {
+    margin: 12px 0 0;
+    padding-left: 20px;
+    color: #555;
+}
+
+.modalBoxBody ul li {
+    margin-bottom: 4px;
+}
+
+.modalBoxFooter {
+    display: flex;
+    justify-content: end;
+    gap: 8px;
+    padding: 0 24px 20px;
+}
+
+#resetModalOverlay .modalBox {
+    max-width: 480px;
+}
+
+/* =========================================
+   Editable Table Cells
+   ========================================= */
+td.editable {
+    cursor: text;
+    background-color: #fff;
+    transition: background-color 0.15s, box-shadow 0.15s;
+}
+
+td.editable:hover {
+    background-color: #f8f5ff;
+}
+
+td.editable:focus {
+    outline: none;
+    background-color: #fff;
+    box-shadow: inset 0 0 0 2px var(--primary);
+    border-radius: 4px;
+}
+
+/* =========================================
    Mobile Responsive
    ========================================= */
 @media (max-width: 768px) {

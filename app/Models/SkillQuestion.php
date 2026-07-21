@@ -12,11 +12,11 @@ class SkillQuestion extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function skill()
     {
-        $this->belongsTo(Skill::class);
+        return $this->belongsTo(Skill::class);
     }
 }

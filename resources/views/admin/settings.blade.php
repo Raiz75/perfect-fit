@@ -96,56 +96,6 @@
 </div>
 @endsection
 
-@push('head')
-<style>
-.modalOverlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 1050;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(2px);
-}
-.modalBox {
-    background: #fff;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 440px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    animation: modalIn 0.2s ease-out;
-}
-@keyframes modalIn {
-    from { transform: scale(0.95) translateY(10px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
-}
-.modalBoxHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px 0;
-}
-.modalCloseBtn {
-    background: none;
-    border: none;
-    font-size: 28px;
-    cursor: pointer;
-    line-height: 1;
-    color: #666;
-    padding: 0 4px;
-}
-.modalCloseBtn:hover { color: #000; }
-.modalBoxBody { padding: 20px 24px; }
-.modalBoxFooter {
-    display: flex;
-    justify-content: end;
-    gap: 8px;
-    padding: 0 24px 20px;
-}
-</style>
-@endpush
-
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
