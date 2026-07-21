@@ -1,18 +1,26 @@
-@extends('_layouts.admin')
-
-@section('title', 'PERFIT - Admin Login')
-
-@section('admin-nav') @endsection
-
-@push('head')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>PERFIT - Admin Login</title>
     <link rel="icon" type="image/png" href="{{ asset('images/icn-logo.png') }}">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
     <style>
         :root { --purple: #8c52ff; --purple-dark: #6a3dd9; --purple-glow: rgba(140, 82, 255, 0.35); }
 
+        * { margin: 0; padding: 0; }
+        body { font-family: system-ui, -apple-system, sans-serif; }
+
         .bg-animated {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #faf8ff 0%, #f0e6ff 50%, #e8d5ff 100%);
             background-size: 400% 400%;
             animation: gradientShift 12s ease infinite;
+            padding: 20px; position: relative; overflow: hidden;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -67,42 +75,35 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(140, 82, 255, 0.2);
             border-radius: 28px;
-            box-shadow:
-                0 20px 60px rgba(140, 82, 255, 0.12),
-                0 8px 20px rgba(140, 82, 255, 0.06),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 60px rgba(140, 82, 255, 0.12), 0 8px 20px rgba(140, 82, 255, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             overflow: hidden;
-            animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        @keyframes cardEntrance {
-            0% { opacity: 0; transform: translateY(40px) scale(0.96); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            max-width: 460px; width: 100%;
         }
 
         .forms-wrapper { width: 200%; display: flex; transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1); }
         #container.show-signup .forms-wrapper { transform: translateX(-50%); }
         .form-section { width: 50%; }
 
-        .logo-entrance {
-            animation: logoFade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+        .pill-indicator {
+            display: inline-flex;
+            background: rgba(140, 82, 255, 0.1);
+            border-radius: 50rem;
+            padding: 4px;
+            margin-bottom: 1.5rem;
         }
-        @keyframes logoFade {
-            0% { opacity: 0; transform: translateY(-20px) scale(0.9); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+        .pill-indicator button {
+            border: none;
+            background: transparent;
+            padding: 8px 24px;
+            border-radius: 50rem;
+            font-weight: 600;
+            font-size: 13px;
+            color: #999;
         }
-
-        .form-section > * {
-            opacity: 0;
-            animation: formFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-        .form-section > *:nth-child(1) { animation-delay: 0.3s; }
-        .form-section > *:nth-child(2) { animation-delay: 0.42s; }
-        .form-section > *:nth-child(3) { animation-delay: 0.54s; }
-        .form-section > *:nth-child(4) { animation-delay: 0.66s; }
-        .form-section > *:nth-child(5) { animation-delay: 0.78s; }
-        @keyframes formFadeIn {
-            0% { opacity: 0; transform: translateY(16px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .pill-indicator button.active {
+            background: var(--purple);
+            color: #fff;
+            box-shadow: 0 4px 12px var(--purple-glow);
         }
 
         .input-group-custom {
@@ -126,26 +127,21 @@
             width: 100%;
             padding: 14px 18px;
             font-size: 14px;
-            transition: background 0.3s;
         }
-        .input-group-custom input::placeholder {
-            color: #b0a0c8;
-            transition: color 0.3s;
-        }
-        .input-group-custom:focus-within input::placeholder {
-            color: #c0b0d8;
-        }
+        .input-group-custom input::placeholder { color: #b0a0c8; }
         .eye-icon {
             margin: 10px; cursor: pointer; flex-shrink: 0;
             opacity: 0.5; color: var(--purple);
-            transition: opacity 0.2s;
-            display: flex;
-            align-items: center;
+            display: flex; align-items: center;
         }
         .eye-icon:hover { opacity: 1; }
 
         .toggle-link {
             position: relative;
+            color: var(--purple); cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
             transition: color 0.2s;
         }
         .toggle-link::after {
@@ -160,38 +156,6 @@
         }
         .toggle-link:hover::after { width: 100%; }
 
-        .pill-indicator {
-            display: inline-flex;
-            background: rgba(140, 82, 255, 0.1);
-            border-radius: 50rem;
-            padding: 4px;
-            margin-bottom: 1.5rem;
-        }
-        .pill-indicator button {
-            border: none;
-            background: transparent;
-            padding: 8px 24px;
-            border-radius: 50rem;
-            font-weight: 600;
-            font-size: 13px;
-            color: #999;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .pill-indicator button.active {
-            background: var(--purple);
-            color: #fff;
-            box-shadow: 0 4px 12px var(--purple-glow);
-        }
-
-        .go-home-btn {
-            transition: all 0.25s !important;
-        }
-        .go-home-btn:hover {
-            background: #f0e6ff !important;
-            letter-spacing: 0.5px;
-        }
-
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.4);
@@ -199,13 +163,8 @@
             -webkit-backdrop-filter: blur(8px);
             z-index: 100;
             justify-content: center; align-items: center;
-            animation: overlayIn 0.3s ease;
         }
         .modal-overlay.show { display: flex; }
-        @keyframes overlayIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
         .auth-modal-box {
             background: rgba(255,255,255,0.9);
             backdrop-filter: blur(12px);
@@ -213,31 +172,23 @@
             padding: 2.5rem; border-radius: 24px; text-align: center;
             width: 90%; max-width: 360px;
             box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-            animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes modalPop {
-            0% { opacity: 0; transform: scale(0.9) translateY(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        @media (max-width: 480px) {
-            .form-section { padding: 24px 20px !important; }
         }
     </style>
-@endpush
+</head>
+<body>
+    <livewire:toast-message />
 
-@section('content')
-    <div class="min-vh-100 d-flex align-items-center justify-content-center bg-animated" style="padding: 20px; position: relative; overflow: hidden;">
+    <div class="bg-animated">
         <div class="float-shape"></div>
         <div class="float-shape"></div>
         <div class="float-shape"></div>
         <div class="float-shape"></div>
 
-        <div class="text-center logo-entrance" style="position: absolute; top: 5%; z-index: 2;">
+        <div class="text-center" style="position: absolute; top: 5%; z-index: 2;">
             <img src="{{ asset('images/logo.png') }}" alt="PERFIT" style="height: 48px; margin-bottom: 4px;">
         </div>
 
-        <div class="glass-card" style="max-width: 460px; width: 100%;" id="container">
+        <div class="glass-card" id="container">
             <div class="forms-wrapper">
                 <div class="form-section p-4 p-md-5 d-flex flex-column align-items-center">
                     <div class="pill-indicator">
@@ -250,16 +201,18 @@
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signinPass" placeholder="Password" required>
-                            <span class="eye-icon" onclick="togglePassword('signinPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
+                            <span class="eye-icon" onclick="togglePassword('signinPass', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                            </span>
                         </div>
                         <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign In</button>
                     </form>
                     <div class="w-100 text-center mt-4">
-                        <a id="forgotPasswordLink" class="text-decoration-none fw-semibold toggle-link" style="color: var(--purple); cursor: pointer; font-size: 13px;">Forgot Password?</a>
+                        <a id="forgotPasswordLink" class="toggle-link">Forgot Password?</a>
                     </div>
                     <div class="mt-4 text-center" style="color: #a0a0b8; font-size: 13px;">
                         Don't have an account?
-                        <a id="showSignup" class="fw-semibold text-decoration-none toggle-link" style="color: var(--purple); cursor: pointer;">Sign Up</a>
+                        <a id="showSignup" class="toggle-link">Sign Up</a>
                     </div>
                 </div>
 
@@ -274,21 +227,25 @@
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signupPass" placeholder="Password" required>
-                            <span class="eye-icon" onclick="togglePassword('signupPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
+                            <span class="eye-icon" onclick="togglePassword('signupPass', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                            </span>
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" id="confirmPass" placeholder="Confirm Password" required>
-                            <span class="eye-icon" onclick="togglePassword('confirmPass', this)"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg></span>
+                            <span class="eye-icon" onclick="togglePassword('confirmPass', this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                            </span>
                         </div>
                         <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign Up</button>
                     </form>
                     <div class="mt-4 text-center" style="color: #a0a0b8; font-size: 13px;">
                         Already have an account?
-                        <a id="showSignin" class="fw-semibold text-decoration-none toggle-link" style="color: var(--purple); cursor: pointer;">Sign In</a>
+                        <a id="showSignin" class="toggle-link">Sign In</a>
                     </div>
                 </div>
             </div>
-            <button class="w-100 border-0 py-3 fw-semibold go-home-btn" onclick="goHome()" style="background: rgba(250,248,255,0.6); color: var(--purple); cursor: pointer; font-size: 13px; border-top: 1px solid rgba(140,82,255,0.1);">Back to Home</button>
+            <button class="w-100 border-0 py-3 fw-semibold" onclick="window.location.href='/'" style="background: rgba(250,248,255,0.6); color: var(--purple); cursor: pointer; font-size: 13px; border-top: 1px solid rgba(140,82,255,0.1);">Back to Home</button>
         </div>
 
         <div class="modal-overlay" id="verifyPopup">
@@ -315,9 +272,7 @@
             </div>
         </div>
     </div>
-@endsection
 
-@push('scripts')
     <script>
         const container = document.getElementById('container');
         const signinForm = document.getElementById('signinForm');
@@ -330,19 +285,10 @@
 
         function togglePassword(id, el) {
             const input = document.getElementById(id);
-            const open = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>';
-            const closed = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-4.333 0 -8.333 -2.333 -11 -7c1.272 -2.226 2.924 -4.08 4.892 -5.544m4.108 -1.456c5.333 0 9.333 2.333 12 7c-.859 1.504 -1.874 2.887 -3.058 4.117"/><path d="M3 3l18 18"/></svg>';
-            if (input.type === 'password') {
-                input.type = 'text';
-                el.innerHTML = closed;
-            } else {
-                input.type = 'password';
-                el.innerHTML = open;
-            }
-        }
-
-        function goHome() {
-            window.location.href = '/';
+            const open = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>';
+            const closed = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-4.333 0 -8.333 -2.333 -11 -7c1.272 -2.226 2.924 -4.08 4.892 -5.544m4.108 -1.456c5.333 0 9.333 2.333 12 7c-.859 1.504 -1.874 2.887 -3.058 4.117"/><path d="M3 3l18 18"/></svg>';
+            if (input.type === 'password') { input.type = 'text'; el.innerHTML = closed; }
+            else { input.type = 'password'; el.innerHTML = open; }
         }
 
         document.getElementById('showSignup').addEventListener('click', () => container.classList.add('show-signup'));
@@ -377,8 +323,7 @@
             const confirm = document.getElementById('confirmPass').value.trim();
 
             fetch('/admin/check-email', {
-                method: 'POST',
-                headers: jsonHeaders,
+                method: 'POST', headers: jsonHeaders,
                 body: JSON.stringify({ email })
             })
             .then(res => res.json())
@@ -387,19 +332,12 @@
                     showMessage('Email already exists. Please use another one.', 'error');
                     return;
                 }
-                if (pass !== confirm) {
-                    showMessage('Passwords do not match!', 'error');
-                    return;
-                }
-                if (pass.length < 6) {
-                    showMessage('Password must be at least 6 characters.', 'error');
-                    return;
-                }
+                if (pass !== confirm) { showMessage('Passwords do not match!', 'error'); return; }
+                if (pass.length < 6) { showMessage('Password must be at least 6 characters.', 'error'); return; }
                 showMessage('Processing verification code.', 'success');
                 setTimeout(() => {
                     fetch('/admin/send-verification', {
-                        method: 'POST',
-                        headers: jsonHeaders,
+                        method: 'POST', headers: jsonHeaders,
                         body: JSON.stringify({ email })
                     })
                     .then(res => res.json())
@@ -408,9 +346,7 @@
                             window.tempSignupData = { email, password: pass };
                             document.getElementById('verifyPopup').classList.add('show');
                             showMessage('Verification code sent to your email.', 'success');
-                        } else {
-                            showMessage(mailData.message, 'error');
-                        }
+                        } else { showMessage(mailData.message, 'error'); }
                     })
                     .catch(() => showMessage('Failed to send verification email.', 'error'));
                 }, 1500);
@@ -421,8 +357,7 @@
         function checkVerificationCode() {
             const code = document.getElementById('verifyCode').value.trim();
             fetch('/admin/verify-code', {
-                method: 'POST',
-                headers: jsonHeaders,
+                method: 'POST', headers: jsonHeaders,
                 body: JSON.stringify({ code })
             })
             .then(res => res.json())
@@ -443,14 +378,10 @@
                             signupForm.reset();
                             document.getElementById('verifyPopup').classList.remove('show');
                             document.getElementById('showSignin').click();
-                        } else {
-                            showMessage(data.message, 'error');
-                        }
+                        } else { showMessage(data.message, 'error'); }
                     })
                     .catch(() => showMessage('Error saving account.', 'error'));
-                } else {
-                    showMessage(verifyData.message, 'error');
-                }
+                } else { showMessage(verifyData.message, 'error'); }
             })
             .catch(() => showMessage('Error verifying code.', 'error'));
         }
@@ -471,15 +402,11 @@
 
         function sendTemporaryPassword() {
             const email = document.getElementById('resetEmail').value.trim();
-            if (!email) {
-                showMessage('Please enter your email.', 'error');
-                return;
-            }
+            if (!email) { showMessage('Please enter your email.', 'error'); return; }
             showMessage('Processing temporary password.', 'success');
             setTimeout(() => {
                 fetch('/admin/forgot-password', {
-                    method: 'POST',
-                    headers: jsonHeaders,
+                    method: 'POST', headers: jsonHeaders,
                     body: JSON.stringify({ email })
                 })
                 .then(res => res.json())
@@ -487,12 +414,13 @@
                     if (data.success) {
                         showMessage('Temporary password sent to your email!', 'success');
                         closeForgotPopup();
-                    } else {
-                        showMessage(data.message, 'error');
-                    }
+                    } else { showMessage(data.message, 'error'); }
                 })
                 .catch(() => showMessage('Error connecting to server.', 'error'));
             }, 1500);
         }
     </script>
-@endpush
+
+    @livewireScripts
+</body>
+</html>

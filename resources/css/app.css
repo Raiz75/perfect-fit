@@ -1,4 +1,5 @@
 @import "@tabler/core/dist/css/tabler.min.css";
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 
 * {
     margin: 0;
@@ -8,13 +9,13 @@ html {
     margin: 0 !important;
 }
 :root {
-    /* Colors */
     --base: #ffffff;
     --primary: #8c52ff;
     --secondary: #9c6dfa;
     --muted: #666;
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 70px;
 }
-
 
 .primary-btn-perfit {
     border-radius: 50rem;
@@ -35,4 +36,290 @@ html {
 }
 .primary-btn-perfit:active {
     transform: translateY(0) scale(0.97);
+}
+
+/* =========================================
+   Admin Page Layout
+   ========================================= */
+.adminPage {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* =========================================
+   Sidebar
+   ========================================= */
+.adminSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: var(--base);
+    border-right: 1px solid var(--primary);
+    z-index: 1040;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+/* Collapsed state */
+.adminSidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+/* =========================================
+   Sidebar Header (Logo)
+   ========================================= */
+.sidebarHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 16px;
+    min-height: 80px;
+    flex-shrink: 0;
+}
+
+.sidebarLogo {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.sidebarBrandText {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    white-space: nowrap;
+    transition: opacity 0.2s ease;
+}
+
+.adminSidebar.collapsed .sidebarBrandText {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =========================================
+   Navigation
+   ========================================= */
+.sidebarNav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    overflow-y: auto;
+}
+
+.sidebarLink {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border: none;
+    border-left: 6px solid transparent;
+    background: transparent;
+    color: #888;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 0 8px 8px 0;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    width: 100%;
+    text-align: left;
+}
+
+.sidebarLink:hover {
+    color: var(--primary);
+    background: #f5eeff;
+    border-left-color: var(--primary);
+    text-decoration: none !important;
+}
+
+.sidebarLink.active {
+    color: var(--primary);
+    background: #f5eeff;
+    border-left-color: var(--primary);
+}
+
+/* Logout link at bottom */
+.logoutLink {
+    border-left-color: transparent !important;
+}
+.logoutLink:hover {
+    border-left-color: #dc3545 !important;
+    color: #dc3545 !important;
+    background: #fff0f0 !important;
+}
+
+.sidebarIcon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.sidebarLink:hover .sidebarIcon {
+    transform: scale(1.15);
+}
+
+.adminSidebar.collapsed .sidebarLink {
+    gap: 0;
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.adminSidebar.collapsed .sidebarLink .sidebarIcon {
+    margin: 0 auto;
+}
+
+.sidebarLabel {
+    transition: width 0.3s ease, opacity 0.2s ease;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.adminSidebar.collapsed .sidebarLabel {
+    width: 0 !important;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================================
+   Sidebar Footer
+   ========================================= */
+.sidebarFooter {
+    padding: 8px 12px;
+    flex-shrink: 0;
+    border-top: 1px solid #eee;
+}
+
+/* =========================================
+   Toggle Button
+   ========================================= */
+.sidebarToggle {
+    position: absolute;
+    top: 50%;
+    right: -14px;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    background: var(--base);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    transition: transform 0.3s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.adminSidebar.collapsed .sidebarToggle {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.sidebarToggle:hover {
+    background: var(--primary);
+    color: var(--base);
+}
+
+/* =========================================
+   Main Content Area
+   ========================================= */
+.adminContent {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: 30px;
+    min-height: 100vh;
+    background: #f8f9fa;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.adminSidebar.collapsed + .adminContent {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* =========================================
+   Mobile Responsive
+   ========================================= */
+@media (max-width: 768px) {
+    .adminSidebar {
+        width: var(--sidebar-width) !important;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .adminSidebar.mobileOpen {
+        transform: translateX(0);
+    }
+
+    .adminSidebar.collapsed {
+        width: var(--sidebar-width) !important;
+    }
+
+    .adminSidebar.collapsed .sidebarLabel,
+    .adminSidebar.collapsed .sidebarBrandText {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .adminContent {
+        margin-left: 0 !important;
+    }
+
+    .sidebarToggle {
+        display: none;
+    }
+
+    /* Mobile hamburger */
+    .mobileHamburger {
+        display: flex !important;
+    }
+}
+
+.mobileHamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 28px;
+    height: 20px;
+    cursor: pointer;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1050;
+    background: var(--base);
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.mobileHamburger div {
+    height: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: 0.3s;
+}
+
+/* Overlay when sidebar is open on mobile */
+.sidebarOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1035;
+}
+
+.sidebarOverlay.show {
+    display: block;
 }

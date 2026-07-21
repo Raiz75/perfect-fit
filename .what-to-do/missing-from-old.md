@@ -187,11 +187,11 @@ app/Services/
 |------|-------|----------|--------|-------|
 | Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
 | Assessment | `/assessment` | `assessment.html` | ❌ | Phase 2 |
-| Admin Login | `/admin/login` | `admin.html` | ✅ | Login/signup sliding forms + verify popup + forgot password modal. All calls use `Accept: application/json`. |
-| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | 🔧 | Placeholder with stats cards + logout button (Phase 3 for full panel) |
-| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ❌ | Phase 3 |
-| Admin Questions | `/admin/questions` | `adminPanel.html` | ❌ | Phase 3 |
-| Admin Settings | `/admin/settings` | `adminPanel.html` | ❌ | Phase 3 |
+| Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. All calls use `Accept: application/json`. |
+| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Refactored to `@extends('_layouts.admin')`. Stats cards + sidebar with Tabler icons. Logout moved to sidebar. |
+| Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
+| Admin Questions | `/admin/questions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
+| Admin Settings | `/admin/settings` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
 | Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
 | Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
@@ -235,7 +235,18 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 4. Filter by **skill requirements**: user must have all "Required" skills for a ministry
 5. The remaining ministries = behavioral questions shown in Phase 4
 
-### 3.3 Admin Dashboard (High Complexity)
+### 3.3 Admin Layout & Sidebar (✅ Complete)
+
+- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with sidebar + content area + mobile hamburger + overlay
+- ✅ **Collapsible side nav** (`_partials/adminSide/sideNav.blade.php`) — fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only)
+  - Nav links: Dashboard, Restriction Editor, Question Editor, Settings (all using route names)
+  - Logout at bottom with POST form
+  - Active link highlighted with purple left border
+  - Uses **Tabler icons** (`@tabler/icons-webfont`) instead of image files
+  - Desktop: toggle chevron button. Mobile: hamburger + overlay.
+- ✅ **Login page made standalone** — no sidebar, no admin wrapper (was extending admin layout)
+
+### 3.4 Admin Dashboard (High Complexity)
 
 **Components:**
 1. **Charts (Chart.js + chartjs-plugin-datalabels):**
@@ -255,7 +266,7 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 3. **Report table** — sortable, searchable
 4. **PDF export** — use jsPDF + jspdf-autotable (or Laravel's barryvdh/laravel-dompdf)
 
-### 3.4 Admin Restrictions/Questions Editor
+### 3.5 Admin Restrictions/Questions Editor
 
 - **Contenteditable tables** — inline editing without input fields
 - **Demographics tab:** Radio buttons for gender/marital/faith, number inputs for age range, toggle for baptized
@@ -263,30 +274,21 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 - **Questions tabs (3):** Skill Questions, Interest & Passion, Behavioral — each with EN + TL editable cells
 - **Save/Reset buttons:** Save sends all data to server; Reset restores from admin ID 1 defaults
 
-### 3.5 Frontend Assets to Copy from Old Project
+### 3.7 Frontend Assets
 
-From `perfit-old/perfit/img/`:
+**Images in `public/images/` (current state):**
 ```
-icn-logo.png, logo.png, banner.png, bg.png, footer.png,
-doveDynamic.gif, doveStatic.png, howItWorks.webp,
-pzl-top.png, pzl-right.png, pzl-bottom.png, pzl-left.png,
-icn-dashboard1.png, icn-dashboard2.png,
-icn-restriction1.png, icn-restriction2.png,
-icn-question1.png, icn-question2.png,
-icn-settings1.png, icn-settings2.png,
-icn-logout1.png, icn-logout2.png,
-icn-userCount.png, icn-submissionCount.png,
-icn-closedEyes.png, icn-openEyes.png,
-icn-export1.png, icn-export2.png,
-icn-find.png, icn-grow.png, icn-honesty.png,
-el1.jpg, banner-cut.png
+icn-logo.png, logo.png, banner.png, doveStatic.png    ← 4 files kept
 ```
+- All icon images replaced with **Tabler icons** (`@tabler/icons-webfont`)
+- Unused images removed: `bg.png`, `icn-closedEyes.png`, `icn-openEyes.png`, `icn-dashboard*`, `icn-restriction*`, `icn-question*`, `icn-settings*`, `icn-logout*`
 
-From `perfit-old/perfit/`:
-- Copy images to `public/images/` (some already exist)
-- Copy the ministry HTML description content from `ministry.html` for the ministry info page
+**Still to copy from old project when needed:**
+- `footer.png`, `howItWorks.webp`, `pzl-*` (puzzle pieces for assessment), `icn-userCount.png`, `icn-submissionCount.png`, `icn-export*`, `icn-find.png`, `icn-grow.png`, `icn-honesty.png`, `el1.jpg`, `banner-cut.png`
 
-### 3.6 Ministry Info Page Data
+**Landing page icons:** Inline SVGs replaced with Tabler icon classes (`ti ti-users`, `ti ti-key`, `ti ti-language`, `ti ti-clipboard-text`, `ti ti-send`, `ti ti-chart-bar`, `ti ti-chevron-*`)
+
+### 3.8 Ministry Info Page Data
 
 The `ministry.html` has detailed descriptions for each of the 29 ministries with:
 - Ministry name header
@@ -321,16 +323,19 @@ Route::prefix('admin')->group(function () {
     GET  /session-check                   Auth\LoginController@checkSession
 });
 
-// Admin panel — middleware('admin') (✅ 2 routes)
+// Admin panel — middleware('admin') (✅ 7 routes)
 Route::prefix('admin')->middleware('admin')->group(function () {
-    GET  /dashboard                       Closure → view('admin.dashboard')          admin.dashboard
-    POST /logout                          Auth\LogoutController@logout
+    GET  /dashboard                       view('admin.dashboard')                    admin.dashboard
+    GET  /restrictions                    view('admin.restrictions')                 admin.restrictions
+    GET  /questions                       view('admin.questions')                    admin.questions
+    GET  /settings                        view('admin.settings')                     admin.settings
+    POST /logout                          Auth\LogoutController@logout               admin.logout
 });
 
 // ❌ Still needed (Phases 2-4):
 // api/assessment-data, api/user-reports, api/generate-profile
 // admin/panel-data, admin/reports, admin/reports/export
-// admin/restrictions, admin/restrictions/reset
+// admin/restrictions (POST), admin/restrictions/reset
 // admin/settings/church-name, admin/settings/password
 ```
 
@@ -368,6 +373,7 @@ composer require laravel/socialite         # ❌ Maybe later
 npm install chart.js chartjs-plugin-datalabels  # ❌ Phase 3 — Dashboard charts
 npm install jspdf jspdf-autotable               # ❌ Phase 3 — PDF export (or use server-side DOMPDF)
 npm install axios                                # ✅ Already in package.json
+npm install @tabler/icons-webfont                # ✅ Installed — replaced all icon images with Tabler icons
 ```
 
 ---

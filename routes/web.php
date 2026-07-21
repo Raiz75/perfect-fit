@@ -30,5 +30,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-    Route::post('/logout', [LogoutController::class, 'logout']);
+    Route::get('/restrictions', function () {
+        return view('admin.restrictions');
+    })->name('admin.restrictions');
+    Route::get('/questions', function () {
+        return view('admin.questions');
+    })->name('admin.questions');
+    Route::get('/settings', function () {
+        return view('admin.settings');
+    })->name('admin.settings');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('admin.logout');
 });

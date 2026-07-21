@@ -218,7 +218,7 @@
         animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1s forwards, scrollBounce 2s ease-in-out 1.8s infinite;
         cursor: pointer;
     }
-    .hero-scroll svg {
+    .hero-scroll i {
         display: block;
         margin: 0 auto;
     }
@@ -298,7 +298,7 @@
         box-shadow: 0 8px 25px var(--purple-glow) !important;
         transform: translateY(-50%) scale(1.1) !important;
     }
-    .carousel-btn:hover svg { stroke: #fff !important; }
+    .carousel-btn:hover i { color: #fff !important; }
 
     .modal-overlay {
         display: none; position: fixed; inset: 0;
@@ -425,9 +425,7 @@
                 </button>
             </div>
             <div class="hero-scroll">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8c52ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M6 9l6 6 6-6"/>
-                </svg>
+                <i class="ti ti-chevron-down" style="font-size: 1.8rem; color: #8c52ff; display: block;"></i>
             </div>
         </div>
     </section>
@@ -441,12 +439,12 @@
             </div>
 
             @php $steps = [
-                ['num' => '01', 'title' => 'Choose User Type', 'desc' => 'Select Leader to set restrictions or Volunteer to take the assessment.', 'icon' => 'M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0 M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2 M16 3.13a4 4 0 0 1 0 7.75 M21 21v-2a4 4 0 0 0 -3 -3.85'],
-                ['num' => '02', 'title' => 'Enter Church Code', 'desc' => 'Use your church\'s code to apply your pastor\'s settings.', 'icon' => 'M3 21l18 0 M10 21v-4a2 2 0 0 1 4 0v4 M10 5l4 0 M12 3l0 5 M6 21v-7m-2 2l8 -8l8 8m-2 -2v7'],
-                ['num' => '03', 'title' => 'Choose Language', 'desc' => 'Choose your preferred language.', 'icon' => 'M4 5h7 M9 3v2c0 4.418 -2.239 8 -5 8 M5 9c0 2.144 2.952 3.908 6.7 4 M12 20l4 -9l4 9 M19.1 18h-6.2'],
-                ['num' => '04', 'title' => 'Answer the Assessment', 'desc' => 'Carefully go through each question and select your answer.', 'icon' => 'M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2 M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z M9 12l.01 0 M13 12l2 0 M9 16l.01 0 M13 16l2 0'],
-                ['num' => '05', 'title' => 'Submit the Assessment', 'desc' => 'Once done, Submit your response for evaluation.', 'icon' => 'M10 14l11 -11 M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5'],
-                ['num' => '06', 'title' => 'See the Result', 'desc' => 'After submission, check your personalized result.', 'icon' => 'M3 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z M9 8m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z M15 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z M4 20l14 0'],
+                ['num' => '01', 'title' => 'Choose User Type', 'desc' => 'Select Leader to set restrictions or Volunteer to take the assessment.', 'icon' => 'ti ti-users'],
+                ['num' => '02', 'title' => 'Enter Church Code', 'desc' => 'Use your church\'s code to apply your pastor\'s settings.', 'icon' => 'ti ti-key'],
+                ['num' => '03', 'title' => 'Choose Language', 'desc' => 'Choose your preferred language.', 'icon' => 'ti ti-language'],
+                ['num' => '04', 'title' => 'Answer the Assessment', 'desc' => 'Carefully go through each question and select your answer.', 'icon' => 'ti ti-clipboard-text'],
+                ['num' => '05', 'title' => 'Submit the Assessment', 'desc' => 'Once done, Submit your response for evaluation.', 'icon' => 'ti ti-send'],
+                ['num' => '06', 'title' => 'See the Result', 'desc' => 'After submission, check your personalized result.', 'icon' => 'ti ti-chart-bar'],
             ]; @endphp
 
             <div class="position-relative">
@@ -466,9 +464,7 @@
                     </div>
                     <div class="col-md-2 d-none d-md-flex justify-content-center position-relative z-1">
                         <div class="step-dot d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 56px; height: 56px; background: #fff; border: 3px solid #8c52ff; box-shadow: 0 0 0 8px rgba(140, 82, 255, 0.08);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8c52ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="{{ $step['icon'] }}" />
-                            </svg>
+                            <i class="{{ $step['icon'] }}" style="font-size: 1.4rem; color: #8c52ff;"></i>
                         </div>
                     </div>
                     <div class="col-md-5 d-none d-md-block"></div>
@@ -478,9 +474,7 @@
                     <div class="col-md-5 d-none d-md-block"></div>
                     <div class="col-md-2 d-none d-md-flex justify-content-center position-relative z-1">
                         <div class="step-dot d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 56px; height: 56px; background: #fff; border: 3px solid #8c52ff; box-shadow: 0 0 0 8px rgba(140, 82, 255, 0.08);">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8c52ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="{{ $step['icon'] }}" />
-                            </svg>
+                            <i class="{{ $step['icon'] }}" style="font-size: 1.4rem; color: #8c52ff;"></i>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -575,10 +569,10 @@
                 </div>
 
                 <button class="carousel-control-prev carousel-btn" type="button" data-bs-target="#ministryCarousel" data-bs-slide="prev" style="width: 44px; height: 44px; top: 50%; transform: translateY(-50%); background: #fff; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,.12); left: 0; opacity: 1;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8c52ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    <i class="ti ti-chevron-left" style="font-size: 1.4rem; color: #8c52ff;"></i>
                 </button>
                 <button class="carousel-control-next carousel-btn" type="button" data-bs-target="#ministryCarousel" data-bs-slide="next" style="width: 44px; height: 44px; top: 50%; transform: translateY(-50%); background: #fff; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,.12); right: 0; opacity: 1;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8c52ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                    <i class="ti ti-chevron-right" style="font-size: 1.4rem; color: #8c52ff;"></i>
                 </button>
             </div>
         </div>
