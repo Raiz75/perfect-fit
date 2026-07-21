@@ -168,7 +168,7 @@ app/Services/
 ### 2.6 OpenAI Integration
 
 - **Migrate from client-side to server-side** (security)
-- Old API key in `callApi.js`: `***REMOVED***`
+- ~~Old API key in `callApi.js`~~ (removed from history)
 - Store in `.env`: `OPENAI_API_KEY=sk-proj-...`
 - Install: `composer require openai-php/laravel`
 - Use `gpt-4o-mini` model
