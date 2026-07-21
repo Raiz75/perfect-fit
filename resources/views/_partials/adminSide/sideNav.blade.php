@@ -18,7 +18,7 @@
         </a>
 
         <a href="{{ route('admin.questions') }}"
-           class="sidebarLink {{ request()->routeIs('admin.questions') ? 'active' : '' }}">
+           class="sidebarLink {{ request()->routeIs('admin.questions*') ? 'active' : '' }}">
             <i class="ti ti-help-hexagon sidebarIcon"></i>
             <span class="sidebarLabel">Question Editor</span>
         </a>

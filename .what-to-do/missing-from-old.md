@@ -403,7 +403,9 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 9. ❌ Admin panel data loading
 10. ❌ Dashboard with Chart.js (filters, charts, table)
 11. ❌ Restriction editor (demographic + skills)
-12. ❌ Question editor (3 question types)
+12. 🔧 Question editor (3 question types)
+    - ✅ 3 tab pages created (Skill, Interest & Passion, Behavioral) with sub-routes and responsive layout
+    - ❌ Question data from DB not yet loaded into tables (static placeholders only)
 13. ✅ Settings page (church name, church code copy, change password with validation)
 14. ❌ PDF export
 

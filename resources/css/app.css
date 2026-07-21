@@ -44,6 +44,8 @@ html {
 .adminPage {
     display: flex;
     min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 /* =========================================
@@ -240,6 +242,7 @@ html {
     display: flex;
     flex-direction: column;
     transition: margin-left 0.3s ease-in-out;
+    min-width: 0;
 }
 
 .adminSidebar.collapsed ~ .adminRight {
@@ -250,6 +253,7 @@ html {
     flex: 1;
     padding: 30px;
     background: #f8f9fa;
+    min-width: 0;
 }
 
 /* =========================================
@@ -312,6 +316,69 @@ html {
 
 .sidebarOverlay.show {
     display: block;
+}
+
+/* =========================================
+   Question Top Nav
+   ========================================= */
+.questionTopNav {
+    display: flex;
+    gap: 4px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    max-width: 100%;
+    flex-wrap: wrap;
+}
+
+.questionTopNav::-webkit-scrollbar {
+    height: 4px;
+}
+
+.questionTopNav::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.questionTab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    text-decoration: none !important;
+    transition: all 0.2s;
+}
+
+.questionTab:hover {
+    color: var(--primary);
+    background: #f3ecff;
+    text-decoration: none !important;
+}
+
+.questionTab i,
+.questionTab span {
+    text-decoration: none !important;
+}
+
+.questionTab.active {
+    color: #fff;
+    background: var(--primary);
+    box-shadow: 0 2px 8px rgba(140, 82, 255, 0.3);
+}
+
+.questionTab i {
+    font-size: 18px;
+}
+
+@media (max-width: 576px) {
+    .questionTopNav {
+        flex-direction: column;
+    }
 }
 
 /* =========================================

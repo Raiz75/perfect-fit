@@ -35,8 +35,17 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         return view('admin.restrictions');
     })->name('admin.restrictions');
     Route::get('/questions', function () {
-        return view('admin.questions');
+        return redirect()->route('admin.questions.skill');
     })->name('admin.questions');
+    Route::get('/questions/skill', function () {
+        return view('admin.questions.skill');
+    })->name('admin.questions.skill');
+    Route::get('/questions/interest', function () {
+        return view('admin.questions.interest');
+    })->name('admin.questions.interest');
+    Route::get('/questions/behavioral', function () {
+        return view('admin.questions.behavioral');
+    })->name('admin.questions.behavioral');
     Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
     Route::post('/settings/church-name', [SettingsController::class, 'updateChurchName'])->name('admin.settings.church-name');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.password');
