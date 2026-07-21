@@ -402,7 +402,13 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 ### Phase 3: Admin Panel
 9. ❌ Admin panel data loading
 10. ❌ Dashboard with Chart.js (filters, charts, table)
-11. ❌ Restriction editor (demographic + skills)
+11. ✅ Restriction editor (demographic + skills)
+    - ✅ Top nav with 2 tabs (Demographics, Skills) using `restriction-topNav.blade.php`
+    - ✅ Demographic restrictions table (gender radios, age number inputs, marital radios, baptized switch, faith radios)
+    - ✅ Skill restrictions table (8 toggle switches per ministry)
+    - ✅ Save all changes — collects all rows and sends bulk update via POST
+    - ✅ Reset to default — copies from admin template (user_id=1)
+    - ✅ Reset confirmation modal
 12. ✅ Question editor (3 question types)
     - ✅ 3 tab pages created (Skill, Interest & Passion, Behavioral) with sub-routes and responsive layout
     - ✅ Question data loaded from DB via QuestionController with eager-loaded relations

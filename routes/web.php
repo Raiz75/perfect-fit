@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\RestrictionController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
@@ -33,8 +34,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
     Route::get('/restrictions', function () {
-        return view('admin.restrictions');
+        return redirect()->route('admin.restrictions.demographics');
     })->name('admin.restrictions');
+    Route::get('/restrictions/demographics', [RestrictionController::class, 'demographics'])->name('admin.restrictions.demographics');
+    Route::post('/restrictions/demographics/update', [RestrictionController::class, 'updateDemographics'])->name('admin.restrictions.demographics.update');
+    Route::post('/restrictions/demographics/reset', [RestrictionController::class, 'resetDemographics'])->name('admin.restrictions.demographics.reset');
+    Route::get('/restrictions/skills', [RestrictionController::class, 'skills'])->name('admin.restrictions.skills');
+    Route::post('/restrictions/skills/update', [RestrictionController::class, 'updateSkills'])->name('admin.restrictions.skills.update');
+    Route::post('/restrictions/skills/reset', [RestrictionController::class, 'resetSkills'])->name('admin.restrictions.skills.reset');
     Route::get('/questions', function () {
         return redirect()->route('admin.questions.skill');
     })->name('admin.questions');

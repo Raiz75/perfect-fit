@@ -12,7 +12,7 @@
         </a>
 
         <a href="{{ route('admin.restrictions') }}"
-           class="sidebarLink {{ request()->routeIs('admin.restrictions') ? 'active' : '' }}">
+           class="sidebarLink {{ request()->routeIs('admin.restrictions*') ? 'active' : '' }}">
             <i class="ti ti-adjustments-alt sidebarIcon"></i>
             <span class="sidebarLabel">Restriction Editor</span>
         </a>

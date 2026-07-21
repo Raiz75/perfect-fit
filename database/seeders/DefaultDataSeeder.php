@@ -33,17 +33,49 @@ class DefaultDataSeeder extends Seeder
 
     private function createDemographicRestrictions(int $userId): void
     {
+        $data = [
+            [1, 0, 12, 99, 0, 1, 2],
+            [2, 0, 12, 99, 0, 1, 2],
+            [3, 0, 12, 99, 0, 1, 2],
+            [4, 0, 15, 99, 0, 1, 3],
+            [5, 0, 20, 99, 0, 1, 3],
+            [6, 0, 15, 99, 0, 1, 3],
+            [7, 0, 12, 25, 0, 1, 3],
+            [8, 0, 20, 30, 0, 1, 3],
+            [9, 1, 21, 99, 0, 1, 3],
+            [10, 2, 21, 99, 0, 1, 3],
+            [11, 0, 21, 99, 2, 1, 3],
+            [12, 0, 1, 99, 0, 1, 3],
+            [13, 0, 25, 99, 0, 1, 3],
+            [14, 0, 25, 99, 0, 1, 3],
+            [15, 0, 25, 99, 0, 1, 3],
+            [16, 0, 25, 99, 0, 1, 3],
+            [17, 0, 1, 99, 0, 1, 3],
+            [18, 0, 25, 99, 0, 1, 3],
+            [19, 0, 1, 99, 0, 1, 3],
+            [20, 0, 21, 99, 0, 1, 3],
+            [21, 0, 22, 99, 0, 1, 3],
+            [22, 0, 22, 99, 0, 1, 3],
+            [23, 0, 21, 99, 0, 1, 3],
+            [24, 0, 21, 99, 0, 1, 3],
+            [25, 0, 21, 99, 0, 1, 3],
+            [26, 0, 21, 99, 0, 1, 3],
+            [27, 0, 21, 99, 0, 1, 3],
+            [28, 0, 60, 99, 0, 1, 3],
+            [29, 0, 21, 99, 1, 1, 3],
+        ];
+
         $records = [];
-        for ($ministryId = 1; $ministryId <= 29; $ministryId++) {
+        foreach ($data as [$mid, $gender, $ageMin, $ageMax, $marital, $baptized, $faith]) {
             $records[] = [
                 'user_id' => $userId,
-                'ministry_id' => $ministryId,
-                'gender' => 0,
-                'age_min' => 1,
-                'age_max' => 99,
-                'marital_status' => 0,
-                'baptized' => 2,
-                'time_in_faith' => 1,
+                'ministry_id' => $mid,
+                'gender' => $gender,
+                'age_min' => $ageMin,
+                'age_max' => $ageMax,
+                'marital_status' => $marital,
+                'baptized' => $baptized,
+                'time_in_faith' => $faith,
             ];
         }
         DemographicRestriction::insert($records);
@@ -51,19 +83,51 @@ class DefaultDataSeeder extends Seeder
 
     private function createSkillRestrictions(int $userId): void
     {
+        $data = [
+            [1, 1, 1, 0, 0, 0, 0, 0, 1],
+            [2, 1, 1, 0, 0, 0, 0, 0, 1],
+            [3, 1, 1, 0, 0, 0, 0, 0, 1],
+            [4, 0, 0, 1, 0, 1, 0, 1, 1],
+            [5, 0, 0, 1, 0, 1, 0, 1, 1],
+            [6, 0, 0, 1, 0, 1, 0, 1, 1],
+            [7, 0, 0, 0, 0, 0, 0, 0, 1],
+            [8, 0, 0, 0, 0, 0, 0, 0, 1],
+            [9, 0, 0, 0, 0, 0, 0, 1, 1],
+            [10, 0, 0, 0, 0, 0, 0, 1, 1],
+            [11, 0, 0, 0, 0, 0, 0, 1, 1],
+            [12, 0, 0, 0, 0, 0, 0, 0, 1],
+            [13, 0, 0, 1, 0, 0, 1, 0, 1],
+            [14, 0, 0, 1, 0, 0, 1, 0, 1],
+            [15, 0, 0, 0, 1, 0, 0, 0, 1],
+            [16, 0, 0, 0, 1, 0, 0, 0, 1],
+            [17, 0, 0, 1, 0, 1, 0, 1, 1],
+            [18, 0, 0, 1, 0, 1, 0, 1, 1],
+            [19, 0, 0, 1, 0, 1, 0, 1, 1],
+            [20, 0, 0, 1, 0, 1, 0, 1, 1],
+            [21, 0, 1, 1, 0, 0, 0, 0, 1],
+            [22, 0, 1, 1, 0, 1, 0, 1, 1],
+            [23, 0, 0, 0, 0, 0, 0, 1, 1],
+            [24, 0, 0, 0, 0, 0, 0, 0, 1],
+            [25, 1, 0, 0, 0, 1, 0, 0, 1],
+            [26, 0, 0, 0, 0, 1, 0, 1, 1],
+            [27, 0, 0, 0, 0, 0, 0, 0, 1],
+            [28, 0, 0, 0, 0, 0, 0, 0, 1],
+            [29, 0, 0, 0, 0, 0, 0, 0, 1],
+        ];
+
         $records = [];
-        for ($ministryId = 1; $ministryId <= 29; $ministryId++) {
+        foreach ($data as [$mid, $music, $tech, $writing, $technical, $speaking, $accounting, $mentoring, $bible]) {
             $records[] = [
                 'user_id' => $userId,
-                'ministry_id' => $ministryId,
-                'music' => false,
-                'technology' => false,
-                'writing' => false,
-                'technical' => false,
-                'speaking' => false,
-                'accounting' => false,
-                'mentoring' => false,
-                'bible_knowledge' => false,
+                'ministry_id' => $mid,
+                'music' => $music,
+                'technology' => $tech,
+                'writing' => $writing,
+                'technical' => $technical,
+                'speaking' => $speaking,
+                'accounting' => $accounting,
+                'mentoring' => $mentoring,
+                'bible_knowledge' => $bible,
             ];
         }
         SkillRestriction::insert($records);
