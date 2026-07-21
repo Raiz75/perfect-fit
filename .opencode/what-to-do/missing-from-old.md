@@ -113,7 +113,7 @@ app/Http/Controllers/
 - ✅ Uses **Laravel's session-based auth** (not API tokens)
 - ✅ Old `$_SESSION['admin_email']` replaced with `Auth::user()`
 - ✅ `AdminMiddleware` created — registered as `admin` alias in `bootstrap/app.php`
-- ❌ `admin@admin` special user logic (hide "Reset" buttons) — frontend only, Phase 3
+- ✅ `admin@admin` special user logic (hide "Reset" buttons) — frontend only, Phase 3
 - ✅ Registration copies defaults from admin ID 1 via `app/Actions/CopyDefaults.php`
 - ✅ Church code 9-char, case-sensitive, `BINARY` comparison in `validateChurchCode()`
 - ✅ Password strength: min 8 chars, 1 uppercase, 1 number, 1 special (server-side + client-side validation)

@@ -22,4 +22,12 @@ document.addEventListener('DOMContentLoaded', function () {
             overlay.classList.remove('show');
         });
     }
+
+    // Admin@admin special user — hide "Reset to default" buttons
+    const userEmailMeta = document.querySelector('meta[name="user-email"]');
+    if (userEmailMeta && userEmailMeta.content === 'admin@admin') {
+        document.querySelectorAll('.noToAdmin').forEach(function (el) {
+            el.style.display = 'none';
+        });
+    }
 });
