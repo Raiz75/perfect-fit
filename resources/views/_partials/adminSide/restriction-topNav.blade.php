@@ -1,11 +1,11 @@
-<nav class="restrictionTopNav">
+<nav class="admin-nav-tabs">
     <a href="{{ route('admin.restrictions.demographics') }}"
-       class="restrictionTab {{ request()->routeIs('admin.restrictions.demographics') ? 'active' : '' }}">
+       class="tab-link {{ request()->routeIs('admin.restrictions.demographics') ? 'active' : '' }}">
         <i class="ti ti-users"></i>
         <span>Demographics</span>
     </a>
     <a href="{{ route('admin.restrictions.skills') }}"
-       class="restrictionTab {{ request()->routeIs('admin.restrictions.skills') ? 'active' : '' }}">
+       class="tab-link {{ request()->routeIs('admin.restrictions.skills') ? 'active' : '' }}">
         <i class="ti ti-tool"></i>
         <span>Skills</span>
     </a>

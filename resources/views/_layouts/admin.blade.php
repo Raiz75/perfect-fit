@@ -13,6 +13,11 @@
 <body>
     <livewire:toast-message />
 
+    <!-- Floating background shapes for admin -->
+    <div class="adminFloatShape"></div>
+    <div class="adminFloatShape"></div>
+    <div class="adminFloatShape"></div>
+
     <!-- Sidebar overlay for mobile -->
     <div class="sidebarOverlay" id="sidebarOverlay"></div>
 
@@ -22,7 +27,7 @@
         <div class="adminRight">
             <x-admin-top-nav :title="$title ?? 'PERFIT'" />
 
-            <main class="adminContent" id="adminContent">
+            <main class="adminContent adminGlassBg" id="adminContent">
                 @yield('content')
             </main>
         </div>

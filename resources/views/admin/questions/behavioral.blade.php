@@ -6,68 +6,47 @@
 @section('content')
     @include('_partials.adminSide.question-topNav')
 
-    <div class="card border-0 shadow-sm mt-3" style="border-radius: 16px;">
-        <div class="card-body p-4">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 gap-2">
-                <div>
-                    <h5 class="fw-semibold mb-1">Behavioral Questions</h5>
-                    <p class="text-muted small mb-0">
-                        Edit the behavioral questions to assess volunteer <strong>traits</strong> and <strong>ministry fit</strong>.
-                        Click on a cell to edit the text directly.
-                    </p>
-                </div>
-                <div class="d-flex gap-2 flex-shrink-0">
-                    <button class="noToAdmin btn btn-outline-secondary btn-sm" id="resetBehavioralBtn">Reset all to default</button>
-                    <button class="btn btn-primary btn-sm" id="saveBehavioralBtn">Save all changes</button>
-                </div>
+    <div class="admin-glass-card p-4 mt-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 gap-2">
+            <div>
+                <h5 class="admin-section-title">Behavioral Questions</h5>
+                <p class="admin-section-desc mb-0">Edit behavioral questions to assess volunteer <strong>traits</strong> and <strong>ministry fit</strong>.</p>
             </div>
-            <div style="overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch;">
-                <table class="table table-bordered table-hover align-middle mb-0" id="behavioralQuestions" style="width: 100%; min-width: 650px;">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Ministry</th>
-                            <th style="width: 140px;">Question Number</th>
-                            <th>English Question</th>
-                            <th>Tagalog Question</th>
-                        </tr>
-                    </thead>
+            <div class="admin-action-bar mb-0">
+                <button class="btn btn-outline-perfit noToAdmin" id="resetBehavioralBtn">Reset</button>
+                <button class="btn primary-btn-perfit btn-sm" id="saveBehavioralBtn">Save changes</button>
+            </div>
+        </div>
+        <div class="admin-glass-table">
+            <div style="overflow-x: auto; max-width: 100%;">
+                <table class="table align-middle mb-0" id="behavioralQuestions" style="min-width: 650px;">
+                    <thead><tr><th>Ministry</th><th style="width:140px;">#</th><th>English</th><th>Tagalog</th></tr></thead>
                     <tbody>
                         @forelse($questions as $ministryName => $group)
                             @foreach($group as $question)
                                 <tr data-id="{{ $question->id }}">
-                                    <td>{{ $ministryName }}</td>
+                                    <td class="fw-medium">{{ $ministryName }}</td>
                                     <td>{{ $question->question_number }}</td>
                                     <td class="editable" contenteditable="true">{{ $question->question_en }}</td>
                                     <td class="editable" contenteditable="true">{{ $question->question_tl }}</td>
                                 </tr>
                             @endforeach
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center text-muted py-4">No questions found.</td>
-                            </tr>
+                            <tr><td colspan="4" class="text-center text-muted py-4">No questions found.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
     <div class="modalOverlay" id="resetModalOverlay">
         <div class="modalBox">
-            <div class="modalBoxHeader">
-                <h5 style="margin:0;font-weight:600;">Reset Behavioral Questions</h5>
-                <button class="modalCloseBtn" id="resetModalCloseBtn">&times;</button>
-            </div>
-            <div class="modalBoxBody">
-                <p>This will replace all behavioral questions with the default template. Any changes you made will be permanently lost.</p>
-                <ul>
-                    <li>145 behavioral questions across 29 ministries</li>
-                    <li>English and Tagalog translations will be reset</li>
-                    <li>This action <strong>cannot be undone</strong></li>
-                </ul>
-            </div>
+            <div class="modalBoxHeader"><h5>Reset Questions</h5><button class="modalCloseBtn">&times;</button></div>
+            <div class="modalBoxBody"><p>This will replace all questions with defaults. Cannot be undone.</p></div>
             <div class="modalBoxFooter">
-                <button class="btn btn-secondary" id="resetModalCancel">Cancel</button>
-                <button class="btn btn-danger" id="resetModalConfirm">Confirm Reset</button>
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-danger">Confirm Reset</button>
             </div>
         </div>
     </div>
@@ -77,97 +56,25 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-    function notify(text, type = 'success') {
-        window.dispatchEvent(new CustomEvent('notify', { detail: { text, type } }));
-    }
-
+    const notify = (t, type = 'success') => window.dispatchEvent(new CustomEvent('notify', { detail: { text: t, type } }));
+    const modal = document.getElementById('resetModalOverlay');
     document.getElementById('saveBehavioralBtn')?.addEventListener('click', function () {
-        const rows = document.querySelectorAll('#behavioralQuestions tbody tr[data-id]');
-        const questions = [];
-
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td.editable');
-            if (cells.length < 2) return;
-            questions.push({
-                id: row.dataset.id,
-                question_en: cells[0].textContent.trim(),
-                question_tl: cells[1].textContent.trim(),
-            });
-        });
-
-        if (!questions.length) {
-            notify('No questions to save.', 'warning');
-            return;
-        }
-
-        const btn = this;
-        btn.disabled = true;
-        btn.textContent = 'Saving...';
-
-        fetch('{{ route("admin.questions.behavioral.update") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrfToken },
-            body: JSON.stringify({ questions }),
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) notify(data.message);
-            else notify(data.message || 'Failed to save.', 'danger');
-        })
-        .catch(() => notify('Network error. Please try again.', 'danger'))
-        .finally(() => {
-            btn.disabled = false;
-            btn.textContent = 'Save all changes';
-        });
+        const rows = document.querySelectorAll('#behavioralQuestions tbody tr[data-id]'); const qs = [];
+        rows.forEach(r => { const c = r.querySelectorAll('td.editable'); if(c.length>=2) qs.push({id:r.dataset.id,question_en:c[0].textContent.trim(),question_tl:c[1].textContent.trim()}); });
+        if(!qs.length) return notify('No questions.','warning');
+        const btn=this; btn.disabled=true; btn.innerHTML='<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+        fetch('{{ route("admin.questions.behavioral.update") }}',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':csrfToken},body:JSON.stringify({questions:qs})})
+        .then(r=>r.json()).then(d=>{notify(d.message,d.success?'success':'danger')}).catch(()=>notify('Error.','danger'))
+        .finally(()=>{btn.disabled=false;btn.textContent='Save changes';});
     });
-
-    const resetModalOverlay = document.getElementById('resetModalOverlay');
-    const resetModalConfirm = document.getElementById('resetModalConfirm');
-    const resetModalCancel = document.getElementById('resetModalCancel');
-    const resetModalClose = document.getElementById('resetModalCloseBtn');
-
-    function openResetModal() {
-        resetModalOverlay.style.display = 'flex';
-    }
-
-    function closeResetModal() {
-        resetModalOverlay.style.display = 'none';
-    }
-
-    document.getElementById('resetBehavioralBtn')?.addEventListener('click', openResetModal);
-
-    resetModalCancel?.addEventListener('click', closeResetModal);
-    resetModalClose?.addEventListener('click', closeResetModal);
-    resetModalOverlay?.addEventListener('click', function (e) {
-        if (e.target === this) closeResetModal();
-    });
-
-    resetModalConfirm?.addEventListener('click', function () {
-        closeResetModal();
-
-        const btn = document.getElementById('resetBehavioralBtn');
-        btn.disabled = true;
-        btn.textContent = 'Resetting...';
-
-        fetch('{{ route("admin.questions.behavioral.reset") }}', {
-            method: 'POST',
-            headers: { 'X-CSRF-TOKEN': csrfToken },
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                notify(data.message);
-                if (data.questions) location.reload();
-            } else {
-                notify(data.message || 'Failed to reset.', 'danger');
-            }
-        })
-        .catch(() => notify('Network error. Please try again.', 'danger'))
-        .finally(() => {
-            btn.disabled = false;
-            btn.textContent = 'Reset all to default';
-        });
+    document.getElementById('resetBehavioralBtn')?.addEventListener('click',()=>modal.style.display='flex');
+    modal.querySelectorAll('.modalCloseBtn,.btn-secondary')?.forEach(b=>b?.addEventListener('click',()=>modal.style.display='none'));
+    modal?.addEventListener('click',function(e){if(e.target===this)this.style.display='none';});
+    modal.querySelector('.btn-danger')?.addEventListener('click',function(){
+        modal.style.display='none';
+        fetch('{{ route("admin.questions.behavioral.reset") }}',{method:'POST',headers:{'X-CSRF-TOKEN':csrfToken}})
+        .then(r=>r.json()).then(d=>{if(d.success){notify(d.message);if(d.questions)location.reload();}else notify(d.message||'Failed.','danger');})
+        .catch(()=>notify('Error.','danger'));
     });
 });
 </script>

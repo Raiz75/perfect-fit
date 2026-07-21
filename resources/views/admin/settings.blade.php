@@ -6,63 +6,57 @@
 @section('content')
 <div class="row g-4">
     <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
-            <div class="card-body p-4">
-                <h5 class="fw-semibold mb-1">Church Information</h5>
-                <p class="text-muted small mb-3">Update your church details.</p>
-                <hr>
+        <div class="admin-glass-card p-4 h-100">
+            <h5 class="fw-semibold mb-1">Church Information</h5>
+            <p class="text-muted small mb-3">Update your church details.</p>
+            <hr>
 
-                <div class="mb-3">
-                    <label class="form-label fw-medium">Church Name</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="churchNameInput"
-                               value="{{ $user->church_name }}" placeholder="Enter church name">
-                        <button class="btn btn-primary" id="saveChurchNameBtn" style="background:#8c52ff;border-color:#8c52ff;">
-                            Save
-                        </button>
-                    </div>
-                    <div class="invalid-feedback" id="churchNameError"></div>
+            <div class="mb-3">
+                <label class="form-label fw-medium">Church Name</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="churchNameInput"
+                           value="{{ $user->church_name }}" placeholder="Enter church name">
+                    <button class="btn primary-btn-perfit btn-sm" id="saveChurchNameBtn">Save</button>
                 </div>
+                <div class="invalid-feedback" id="churchNameError"></div>
+            </div>
 
-                <div class="mb-0">
-                    <label class="form-label fw-medium">Church Code</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control bg-light" id="churchCodeInput"
-                               value="{{ $user->church_code }}" readonly>
-                        <button class="btn btn-outline-secondary" id="copyCodeBtn">Copy</button>
-                    </div>
-                    <div class="form-text">Share this code with volunteers so they can register.</div>
+            <div class="mb-0">
+                <label class="form-label fw-medium">Church Code</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="churchCodeInput"
+                           value="{{ $user->church_code }}" readonly style="background:rgba(140,82,255,0.05);">
+                    <button class="btn btn-outline-secondary" id="copyCodeBtn">Copy</button>
                 </div>
+                <div class="form-text">Share this code with volunteers so they can register.</div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100" style="border-radius: 16px;">
-            <div class="card-body p-4">
-                <h5 class="fw-semibold mb-1">Personal Information</h5>
-                <p class="text-muted small mb-3">Your admin account details.</p>
-                <hr>
+        <div class="admin-glass-card p-4 h-100">
+            <h5 class="fw-semibold mb-1">Personal Information</h5>
+            <p class="text-muted small mb-3">Your admin account details.</p>
+            <hr>
 
-                <div class="mb-3">
-                    <label class="form-label fw-medium">Email</label>
-                    <input type="text" class="form-control bg-light" value="{{ $user->email }}" readonly>
-                </div>
+            <div class="mb-3">
+                <label class="form-label fw-medium">Email</label>
+                <input type="text" class="form-control" value="{{ $user->email }}" readonly style="background:rgba(140,82,255,0.05);">
+            </div>
 
-                <div class="mb-0">
-                    <label class="form-label fw-medium">Password</label>
-                    <div>
-                        <button class="btn btn-outline-primary" id="changePassBtn"
-                                style="border-color:#8c52ff;color:#8c52ff;">
-                            Change password
-                        </button>
-                    </div>
+            <div class="mb-0">
+                <label class="form-label fw-medium">Password</label>
+                <div>
+                    <button class="btn primary-btn-perfit btn-sm" id="changePassBtn">
+                        Change password
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Change Password Modal -->
 <div class="modalOverlay" id="passModalOverlay">
     <div class="modalBox">
         <div class="modalBoxHeader">
@@ -89,8 +83,7 @@
         </div>
         <div class="modalBoxFooter">
             <button class="btn btn-secondary" id="passModalCancelBtn">Cancel</button>
-            <button class="btn btn-primary" id="savePasswordBtn"
-                    style="background:#8c52ff;border-color:#8c52ff;">Update Password</button>
+            <button class="btn primary-btn-perfit" id="savePasswordBtn">Update Password</button>
         </div>
     </div>
 </div>
