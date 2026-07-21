@@ -202,7 +202,7 @@
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signinPass" placeholder="Password" required>
                             <span class="eye-icon" onclick="togglePassword('signinPass', this)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                                <i class="ti ti-eye-off"></i>
                             </span>
                         </div>
                         <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign In</button>
@@ -228,13 +228,13 @@
                         <div class="input-group-custom mb-3">
                             <input type="password" name="password" id="signupPass" placeholder="Password" required>
                             <span class="eye-icon" onclick="togglePassword('signupPass', this)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                                <i class="ti ti-eye-off"></i>
                             </span>
                         </div>
                         <div class="input-group-custom mb-3">
                             <input type="password" id="confirmPass" placeholder="Confirm Password" required>
                             <span class="eye-icon" onclick="togglePassword('confirmPass', this)">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>
+                                <i class="ti ti-eye-off"></i>
                             </span>
                         </div>
                         <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-3 px-5">Sign Up</button>
@@ -285,8 +285,8 @@
 
         function togglePassword(id, el) {
             const input = document.getElementById(id);
-            const open = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.667 4.667 -6.667 7 -11 7s-8.333 -2.333 -11 -7c2.667 -4.667 6.667 -7 11 -7s8.333 2.333 11 7"/></svg>';
-            const closed = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 0h24v24H0z" fill="none"/><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-4.333 0 -8.333 -2.333 -11 -7c1.272 -2.226 2.924 -4.08 4.892 -5.544m4.108 -1.456c5.333 0 9.333 2.333 12 7c-.859 1.504 -1.874 2.887 -3.058 4.117"/><path d="M3 3l18 18"/></svg>';
+            const open = '<i class="ti ti-eye-off"></i>';
+            const closed = '<i class="ti ti-eye"></i>';
             if (input.type === 'password') { input.type = 'text'; el.innerHTML = closed; }
             else { input.type = 'password'; el.innerHTML = open; }
         }

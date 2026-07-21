@@ -578,3 +578,80 @@ td.editable:focus {
         display: none;
     }
 }
+
+/* =========================================
+   Logout Confirmation Modal
+   ========================================= */
+.logout-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+.logout-modal-overlay.show {
+    display: flex;
+}
+.logout-modal-box {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 2.5rem 2rem;
+    border-radius: 24px;
+    text-align: center;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+    animation: modalFadeIn 0.25s ease;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+.logout-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(220, 53, 69, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 28px;
+    color: #dc3545;
+}
+.logout-modal-title {
+    font-weight: 700;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+.logout-modal-text {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+.logout-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+.logout-btn-cancel {
+    border-radius: 50rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    border: 3px solid #e0e0e0 !important;
+    background: transparent !important;
+    color: #666 !important;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.logout-btn-cancel:hover {
+    border-color: #ccc !important;
+    background: #f5f5f5 !important;
+    color: #333 !important;
+}
