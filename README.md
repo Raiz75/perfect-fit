@@ -1,59 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+  <img src="public/images/logo.png" alt="PERFIT Logo" width="120" />
+  <h1>PERFIT</h1>
+  <p><strong>Ministry Fit Assessment Platform</strong></p>
+  <p>
+    <em>Helping volunteers discover where they best serve.</em>
+  </p>
+</div>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+PERFIT is a web-based assessment tool that helps church volunteers identify which ministries best match their **skills, interests, and personality**. Admin users configure restriction rules and question sets; volunteers take an assessment and receive a personalized ministry fit report.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Volunteer Assessment** — Multi-step questionnaire covering skills, interests & passion, and behavioral traits (English and Filipino)
+- **Admin Panel** — Dashboard with analytics, restrictions editor, question editor, and settings
+- **Restriction Editor** — Set demographic and skill requirements per ministry (age, gender, marital status, skills, etc.)
+- **Question Editor** — Manage skill questions, interest & passion questions, and behavioral questions with EN + TL variants
+- **Church Code System** — Each church gets a unique code for volunteer registration
+- **User Reports** — Generate detailed ministry fit reports for volunteers
+- **Export** — Generate admin reports (PDF)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tech Stack
 
-## Learning Laravel
+| Layer | Technology |
+|-------|-----------|
+| **Framework** | Laravel 12 |
+| **Frontend** | Blade, Tabler, Vite |
+| **Database** | SQLite / MySQL |
+| **Icons** | Tabler Icons |
+| **Charts** | Chart.js |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Prerequisites
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP 8.2+
+- Composer
+- Node.js 20+
+- SQLite or MySQL
 
-## Laravel Sponsors
+## Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+# Clone the repository
+git clone <repo-url> perfit
+cd perfit
 
-### Premium Partners
+# Install PHP dependencies
+composer install
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Install Node dependencies
+npm install
 
-## Contributing
+# Environment setup
+cp .env.example .env
+php artisan key:generate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Database setup (SQLite default)
+touch database/database.sqlite
+php artisan migrate --seed
 
-## Code of Conduct
+# Build frontend
+npm run build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Development
 
-## Security Vulnerabilities
+```bash
+# Start all dev servers (Vite + Laravel + Queue + Logs)
+composer run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Or run individually:
+
+```bash
+php artisan serve           # Laravel dev server
+npm run dev                 # Vite HMR
+php artisan queue:listen    # Queue worker
+php artisan pail            # Log viewer
+```
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `composer run dev` | Start all dev servers concurrently |
+| `composer run build` | Build frontend assets |
+| `composer run test` | Run tests |
+| `npm run dev` | Vite HMR |
+| `npm run build` | Vite production build |
+
+## Project Structure
+
+```
+app/
+  Http/
+    Controllers/
+      Auth/       # Login, Register, ForgotPassword, Logout
+      FrontendController.php
+  Models/         # User, Ministry, Skill, Reports, Restrictions, Questions
+config/
+database/
+  migrations/     # 10 migration files
+  seeders/        # Ministry categories, ministries, skills
+public/
+  images/         # Static assets (logos, banners)
+resources/
+  css/            # app.css (Tabler + custom styles)
+  views/
+    _layouts/     # master.blade.php, admin.blade.php
+    _partials/    # Side nav components
+    admin/        # Dashboard, login, restrictions, questions, settings
+    Index.blade.php  # Landing page
+routes/
+  web.php         # Public + Admin routes
+```
+
+## Routes
+
+### Public
+| URI | Name | Description |
+|-----|------|-------------|
+| `/` | `home` | Landing page |
+| `/ministries` | `ministries` | Ministry info |
+| `/privacy-policy` | `privacy-policy` | Privacy policy |
+
+### Admin Auth
+| URI | Name | Description |
+|-----|------|-------------|
+| `/admin/login` | `admin.login` | Login page |
+| `/admin/register` | — | Registration (API) |
+
+### Admin Panel (authenticated)
+| URI | Name | Description |
+|-----|------|-------------|
+| `/admin/dashboard` | `admin.dashboard` | Analytics dashboard |
+| `/admin/restrictions` | `admin.restrictions` | Restriction editor |
+| `/admin/questions` | `admin.questions` | Question editor |
+| `/admin/settings` | `admin.settings` | Church settings |
+| `/admin/logout` | `admin.logout` | Logout |
+
+## Development Status
+
+> This project is a migration from a legacy PHP/jQuery codebase to Laravel 12.
+
+| Area | Status |
+|------|--------|
+| Database | ✅ Complete (migrations, models, seeders) |
+| Public Pages | 🔧 In progress (landing, ministry info) |
+| Admin Layout & Nav | ✅ Complete |
+| Assessment | ❌ Not started |
+| User Reports | ❌ Not started |
+| Export | ❌ Not started |
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is proprietary. All rights reserved.

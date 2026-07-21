@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "perfit/perfit",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "PERFIT — A church ministry fit assessment platform. Helps volunteers discover which ministries best match their skills, interests, and personality.",
+    "keywords": ["perfit", "ministry", "assessment", "laravel"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
