@@ -49,10 +49,11 @@ new class extends Component
         font-size: 14px;
         font-weight: 500;
         font-family: 'Poppins', Arial, sans-serif;
-        z-index: 9999;
+        z-index: 999999 !important;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         backdrop-filter: blur(4px);
         transition: opacity 0.4s ease-in-out;
+        isolation: isolate;
         line-height: 1.5;
     }
 

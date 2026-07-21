@@ -13,22 +13,19 @@
 <body>
     <livewire:toast-message />
 
-    <!-- Mobile hamburger -->
-    <button class="mobileHamburger" id="mobileHamburger" aria-label="Toggle menu">
-        <div></div>
-        <div></div>
-        <div></div>
-    </button>
-
     <!-- Sidebar overlay for mobile -->
     <div class="sidebarOverlay" id="sidebarOverlay"></div>
 
     <div class="adminPage">
         @include('_partials.adminSide.sideNav')
 
-        <main class="adminContent" id="adminContent">
-            @yield('content')
-        </main>
+        <div class="adminRight">
+            @include('_partials.adminSide.topNav')
+
+            <main class="adminContent" id="adminContent">
+                @yield('content')
+            </main>
+        </div>
     </div>
 
     @stack('scripts')

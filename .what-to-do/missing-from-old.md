@@ -83,7 +83,8 @@ app/Http/Controllers/
 ├── AdminPanelController.php         # ❌ load admin panel data
 ├── RestrictionController.php        # ❌ save/reset restrictions
 ├── QuestionController.php           # ❌ save/reset questions
-├── SettingsController.php           # ❌ church name, change password
+├── Admin\
+│   └── SettingsController.php       # ✅ church name, change password (with modal + validation)
 └── MinistryController.php           # ❌ ministry info page data
 ```
 
@@ -107,8 +108,8 @@ app/Http/Controllers/
 | `php-loadAdminPanel.php` | GET | `/admin/panel-data` | `AdminPanelController::load` | ❌ | Phase 3 |
 | `php-saveRestriction.php` | POST | `/admin/restrictions` | `RestrictionController::save` | ❌ | Phase 3 |
 | `php-resetRestriction.php` | POST | `/admin/restrictions/reset` | `RestrictionController::reset` | ❌ | Phase 3 |
-| `php-changeChurchName.php` | POST | `/admin/settings/church-name` | `SettingsController::updateChurchName` | ❌ | Phase 3 |
-| `php-updatePass.php` | POST | `/admin/settings/password` | `SettingsController::updatePassword` | ❌ | Phase 3 |
+| `php-changeChurchName.php` | POST | `/admin/settings/church-name` | `Admin\SettingsController::updateChurchName` | ✅ | Unique check excluding self |
+| `php-updatePass.php` | POST | `/admin/settings/password` | `Admin\SettingsController::updatePassword` | ✅ | Min 8 + 1 capital + 1 number + 1 special |
 
 ### 2.3 Auth Implementation Notes
 
@@ -191,7 +192,7 @@ app/Services/
 | Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Refactored to `@extends('_layouts.admin')`. Stats cards + sidebar with Tabler icons. Logout moved to sidebar. |
 | Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
 | Admin Questions | `/admin/questions` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
-| Admin Settings | `/admin/settings` | `adminPanel.html` | 🔧 | Placeholder view extending admin layout. Content pending. |
+| Admin Settings | `/admin/settings` | `adminPanel.html` | ✅ | Church name save + church code copy + change password modal (custom overlay). Password rules: min 8 chars, 1 capital, 1 number, 1 special. Inline validation errors + Livewire toast. |
 | Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
 | Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
@@ -245,6 +246,8 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
   - Uses **Tabler icons** (`@tabler/icons-webfont`) instead of image files
   - Desktop: toggle chevron button. Mobile: hamburger + overlay.
 - ✅ **Login page made standalone** — no sidebar, no admin wrapper (was extending admin layout)
+- ✅ **Top nav** (`_partials/adminSide/topNav.blade.php`) — sticky top bar with page title via `@yield('pageTitle')`. Hamburger visible on mobile inside the top nav. Each admin view sets `@section('pageTitle', '...')`.
+- ✅ **Admin layout structure** updated: `.adminPage` → `.adminSidebar` + `.adminRight` (`.adminTopNav` + `.adminContent`)
 
 ### 3.4 Admin Dashboard (High Complexity)
 
@@ -323,12 +326,14 @@ Route::prefix('admin')->group(function () {
     GET  /session-check                   Auth\LoginController@checkSession
 });
 
-// Admin panel — middleware('admin') (✅ 7 routes)
+// Admin panel — middleware('admin') (✅ 9 routes)
 Route::prefix('admin')->middleware('admin')->group(function () {
     GET  /dashboard                       view('admin.dashboard')                    admin.dashboard
     GET  /restrictions                    view('admin.restrictions')                 admin.restrictions
     GET  /questions                       view('admin.questions')                    admin.questions
-    GET  /settings                        view('admin.settings')                     admin.settings
+    GET  /settings                        Admin\SettingsController@index             admin.settings
+    POST /settings/church-name            Admin\SettingsController@updateChurchName  admin.settings.church-name
+    POST /settings/password               Admin\SettingsController@updatePassword    admin.settings.password
     POST /logout                          Auth\LogoutController@logout               admin.logout
 });
 
@@ -336,7 +341,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 // api/assessment-data, api/user-reports, api/generate-profile
 // admin/panel-data, admin/reports, admin/reports/export
 // admin/restrictions (POST), admin/restrictions/reset
-// admin/settings/church-name, admin/settings/password
 ```
 
 ---
@@ -400,7 +404,7 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 10. ❌ Dashboard with Chart.js (filters, charts, table)
 11. ❌ Restriction editor (demographic + skills)
 12. ❌ Question editor (3 question types)
-13. ❌ Settings page
+13. ✅ Settings page (church name, church code copy, change password with validation)
 14. ❌ PDF export
 
 ### Phase 4: Enhancement

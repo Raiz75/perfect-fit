@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -36,8 +37,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/questions', function () {
         return view('admin.questions');
     })->name('admin.questions');
-    Route::get('/settings', function () {
-        return view('admin.settings');
-    })->name('admin.settings');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
+    Route::post('/settings/church-name', [SettingsController::class, 'updateChurchName'])->name('admin.settings.church-name');
+    Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('admin.settings.password');
     Route::post('/logout', [LogoutController::class, 'logout'])->name('admin.logout');
 });

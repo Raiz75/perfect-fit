@@ -1,13 +1,10 @@
 @extends('_layouts.admin')
 
 @section('title', 'Admin Dashboard - PERFIT')
+@section('pageTitle', 'Dashboard')
 
 @section('content')
     <?php $user = Auth::user(); ?>
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="fw-bold" style="color: #1a1a2e;">Dashboard</h1>
-    </div>
 
     <div class="row g-4 mb-4">
         <div class="col-md-3">
