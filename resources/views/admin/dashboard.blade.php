@@ -118,7 +118,12 @@
             <div class="col-12">
                 <label class="form-label">Ministry</label>
                 <div class="d-flex flex-wrap gap-3" id="ministryFilterContainer">
-                    <!-- Populated by JS -->
+                    @foreach($ministries as $ministry)
+                    <div class="form-check">
+                        <input class="form-check-input ministry-filter" type="checkbox" value="{{ $ministry }}" id="min_{{ Str::slug($ministry, '_') }}">
+                        <label class="form-check-label small" for="min_{{ Str::slug($ministry, '_') }}">{{ $ministry }}</label>
+                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

@@ -89,14 +89,11 @@ app/Http/Controllers/
 
 | Old PHP File | Method | Laravel Route | Controller Method | Status | Notes |
 |-------------|--------|---------------|-------------------|--------|-------|
-| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | ✅ | Uses LoginRequest Form Request |
-| `php-signUp.php` | POST | `/admin/register` | `Auth\RegisterController::register` | ✅ | Uses RegisterRequest Form Request + CopyDefaults Action |
-| `php-checkEmail.php` | POST | `/admin/check-email` | `Auth\RegisterController::checkEmail` | ✅ | Uses CheckEmailRequest Form Request |
-| `php-sendVerification.php` | POST | `/admin/send-verification` | `Auth\RegisterController::sendVerification` | ✅ | Sends VerificationCodeMail |
-| `php-forgotPass.php` | POST | `/admin/forgot-password` | `Auth\ForgotPasswordController::sendTempPassword` | ✅ | Sends TemporaryPasswordMail |
-| `php-validateChurchCode.php` | POST | `/admin/validate-church-code` | `Auth\RegisterController::validateChurchCode` | ✅ | BINARY comparison |
-| — | POST | `/admin/verify-code` | `Auth\RegisterController::verifyCode` | ✅ | Server-side code verification |
-| `php-sessionTest.php` | GET | `/admin/session-check` | `Auth\LoginController::checkSession` | ✅ | Returns admin or 401 |
+| `php-signIn.php` | POST | `/admin/login` | `Auth\LoginController::login` | ✅ | Standard form POST → redirect. Uses LoginRequest. JS enhancement only (togglePassword, toast). |
+| `php-signUp.php` | POST | `/admin/send-verification` | `Auth\RegisterController::sendVerification` | ✅ | Standard form POST → redirect to `/admin/register?verify=` with toast. Validates via SendVerificationRequest (email unique + password rules). Stores email+password in session. |
+| — | POST | `/admin/verify-registration` | `Auth\RegisterController::verifyRegistration` | ✅ | New endpoint — validates code from session, creates user from stored session data, clears session, redirects to login. Merges old verify-code + register flow. |
+| `php-forgotPass.php` | POST | `/admin/forgot-password` | `Auth\ForgotPasswordController::sendTempPassword` | ✅ | Standard form POST → redirect back with toast flash. Sends TemporaryPasswordMail. |
+| `php-validateChurchCode.php` | POST | `/admin/validate-church-code` | `Auth\RegisterController::validateChurchCode` | ✅ | BINARY comparison (kept as JSON endpoint for assessment page) |
 | `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | ✅ | Redirects to admin.login |
 | `php-getDbData.php` | POST | `/api/assessment-data` | Replaced by session-based `AssessmentController::show()` | 🔧 | Handled server-side via session (church_code stored in session, not fetched via API) |
 | `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | ❌ | Phase 3 |
@@ -116,8 +113,12 @@ app/Http/Controllers/
 - ✅ `admin@admin` special user logic (hide "Reset" buttons) — frontend only, Phase 3
 - ✅ Registration copies defaults from admin ID 1 via `app/Actions/CopyDefaults.php`
 - ✅ Church code 9-char, case-sensitive, `BINARY` comparison in `validateChurchCode()`
-- ✅ Password strength: min 8 chars, 1 uppercase, 1 number, 1 special (server-side + client-side validation)
-- ✅ Form Request classes created: `LoginRequest`, `RegisterRequest`, `CheckEmailRequest`, `SendVerificationRequest`, `ChangePasswordRequest`
+- ✅ Password strength: min 8 chars, 1 uppercase, 1 number, 1 special (server-side only via Form Requests — removed from JS)
+- ✅ **All POSTs handled by controllers** — sign-in, send-verification, verify-registration, forgot-password all use standard `<form method="POST">` submissions. JS has zero fetch calls.
+- ✅ **Login and Register are separate pages** — `/admin/login` and `/admin/register` each with their own Blade template
+- ✅ **Verification flow**: `sendVerification` stores email+password in session, redirects to `/admin/register?verify=`. JS auto-shows verify modal. `verifyRegistration` reads session, creates user, clears session.
+- ✅ **Messages go to toast component** — all server messages (validation errors, success flashes) pass through `#toast-data` hidden element → dispatched as `notify` CustomEvent → rendered by `⚡toast-message` Livewire component. No inline alert boxes.
+- ✅ Form Request classes created: `LoginRequest`, `SendVerificationRequest`, `ChangePasswordRequest`
 
 ### 2.4 Service / Action Classes
 
@@ -180,8 +181,9 @@ app/Services/ (pending)
 |------|-------|----------|--------|-------|
 | Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
 | Assessment | `/assessment` | `assessment.html` | ✅ | All 4 phases built as server-side POST forms. No Livewire, no JS submissions. Session-based. Puzzle animation. Dynamic step counter. |
-| Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. JS extracted to `resources/js/admin-login.js`. Password strength validation client-side. |
-| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Full implementation with 7 Chart.js charts, filters (search, date, demographic, skills, ministries), and report table. Data endpoint: `/admin/dashboard/data`. JS: `resources/js/admin-dashboard.js`. |
+| Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Sign-in form only + forgot password modal. Links to `/admin/register`. JS: `resources/js/auth.js`. All messages via toast component. All POSTs go to controllers (standard form submissions). |
+| Admin Register | `/admin/register` | `admin.html` | ✅ | Standalone page. Sign-up form + email verification modal (auto-shown on `?verify=`). Links to `/admin/login`. JS: `resources/js/auth.js`. Same toast + standard form POST pattern. |
+| Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Full implementation with 7 Chart.js charts, filters (search, date, demographic, skills, ministries), and report table. Data endpoint: `/admin/dashboard/data`. JS: `resources/js/admin-dashboard.js`. Numeric mappings moved from JS to DashboardController. Ministry list served from PHP constant. Ministry checkboxes rendered server-side. |
 | Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ✅ | Top nav with 2 tabs (Demographics, Skills). Full CRUD with save/reset. |
 | Admin Questions | `/admin/questions` | `adminPanel.html` | ✅ | 3 tab pages (Skill, Interest & Passion, Behavioral). Inline editable cells. Save/reset with confirmation modal. |
 | Admin Settings | `/admin/settings` | `adminPanel.html` | ✅ | Church name save + church code copy + change password modal (custom overlay). Password rules: min 8 chars, 1 capital, 1 number, 1 special. Uses ChangePasswordRequest. |
@@ -267,11 +269,11 @@ Phase 5    → TBD — store eligible_ministries, generate report, save to user_
 
 ### 3.3 Admin Layout & Sidebar (✅ Complete)
 
-- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with `@include('_partials.adminSide.sideNav')` + `@include('_partials.adminSide.topNav')` + mobile hamburger + overlay. Sidebar JS extracted to `resources/js/admin.js` (loaded via Vite).
+- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with `@include('_partials.adminSide.sideNav')` + `@include('_partials.adminSide.topNav')` + mobile hamburger + overlay. Sidebar JS extracted to `resources/js/admin.js` (loaded via Vite). Logout modal moved here from sideNav for full-page coverage on mobile.
 - ✅ **Sidebar partial** (`_partials/adminSide/sideNav.blade.php`) — replaces former `<x-admin-sidebar />` component. Fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only).
   - Nav links: Dashboard, Restriction Editor, Question Editor, Settings (all using route names)
-  - Logout confirmation modal (glassmorphism, asks "Are you sure?")
-  - Active link highlighted with purple left border
+  - Logout button: clicking it also collapses the sidebar (`classList.remove('mobileOpen')`) + hides overlay before showing modal
+  - Active link highlighted with purple left border (removed duplicate `inset` box-shadow)
   - Uses **Tabler icons** (`@tabler/icons-webfont`) instead of image files
   - Desktop: toggle chevron button. Mobile: hamburger + overlay.
 - ✅ **Top nav partial** (`_partials/adminSide/topNav.blade.php`) — replaces former `<x-admin-top-nav />` component. Sticky top bar with page title. Hamburger visible on mobile.
@@ -310,11 +312,11 @@ Phase 5    → TBD — store eligible_ministries, generate report, save to user_
 ### 3.6 Coding Convention Compliance (✅ Applied)
 
 - **Blade components** — `@include('_partials.adminSide.sideNav')` → `<x-admin-sidebar />` and `<x-admin-top-nav />` (class-backed)
-- **Form Requests** — All auth actions use dedicated Form Request classes in `app/Http/Requests/Auth/`
+- **Form Requests** — Auth Form Requests in `app/Http/Requests/Auth/`: `LoginRequest`, `SendVerificationRequest`, `ChangePasswordRequest`. `RegisterRequest` and `CheckEmailRequest` removed (logic merged into `SendVerificationRequest` + `verifyRegistration`).
 - **Action classes** — `app/Actions/CopyDefaults.php` extracted from `RegisterController`
-- **Inline JS extracted** — Admin sidebar to `admin.js`, login logic to `admin-login.js`, dashboard to `admin-dashboard.js`
+- **Inline JS extracted** — Admin sidebar to `admin.js`, auth pages (login + register) to `auth.js`, dashboard to `admin-dashboard.js`. `admin-login.js` and `admin-register.js` merged into single `auth.js`.
 - **Tabler Icons** — All inline SVGs replaced with `ti ti-*` classes from `@tabler/icons-webfont`
-- **Password rules** — Min 8, uppercase, number, special (server + client side)
+- **Password rules** — Min 8, uppercase, number, special (server-side only via Form Requests — removed from JS)
 
 ### 3.7 Frontend Assets
 

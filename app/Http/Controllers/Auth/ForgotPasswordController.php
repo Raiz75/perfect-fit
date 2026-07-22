@@ -24,10 +24,8 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email not found.',
-            ], 404);
+            return redirect()->route('admin.login')
+                ->with('error', 'Email not found.');
         }
 
         $tempPassword = Str::random(10);
@@ -36,9 +34,7 @@ class ForgotPasswordController extends Controller
 
         Mail::to($user->email)->send(new TemporaryPasswordMail($tempPassword));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Temporary password sent to your email.',
-        ]);
+        return redirect()->route('admin.login')
+            ->with('success', 'Temporary password sent to your email.');
     }
 }

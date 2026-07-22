@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>PERFIT - Admin Login</title>
+    <title>PERFIT - Admin Registration</title>
     <link rel="icon" type="image/png" href="{{ asset('images/icn-logo.png') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -175,44 +175,47 @@
             <div id="toast-data" data-message="{{ $toastMsg }}" data-type="{{ $toastType }}" style="display:none;"></div>
             @endif
 
-            <form method="POST" action="{{ route('admin.login') }}" class="w-100">
+            <form method="POST" action="{{ route('admin.send-verification') }}" class="w-100">
                 @csrf
                 <div class="text-center mb-4">
-                    <h3 class="fw-bold" style="color: var(--purple);">Sign In</h3>
+                    <h3 class="fw-bold" style="color: var(--purple);">Sign Up</h3>
                 </div>
                 <div class="input-group-custom mb-3">
                     <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required>
                 </div>
                 <div class="input-group-custom mb-3">
-                    <input type="password" name="password" id="signinPass" placeholder="Password" required>
-                    <span class="eye-icon" onclick="togglePassword('signinPass', this)">
+                    <input type="password" name="password" id="signupPass" placeholder="Password" required>
+                    <span class="eye-icon" onclick="togglePassword('signupPass', this)">
                         <i class="ti ti-eye-off"></i>
                     </span>
                 </div>
-                <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-4 px-5">Sign In</button>
+                <div class="input-group-custom mb-3">
+                    <input type="password" name="password_confirmation" id="confirmPass" placeholder="Confirm Password" required>
+                    <span class="eye-icon" onclick="togglePassword('confirmPass', this)">
+                        <i class="ti ti-eye-off"></i>
+                    </span>
+                </div>
+                <button type="submit" class="btn primary-btn-perfit d-block mx-auto mt-4 px-5">Sign Up</button>
             </form>
 
-            <div class="w-100 text-center mt-4">
-                <a id="forgotPasswordLink" class="toggle-link">Forgot Password?</a>
-            </div>
             <div class="mt-4 text-center" style="color: #a0a0b8; font-size: 13px;">
-                Don't have an account?
-                <a href="{{ route('admin.register') }}" class="toggle-link">Sign Up</a>
+                Already have an account?
+                <a href="{{ route('admin.login') }}" class="toggle-link">Sign In</a>
             </div>
 
             <button class="w-100 border-0 py-3 fw-semibold mt-4" onclick="window.location.href='/'" style="background: rgba(250,248,255,0.6); color: var(--purple); cursor: pointer; font-size: 13px; border-top: 1px solid rgba(140,82,255,0.1); border-radius: 0 0 28px 28px;">Back to Home</button>
         </div>
 
-        <div class="modal-overlay" id="forgotPopup">
+        <div class="modal-overlay" id="verifyPopup">
             <div class="auth-modal-box">
-                <h3 class="fw-bold mb-2" style="color: var(--purple);">Reset Password</h3>
-                <p class="text-muted mb-3" style="font-size: 14px;">Enter your registered email to receive a temporary password.</p>
-                <form method="POST" action="{{ route('admin.forgot-password') }}">
+                <h3 class="fw-bold mb-2" style="color: var(--purple);">Email Verification</h3>
+                <p class="text-muted mb-3" style="font-size: 14px;">Enter the 6-digit code sent to your email.</p>
+                <form method="POST" action="{{ route('admin.verify-registration') }}">
                     @csrf
-                    <input type="email" name="email" placeholder="Enter your email" class="w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 10px; padding: 12px; text-align: center; background: rgba(255,255,255,0.5); outline: none; display: block;">
+                    <input type="text" name="code" maxlength="6" class="text-center w-75 mx-auto mb-3" style="border: 2px solid var(--purple); border-radius: 10px; font-size: 18px; padding: 12px; letter-spacing: 6px; font-weight: bold; color: var(--purple); background: rgba(255,255,255,0.5); outline: none; display: block;">
                     <div class="d-flex justify-content-center gap-3">
-                        <button type="button" class="btn primary-btn-perfit" onclick="document.getElementById('forgotPopup').classList.remove('show')" style="padding-left: 1.5rem; padding-right: 1.5rem;">Back</button>
-                        <button type="submit" class="btn primary-btn-perfit" style="padding-left: 1.5rem; padding-right: 1.5rem;">Send</button>
+                        <a href="{{ route('admin.register') }}" class="btn primary-btn-perfit" style="padding-left: 1.5rem; padding-right: 1.5rem; text-decoration: none; line-height: 1.5;">Back</a>
+                        <button type="submit" class="btn primary-btn-perfit" style="padding-left: 1.5rem; padding-right: 1.5rem;">Verify</button>
                     </div>
                 </form>
             </div>

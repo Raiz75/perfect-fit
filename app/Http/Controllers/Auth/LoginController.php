@@ -21,16 +21,10 @@ class LoginController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
-            return response()->json([
-                'success' => true,
-                'message' => 'Login successful.',
-            ]);
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        return response()->json([
-            'success' => false,
-            'message' => 'Invalid email or password.',
-        ], 401);
+        return back()->withErrors(['email' => 'Invalid email or password.'])->withInput();
     }
 
     public function checkSession(Request $request)

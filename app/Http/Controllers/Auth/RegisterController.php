@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Auth;
 use App\Actions\CopyDefaults;
 use App\Mail\VerificationCodeMail;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\CheckEmailRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendVerificationRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,69 +14,67 @@ use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
-    public function checkEmail(CheckEmailRequest $request)
+    public function showRegisterForm()
     {
-        $exists = User::where('email', $request->email)->exists();
-
-        return response()->json(['exists' => $exists]);
+        if (auth()->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+        return view('admin.register');
     }
 
     public function sendVerification(SendVerificationRequest $request)
     {
         $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-        session(['verification_code' => $code, 'verification_email' => $request->email]);
+        session([
+            'verification_code' => $code,
+            'verification_email' => $request->email,
+            'verification_password' => $request->password,
+        ]);
 
         Mail::to($request->email)->send(new VerificationCodeMail($code));
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Verification code sent.',
-        ]);
+        return redirect()->route('admin.register', ['verify' => $request->email])
+            ->with('success', 'Verification code sent to your email.');
     }
 
-    public function register(RegisterRequest $request, CopyDefaults $copyDefaults)
-    {
-        $admin = User::create([
-            'name' => $request->email,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'church_code' => $this->generateChurchCode(),
-            'church_name' => null,
-        ]);
-
-        $copyDefaults->handle($admin->id);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Account created successfully.',
-        ]);
-    }
-
-    public function verifyCode(Request $request)
+    public function verifyRegistration(Request $request)
     {
         $request->validate(['code' => 'required|string']);
 
         $storedCode = session('verification_code');
-        $storedEmail = session('verification_email');
+        $email = session('verification_email');
+        $password = session('verification_password');
 
-        if (!$storedCode || !$storedEmail) {
-            return response()->json([
-                'success' => false,
-                'message' => 'No verification code was sent. Please request a new one.',
-            ], 400);
+        if (!$storedCode || !$email || !$password) {
+            return redirect()->route('admin.register')
+                ->withErrors(['verify' => 'Session expired. Please sign up again.']);
         }
 
         if ($request->code !== $storedCode) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Incorrect verification code.',
-            ], 422);
+            return redirect()->route('admin.register', ['verify' => $email])
+                ->withErrors(['verify' => 'Incorrect verification code.']);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Code verified.',
+        if (User::where('email', $email)->exists()) {
+            session()->forget(['verification_code', 'verification_email', 'verification_password']);
+            return redirect()->route('admin.register')
+                ->withErrors(['email' => 'This email is already registered.']);
+        }
+
+        $admin = User::create([
+            'name' => $email,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'church_code' => $this->generateChurchCode(),
+            'church_name' => null,
         ]);
+
+        session()->forget(['verification_code', 'verification_email', 'verification_password']);
+
+        app(CopyDefaults::class)->handle($admin->id);
+
+        return redirect()->route('admin.login')
+            ->with('success', 'Email verified and account created! Please sign in.');
     }
 
     public function validateChurchCode(Request $request)

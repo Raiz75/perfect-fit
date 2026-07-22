@@ -31,14 +31,12 @@ Route::prefix('assessment')->name('assessment.')->group(function () {
 // Admin auth (guest)
 Route::prefix('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('admin.register');
     Route::post('/login', [LoginController::class, 'login']);
-    Route::post('/check-email', [RegisterController::class, 'checkEmail']);
-    Route::post('/send-verification', [RegisterController::class, 'sendVerification']);
-    Route::post('/verify-code', [RegisterController::class, 'verifyCode']);
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::post('/send-verification', [RegisterController::class, 'sendVerification'])->name('admin.send-verification');
+    Route::post('/verify-registration', [RegisterController::class, 'verifyRegistration'])->name('admin.verify-registration');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendTempPassword'])->name('admin.forgot-password');
     Route::post('/validate-church-code', [RegisterController::class, 'validateChurchCode']);
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendTempPassword']);
-    Route::get('/session-check', [LoginController::class, 'checkSession']);
 });
 
 // Admin panel (authenticated)
