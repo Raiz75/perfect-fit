@@ -299,7 +299,8 @@ Phase 5    → TBD — store eligible_ministries, generate report, save to user_
    - Skills (8 checkboxes)
    - Ministries (29 checkboxes)
 3. **Report table** — scrollable with sticky headers, auto-renders on filter change
-4. **Data endpoint** — `GET /admin/dashboard/data` with all filter params
+4. **Data endpoint** — `GET /admin/dashboard/data` with all filter params. Returns pre-mapped display values (gender→Male/Female, marital→Single/Married, etc.) — no conversion needed in JS.
+5. **Ministry list** — Defined as `DashboardController::MINISTRIES` constant. Passed to view, rendered server-side via Blade `@foreach`. No JS population needed.
 
 ### 3.5 Admin Restrictions/Questions Editor (✅ Complete)
 
@@ -356,17 +357,15 @@ Route::get('/',                         [FrontendController::class, 'index'])->n
 Route::get('/ministries',               [FrontendController::class, 'ministries'])->name('ministries');
 Route::get('/privacy-policy',           [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
 
-// Admin auth — no middleware (guest access) (✅ 8 routes)
+// Admin auth — no middleware (guest access) (✅ 6 routes)
 Route::prefix('admin')->group(function () {
-    GET  /login                           Auth\LoginController@showLoginForm         admin.login
+    GET  /login                           Auth\LoginController@showLoginForm          admin.login
     POST /login                           Auth\LoginController@login
-    POST /check-email                     Auth\RegisterController@checkEmail
-    POST /send-verification               Auth\RegisterController@sendVerification
-    POST /verify-code                     Auth\RegisterController@verifyCode
-    POST /register                        Auth\RegisterController@register
+    GET  /register                        Auth\RegisterController@showRegisterForm    admin.register
+    POST /send-verification               Auth\RegisterController@sendVerification     admin.send-verification
+    POST /verify-registration             Auth\RegisterController@verifyRegistration   admin.verify-registration
+    POST /forgot-password                 Auth\ForgotPasswordController@sendTempPassword  admin.forgot-password
     POST /validate-church-code            Auth\RegisterController@validateChurchCode
-    POST /forgot-password                 Auth\ForgotPasswordController@sendTempPassword
-    GET  /session-check                   Auth\LoginController@checkSession
 });
 
 // Admin panel — middleware('admin') (✅ 15 routes)
@@ -455,16 +454,16 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 ### Phase 1: Foundation (✅ Complete)
 1. ✅ Migrations & Seeders
 2. ✅ Master layout (`_layouts/master.blade.php`) with nav + footer
-3. ✅ Auth controllers + views (login/register/forgot-password with sliding forms + modals)
+3. ✅ Auth controllers + views (separate login & register pages + forgot-password modal + verification modal)
 4. ✅ Admin middleware + route registration
 5. ✅ Email integration (Laravel Mail + Gmail SMTP + Mailable classes + email Blade views)
 6. ✅ FrontendController + public routes (landing, ministries, privacy-policy)
 7. ✅ Landing page modals (user type, church code, language, bible verse) — all buttons wired
 
 ### Phase 2: Core Assessment (✅ Phases 1-4 Complete)
-8. ✅ AssessmentController — `setChurchCode()`, `show()`, `storePhase1-4()`, `reset()`
+8. ✅ AssessmentController — `setChurchCode()`, `show()`, `storePhase1-4()`, `reset()` (fixed behavioral question duplication: added `->where('user_id', $admin->id)` filter)
 9. ✅ Ministry matching logic — `computeEligibleMinistries()` in AssessmentController (filters by interest category, demographics, skills)
-10. ✅ Assessment wizard — All 4 phases built as server-side POST forms (no Livewire, no JS submissions)
+10. ✅ Assessment wizard — All 4 phases built as server-side POST forms. Glass UI theme with purple `#8c52ff`, backdrop blur, animated gradient background. Likert 1-6 circular buttons, pill radios, progressive blur (answered=faded, future=blurred+locked), auto-scroll to next question. No category headers or question numbers. Puzzle animation.
 11. ❌ Report creation + storage (Phase 5 — not yet built)
 
 ### Phase 3: Admin Panel (✅ Complete)
@@ -481,10 +480,12 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 20. ❌ Image assets copy (remaining images)
 
 ### Phase 5: Polish (✅ In Progress)
-21. ✅ Form Request validation — LoginRequest, RegisterRequest, CheckEmailRequest, SendVerificationRequest, ChangePasswordRequest
+21. ✅ Form Request validation — LoginRequest, SendVerificationRequest, ChangePasswordRequest (RegisterRequest + CheckEmailRequest removed — merged into SendVerificationRequest)
 22. ✅ Coding conventions applied — Blade components, Action classes, inline JS/CSS extracted, Tabler icons, naming conventions
-23. ❌ Session timeout handling
-24. ❌ Responsive design testing
+23. ✅ Backend logic removed from JS — All validation, data mapping, and POST requests moved to controllers. JS is UI enhancement only (auth.js, admin.js, admin-dashboard.js, assessment.js)
+24. ✅ Login & Register pages separated — dedicated Blade templates, unified auth.js, standard form POSTs, toast messaging
+25. ❌ Session timeout handling
+26. ❌ Responsive design testing
 
 ---
 
@@ -517,8 +518,8 @@ See `perfit-old/perfit/` for complete source reference:
 8. **Gender/marital values:** 0 = "No Restriction", 1 = "Male/Single", 2 = "Female/Married"
 9. **Time in faith values:** 1 = "1+ Week", 2 = "6+ Months", 3 = "1+ Year", 4 = "2+ Years"
 10. **Ministry ID mapping:** Ministries are indexed 1-29 and must stay in the same order as seeded — foreign keys depend on this order
-11. **Password strength rules:** Min 8 characters, at least 1 uppercase letter, 1 number, and 1 special character — enforced both client-side (admin-login.js) and server-side (RegisterRequest, ChangePasswordRequest)
-12. **Vite entry points:** `admin.js` (sidebar toggle), `admin-login.js` (auth forms), `admin-dashboard.js` (Chart.js dashboard), `assessment.js` (puzzle animation + NEXT button delay) — all registered in `vite.config.js`
+11. **Password strength rules:** Min 8 characters, at least 1 uppercase letter, 1 number, and 1 special character — enforced server-side only via `SendVerificationRequest` and `ChangePasswordRequest`. Client-side validation removed (JS only enhances UI).
+12. **Vite entry points:** `admin.js` (sidebar toggle), `auth.js` (login + register pages — togglePassword, toast, forgot modal, auto-show verify), `admin-dashboard.js` (Chart.js dashboard), `assessment.js` (puzzle animation + NEXT button delay) — all registered in `vite.config.js`
 13. **Assessment uses server-side session, not localStorage:** All phase data stored in `session('assessment.*')`. Church code set via `POST /assessment/set-church-code`, stored in session (not localStorage)
 14. **No Livewire on assessment page:** Removed Livewire. All forms use standard HTML `method="POST"` with hidden `@csrf` inputs
 15. **NEXT button uses HTML `form` attribute:** The footer button's `form="..."` attribute targets the active phase's form ID (`demographicForm`, `skillsForm`, `interestForm`, `behavioralForm`). JS intercepts click for 3s puzzle delay, then calls `form.submit()`
@@ -531,20 +532,20 @@ See `perfit-old/perfit/` for complete source reference:
 
 ---
 
-## 9. ⚠️ Refactoring: Admin JavaScript → Controllers
+## 9. ✅ Refactoring: Admin JavaScript → Controllers
 
-The admin JS files contain business logic that should be handled by Laravel controllers. JS should only be used for **enhancement/UX**, not as the primary driver of logic.
+All backend logic has been moved from JS to Laravel controllers. JS is now used only for **enhancement/UX**.
 
-### What to move to controllers:
-- Form validation (already partially done via Form Requests)
-- DOM manipulation for data display (use Blade + Livewire instead)
-- Business rules (ministry filtering, scoring, matching logic → `MinistryMatchingService`)
-- Data fetching logic (use Livewire or controller-backed endpoints)
+### ✅ What was moved to controllers:
+- **Form validation** — All validation in Form Requests (`SendVerificationRequest`, `ChangePasswordRequest`, `LoginRequest`). Password strength rules removed from JS.
+- **Numeric field mappings** — `DashboardController::getData()` now returns mapped display values (Male/Female, Single/Married, etc.) instead of raw codes. `convertNumericFields()` removed from JS.
+- **Static data** — Ministry list moved from JS array to `DashboardController::MINISTRIES` constant. Ministry checkboxes rendered server-side by Blade. `ministryList` removed from JS.
+- **All form POSTs** — Sign-in, send-verification, verify-registration, forgot-password all use standard `<form method="POST">` submissions. JS has zero fetch calls. Controllers redirect with flash messages.
+- **Password validation** — Removed from JS. Handled entirely by `SendVerificationRequest` (min 8, uppercase, number, special, confirmed).
+- **Sign-up state** — `window.tempSignupData` removed. Password now stored in session by `sendVerification`, read by `verifyRegistration`.
 
-### What JS should keep doing:
-- Animations and transitions
-- Toast notifications
-- Sidebar toggle
-- Chart rendering (Chart.js)
-- Inline editing UX (contenteditable tables)
-- Clipboard copy
+### ✅ What JS kept doing:
+- **`auth.js`** — togglePassword, toast notifications via CustomEvent, forgot password modal toggle, auto-show verify modal on `?verify=`
+- **`admin.js`** — Sidebar toggle (desktop collapsed, mobile hamburger), mobile overlay close, admin@admin element hiding
+- **`admin-dashboard.js`** — Chart.js rendering (7 charts), table row rendering from server-mapped data, filter param collection, API call to `/admin/dashboard/data`
+- **`assessment.js`** — Puzzle animation timing, 3s NEXT delay, step counter is server-rendered
