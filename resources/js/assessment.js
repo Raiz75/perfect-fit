@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             e.preventDefault();
             nextBtn.disabled = true;
-            nextBtn.textContent = 'Please wait...';
+            nextBtn.innerHTML = '<i class="ti ti-loader" style="margin-right:6px;"></i> Please wait...';
 
             showPuzzle(puzzleMap[currentPhase] || 'bottom');
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     form.submit();
                 } else {
                     nextBtn.disabled = false;
-                    nextBtn.textContent = 'NEXT PHASE';
+                    nextBtn.innerHTML = '<i class="ti ti-arrow-right" style="margin-right:6px;"></i> Next Phase';
                 }
             }, 3000);
         });
