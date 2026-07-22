@@ -4,11 +4,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\RestrictionController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Assessment\AssessmentController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Assessment\DemographicsController;
 use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,8 +18,13 @@ Route::get('/ministries', [FrontendController::class, 'ministries'])->name('mini
 Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
 
 // Assessment
-Route::get('/assessment', [DemographicsController::class, 'show'])->name('assessment');
-Route::post('/assessment', [DemographicsController::class, 'store'])->name('assessment.store');
+Route::prefix('assessment')->name('assessment.')->group(function () {
+    Route::post('/set-church-code', [AssessmentController::class, 'setChurchCode'])->name('set-church-code');
+    Route::get('/', [AssessmentController::class, 'show'])->name('index');
+    Route::post('/phase1', [AssessmentController::class, 'storePhase1'])->name('phase1.store');
+    Route::post('/phase2', [AssessmentController::class, 'storePhase2'])->name('phase2.store');
+    Route::get('/reset', [AssessmentController::class, 'reset'])->name('reset');
+});
 
 // Admin auth (guest)
 Route::prefix('admin')->group(function () {

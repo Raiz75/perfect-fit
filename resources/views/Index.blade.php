@@ -675,10 +675,16 @@
         .then(r => r.json())
         .then(data => {
             if (data.exists) {
-                localStorage.setItem('churchCode', code);
-                closeModal('overlayChurch');
-                openModal('overlayLang');
-                document.getElementById('inputedChurchCode').value = '';
+                fetch('/assessment/set-church-code', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                    body: JSON.stringify({ church_code: code })
+                })
+                .then(function() {
+                    closeModal('overlayChurch');
+                    openModal('overlayLang');
+                    document.getElementById('inputedChurchCode').value = '';
+                });
             } else {
                 alert('Invalid church code.');
             }
@@ -693,7 +699,6 @@
             return;
         }
         closeModal('overlayLang');
-        localStorage.setItem('selectedLanguage', lang);
         window.location.href = '/assessment';
     }
 

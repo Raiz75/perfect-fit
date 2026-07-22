@@ -998,6 +998,8 @@ td.editable:focus {
 }
 .line { flex: 1; height: 4px; background: var(--b); margin-top: 32px; }
 .currentStep { background: var(--a); color: white; }
+.completedStep { background: #28a745; color: white; position: relative; }
+.completedStep::after { content: '✓'; position: absolute; font-size: 0.6em; top: -2px; right: 2px; }
 
 .personalDetail {
     padding: 2rem 0; width: 100%; text-align: center;
@@ -1122,6 +1124,62 @@ td.editable:focus {
     0%   { transform: translate(-50%, -50%) rotate(0deg); }
     100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
+.questionBox {
+    width: 100%;
+    margin: 2rem auto;
+    text-align: center;
+    padding: 1.5rem;
+}
+.questionText {
+    width: 95%;
+    font-size: 1.5rem;
+    margin: 0 auto 1.5rem auto;
+    color: rgb(128, 65, 128);
+    line-height: 1.4;
+}
+.rateBox {
+    margin: 1.5rem auto 0 auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    background: radial-gradient(circle, whitesmoke 0%, white 100%);
+}
+.rateBox button {
+    font-size: 1rem;
+    min-height: 50px;
+    color: rgb(128, 65, 128);
+    background: radial-gradient(circle, rgb(255, 223, 255) 0%, white 100%);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+.rateBox button:hover {
+    background: radial-gradient(circle, rgb(128, 65, 128) 0%, white 100%);
+    color: white;
+}
+.denyInput {
+    filter: blur(5px);
+    pointer-events: none;
+    opacity: 0.9;
+}
+.clicked {
+    background: radial-gradient(circle, rgb(128, 65, 128) 0%, white 100%) !important;
+    color: white !important;
+}
+.groupHeader {
+    width: 100%;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+}
+.groupHeader h3 {
+    color: rgb(128, 65, 128);
+    font-size: 1.8rem;
+    margin: 0;
+}
+
 .overlayLoad p {
     position: absolute;
     top: 55%;
@@ -1147,6 +1205,9 @@ td.editable:focus {
     .box label { font-size: 1.2rem; }
     .footerContent { flex-direction: column; align-items: center; gap: 20px; }
     .footerRight { align-items: center; }
+    .questionText { font-size: 1.2rem; }
+    .rateBox button { font-size: 0.85rem; min-height: 40px; }
+    .groupHeader h3 { font-size: 1.4rem; }
 }
 @media (max-width: 480px) {
     .stepCounter { gap: 2px; }

@@ -10,7 +10,10 @@
         </div>
         <div class="footerRight">
             <button class="nextBtn" id="reviewBtn" style="display:none;">REVIEW ANSWER</button>
-            <button class="nextBtn" id="nextPhaseBtn">NEXT PHASE</button>
+            <button type="submit" class="nextBtn" id="nextPhaseBtn"
+                form="{{ ($currentPhase ?? 1) == 1 ? 'demographicForm' : 'skillsForm' }}">
+                NEXT PHASE
+            </button>
             <button class="nextBtn" id="submitBtn" style="display:none;">SUBMIT</button>
         </div>
     </div>
@@ -18,4 +21,3 @@
         <img src="{{ asset('images/footer.png') }}" alt="">
     </div>
 </div>
-

@@ -6,15 +6,23 @@
     <title>Assessment</title>
     @vite(['resources/css/app.css'])
 </head>
-<body>
+<body data-current-phase="{{ $currentPhase ?? 1 }}">
     @include('_partials.assessmentSide.header')
 
-    <div id="phase1">
-        @include('components.⚡demographic-wizard')
+    <div id="phase1" @if(($currentPhase ?? 1) > 1) style="display:none;" @endif>
+        @include('_partials.assessmentSide.wizard-demographics')
     </div>
 
-    <div id="phase2" style="display: none;">
-        <p>Phase 2: Skill Profiling (Coming soon)</p>
+    <div id="phase2" @if(($currentPhase ?? 1) < 2) style="display:none;" @endif>
+        @if($skillQuestions->isNotEmpty())
+            @include('_partials.assessmentSide.wizard-skills')
+        @elseif(($currentPhase ?? 1) >= 2)
+            <p>No skill questions available for your church.</p>
+        @endif
+    </div>
+
+    <div id="phase3" style="display:none;">
+        <p>Phase 3: Interest & Passion Profiling (Coming soon)</p>
     </div>
 
     @include('_partials.assessmentSide.footer')
