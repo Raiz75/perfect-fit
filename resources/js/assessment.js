@@ -7,18 +7,20 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(function () { piece.classList.remove('highlightPiece'); }, 2000);
     }
 
-    var phase1 = document.getElementById('phase1');
+    var currentPhase = parseInt(document.body.getAttribute('data-current-phase') || '1', 10);
+    var puzzleOrder = ['bottom', 'left', 'right', 'top'];
     var reviewBtn = document.getElementById('reviewBtn');
 
-    if (phase1 && phase1.style.display === 'none') {
+    if (currentPhase > 1) {
         if (reviewBtn) reviewBtn.style.display = 'block';
-        showPuzzle('bottom');
+        for (var i = 0; i < currentPhase - 1; i++) {
+            showPuzzle(puzzleOrder[i]);
+        }
     }
 
     var nextBtn = document.getElementById('nextPhaseBtn');
     if (nextBtn) {
         var puzzleMap = { 1: 'bottom', 2: 'left', 3: 'right', 4: 'top' };
-        var currentPhase = parseInt(document.body.getAttribute('data-current-phase') || '1', 10);
 
         nextBtn.addEventListener('click', function (e) {
             e.preventDefault();

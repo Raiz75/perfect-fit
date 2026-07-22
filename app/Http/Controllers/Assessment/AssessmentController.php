@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Assessment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessment\StoreDemographicsRequest;
+use App\Models\InterestAndPassionQuestion;
+use App\Models\MinistryCategory;
 use App\Models\Skill;
 use App\Models\SkillQuestion;
 use App\Models\User;
@@ -36,18 +38,29 @@ class AssessmentController extends Controller
 
         $skillQuestions = collect();
         $skills = collect();
-        if ($churchCode && $currentPhase >= 2) {
+        $interestQuestions = collect();
+        $ministryCategories = collect();
+        if ($churchCode) {
             $admin = User::where('church_code', $churchCode)->first();
             if ($admin) {
-                $skillQuestions = SkillQuestion::where('user_id', $admin->id)
-                    ->orderBy('skill_id')
-                    ->orderBy('question_number')
-                    ->get();
-                $skills = Skill::all()->keyBy('id');
+                if ($currentPhase >= 2) {
+                    $skillQuestions = SkillQuestion::where('user_id', $admin->id)
+                        ->orderBy('skill_id')
+                        ->orderBy('question_number')
+                        ->get();
+                    $skills = Skill::all()->keyBy('id');
+                }
+                if ($currentPhase >= 3) {
+                    $interestQuestions = InterestAndPassionQuestion::where('user_id', $admin->id)
+                        ->orderBy('ministry_category_id')
+                        ->orderBy('question_number')
+                        ->get();
+                    $ministryCategories = MinistryCategory::all()->keyBy('id');
+                }
             }
         }
 
-        return view('assessment.index', compact('phase1', 'currentPhase', 'skillQuestions', 'skills'));
+        return view('assessment.index', compact('phase1', 'currentPhase', 'skillQuestions', 'skills', 'interestQuestions', 'ministryCategories'));
     }
 
     public function storePhase1(StoreDemographicsRequest $request): RedirectResponse
@@ -110,6 +123,52 @@ class AssessmentController extends Controller
             'groupTotals' => $groupTotals,
         ]]);
         session(['assessment.current_phase' => 3]);
+
+        return redirect()->route('assessment.index');
+    }
+
+    public function storePhase3(Request $request): RedirectResponse
+    {
+        $answers = $request->input('answers', []);
+
+        if (empty($answers)) {
+            return redirect()->route('assessment.index')->withErrors(['answers' => 'Please answer all questions.']);
+        }
+
+        $churchCode = session('assessment.church_code', '');
+        $admin = User::where('church_code', $churchCode)->first();
+        $totalQuestions = $admin ? InterestAndPassionQuestion::where('user_id', $admin->id)->count() : 0;
+
+        if (count($answers) !== $totalQuestions) {
+            return redirect()->route('assessment.index')->withErrors(['answers' => 'Please answer all questions before proceeding.']);
+        }
+
+        $validated = [];
+        foreach ($answers as $questionId => $score) {
+            $score = (int) $score;
+            if ($score < 1 || $score > 6) {
+                return redirect()->route('assessment.index')->withErrors(["answers.$questionId" => 'Invalid score.']);
+            }
+            $validated[$questionId] = $score;
+        }
+
+        $groupTotals = [];
+        foreach ($validated as $questionId => $score) {
+            $question = InterestAndPassionQuestion::find($questionId);
+            if ($question) {
+                $catId = $question->ministry_category_id;
+                if (!isset($groupTotals[$catId])) {
+                    $groupTotals[$catId] = 0;
+                }
+                $groupTotals[$catId] += $score;
+            }
+        }
+
+        session(['assessment.phase3' => [
+            'scores' => $validated,
+            'groupTotals' => $groupTotals,
+        ]]);
+        session(['assessment.current_phase' => 4]);
 
         return redirect()->route('assessment.index');
     }

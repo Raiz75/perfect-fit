@@ -23,6 +23,7 @@ Route::prefix('assessment')->name('assessment.')->group(function () {
     Route::get('/', [AssessmentController::class, 'show'])->name('index');
     Route::post('/phase1', [AssessmentController::class, 'storePhase1'])->name('phase1.store');
     Route::post('/phase2', [AssessmentController::class, 'storePhase2'])->name('phase2.store');
+    Route::post('/phase3', [AssessmentController::class, 'storePhase3'])->name('phase3.store');
     Route::get('/reset', [AssessmentController::class, 'reset'])->name('reset');
 });
 

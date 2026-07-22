@@ -9,20 +9,25 @@
 <body data-current-phase="{{ $currentPhase ?? 1 }}">
     @include('_partials.assessmentSide.header')
 
-    <div id="phase1" @if(($currentPhase ?? 1) > 1) style="display:none;" @endif>
+    @php $cp = $currentPhase ?? 1; @endphp
+    <div id="phase1" @if($cp != 1) style="display:none;" @endif>
         @include('_partials.assessmentSide.wizard-demographics')
     </div>
 
-    <div id="phase2" @if(($currentPhase ?? 1) < 2) style="display:none;" @endif>
+    <div id="phase2" @if($cp != 2) style="display:none;" @endif>
         @if($skillQuestions->isNotEmpty())
             @include('_partials.assessmentSide.wizard-skills')
-        @elseif(($currentPhase ?? 1) >= 2)
+        @elseif($cp == 2)
             <p>No skill questions available for your church.</p>
         @endif
     </div>
 
-    <div id="phase3" style="display:none;">
-        <p>Phase 3: Interest & Passion Profiling (Coming soon)</p>
+    <div id="phase3" @if($cp != 3) style="display:none;" @endif>
+        @if($interestQuestions->isNotEmpty())
+            @include('_partials.assessmentSide.wizard-interest-and-passion')
+        @elseif($cp == 3)
+            <p>No interest & passion questions available for your church.</p>
+        @endif
     </div>
 
     @include('_partials.assessmentSide.footer')
