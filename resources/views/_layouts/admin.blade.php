@@ -23,10 +23,10 @@
     <div class="sidebarOverlay" id="sidebarOverlay"></div>
 
     <div class="adminPage">
-        <x-admin-sidebar />
+        @include('_partials.adminSide.sideNav')
 
         <div class="adminRight">
-            <x-admin-top-nav :title="$title ?? 'PERFIT'" />
+            @include('_partials.adminSide.topNav')
 
             <main class="adminContent adminGlassBg" id="adminContent">
                 @yield('content')
