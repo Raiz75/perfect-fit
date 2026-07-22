@@ -9,10 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var currentPhase = parseInt(document.body.getAttribute('data-current-phase') || '1', 10);
     var puzzleOrder = ['bottom', 'left', 'right', 'top'];
-    var reviewBtn = document.getElementById('reviewBtn');
 
     if (currentPhase > 1) {
-        if (reviewBtn) reviewBtn.style.display = 'block';
         for (var i = 0; i < currentPhase - 1; i++) {
             showPuzzle(puzzleOrder[i]);
         }

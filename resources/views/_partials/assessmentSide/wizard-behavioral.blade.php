@@ -30,27 +30,15 @@
         @php $prevMinistryId = null; @endphp
 
         @foreach($behavioralQuestions as $question)
-            @php $ministryName = $question->ministry->name ?? 'Unknown'; @endphp
-
-            @if($question->ministry_id !== $prevMinistryId)
-                <div class="category-header">
-                    <div class="cat-icon">
-                        <i class="ti ti-building-community"></i>
-                    </div>
-                    <h3>{{ $ministryName }}</h3>
-                </div>
-                @php $prevMinistryId = $question->ministry_id; @endphp
-            @endif
-
-            <div class="question-card">
-                <p class="question-text">
-                    <strong>Q{{ $question->question_number }}.</strong> {{ $question->question_en }}
+            <div class="question-card {{ $loop->first ? '' : 'blurred' }}">
+                <p class="question-text" style="text-align:center;">
+                    {{ $question->question_en }}
                 </p>
                 <div class="likert-row">
                     @foreach([6,5,4,3,2,1] as $val)
                         <label class="likert-btn">
                             <input type="radio" name="answers[{{ $question->id }}]" value="{{ $val }}" required
-                                onchange="this.closest('.likert-row').querySelectorAll('.likert-btn').forEach(b=>b.classList.remove('selected')); this.closest('.likert-btn').classList.add('selected');">
+                                onchange="var r=this.closest('.likert-row');r.querySelectorAll('.likert-btn').forEach(function(b){b.classList.remove('selected')});this.closest('.likert-btn').classList.add('selected');var c=this.closest('.question-card');c.classList.remove('blurred');c.classList.add('answered');var n=c.nextElementSibling;while(n&&!n.matches('.question-card'))n=n.nextElementSibling;if(n){n.classList.remove('blurred');n.scrollIntoView({behavior:'smooth',block:'center'});}">
                             {{ $val }}
                         </label>
                     @endforeach

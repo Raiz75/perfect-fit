@@ -15,42 +15,18 @@
         Use the scale <strong>1–6</strong> — Strongly Agree (6) to Strongly Disagree (1).
     </div>
 
-    @php
-        $prevSkillId = null;
-        $skillIcons = [
-            1 => 'ti ti-music',
-            2 => 'ti ti-device-laptop',
-            3 => 'ti ti-pencil',
-            4 => 'ti ti-tools',
-            5 => 'ti ti-microphone',
-            6 => 'ti ti-calculator',
-            7 => 'ti ti-users',
-            8 => 'ti ti-book',
-        ];
-    @endphp
+
 
     @foreach($skillQuestions as $question)
-        @php $skillName = $skills[$question->skill_id]->name ?? 'Unknown'; @endphp
-
-        @if($question->skill_id !== $prevSkillId)
-            <div class="category-header">
-                <div class="cat-icon">
-                    <i class="{{ $skillIcons[$question->skill_id] ?? 'ti ti-star' }}"></i>
-                </div>
-                <h3>{{ $skillName }}</h3>
-            </div>
-            @php $prevSkillId = $question->skill_id; @endphp
-        @endif
-
-        <div class="question-card">
-            <p class="question-text">
-                <strong>Q{{ $question->question_number }}.</strong> {{ $question->question_en }}
+        <div class="question-card {{ $loop->first ? '' : 'blurred' }}">
+            <p class="question-text" style="text-align:center;">
+                {{ $question->question_en }}
             </p>
             <div class="likert-row">
                 @foreach([6,5,4,3,2,1] as $val)
                     <label class="likert-btn">
                         <input type="radio" name="answers[{{ $question->id }}]" value="{{ $val }}" required
-                            onchange="this.closest('.likert-row').querySelectorAll('.likert-btn').forEach(b=>b.classList.remove('selected')); this.closest('.likert-btn').classList.add('selected');">
+                            onchange="var r=this.closest('.likert-row');r.querySelectorAll('.likert-btn').forEach(function(b){b.classList.remove('selected')});this.closest('.likert-btn').classList.add('selected');var c=this.closest('.question-card');c.classList.remove('blurred');c.classList.add('answered');var n=c.nextElementSibling;while(n&&!n.matches('.question-card'))n=n.nextElementSibling;if(n){n.classList.remove('blurred');n.scrollIntoView({behavior:'smooth',block:'center'});}">
                         {{ $val }}
                     </label>
                 @endforeach
