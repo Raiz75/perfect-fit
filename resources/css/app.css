@@ -965,3 +965,132 @@ td.editable:focus {
     background: rgba(140, 82, 255, 0.08);
     border-color: #8c52ff;
 }
+
+/* =========================================
+   Assessment Styles
+   ========================================= */
+:root {
+    --a: rgb(128, 65, 128);
+    --b: rgb(255, 223, 255);
+}
+
+.banner { width: 100%; position: relative; }
+.banner img { width: 100%; display: block; }
+.ttl {
+    text-align: center; font-size: clamp(1.8rem, 8vw, 4rem); color: var(--a);
+    margin-top: -25vw; margin-bottom: 20vw;
+}
+.stepCounter {
+    width: 90%; margin: 0 auto 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+}
+.stepContainer {
+    display: grid; align-items: center; text-align: center;
+    grid-template-rows: auto auto; color: var(--a);
+}
+.step {
+    width: clamp(36px, 6vw, 60px); height: clamp(36px, 6vw, 60px); border-radius: 50%;
+    background: var(--b); color: var(--a);
+    display: flex; justify-content: center; align-items: center;
+    font-weight: bold; margin: auto; font-size: clamp(0.8rem, 2vw, 1.2rem);
+}
+.line { flex: 1; height: 4px; background: var(--b); margin-top: 32px; }
+.currentStep { background: var(--a); color: white; }
+
+.personalDetail {
+    padding: 2rem 0; width: 100%; text-align: center;
+    color: var(--a); font-size: 2rem;
+    background: radial-gradient(circle, whitesmoke 0%, whitesmoke 10%, white 100%);
+}
+.box { width: auto; padding: 0.75rem; text-align: center; margin: 1rem 0; }
+.box span {
+    font-size: 1.8rem; color: var(--a);
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 50px;
+    background: radial-gradient(circle, var(--b) 0%, transparent 100%);
+}
+.ansDiv { display: flex; justify-content: center; gap: 10px; padding: 10px; flex-wrap: wrap; }
+.personalBox { display: flex; flex-direction: column; align-items: center; }
+.personalBox label {
+    width: 55%; display: flex; justify-content: space-between;
+    align-items: center; font-size: 1.5rem; padding: 4px; color: var(--a);
+}
+.personalBox input[type="text"],
+.personalBox input[type="number"] {
+    height: 30px; width: 70%; font-size: 1rem; padding-left: 5%;
+    border: none; border-bottom: 2px solid var(--a);
+    color: var(--a); background: transparent;
+}
+.personalBox input:focus { outline: none; }
+.contactInput { width: 55%; }
+.contactInput div {
+    width: 70%; display: flex; height: 30px;
+    border-bottom: 2px solid var(--a); background: transparent;
+}
+.contactInput div p { margin: 0; width: 20%; }
+.contactInput div input {
+    width: 80%; border: none; background: transparent; color: var(--a); font-size: 1rem;
+}
+.contactInput div input:focus { outline: none; }
+.box label {
+    display: flex; align-items: center; gap: 10px; font-size: 1.5rem; padding: 4px;
+    color: var(--a); border-left: 3px solid transparent; border-right: 3px solid transparent;
+    cursor: pointer;
+}
+.box label input[type="radio"] { accent-color: var(--a); }
+.box label:has(input[type="radio"]:checked) {
+    background: var(--b);
+    border-left: 3px solid var(--a);
+    border-right: 3px solid var(--a);
+}
+
+.nextBtn {
+    width: 200px; height: 60px;
+    border: 3px solid var(--a); border-radius: 12px;
+    font-size: 1.2rem; background: var(--a); color: white;
+    margin: 10px auto; display: block; cursor: pointer;
+    transition: .3s ease-in-out;
+}
+.nextBtn:hover { background: var(--b); color: var(--a); }
+
+.assessmentFooter { position: relative; width: 100%; margin-top: 2rem; }
+.footerContent {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 0 5% 2rem; position: relative; z-index: 2;
+}
+.footerLeft .puzzle {
+    position: relative; width: 25vw; height: 25vw;
+    max-width: 250px; max-height: 250px;
+}
+.footerLeft .puzzle img {
+    position: absolute; bottom: 0; left: 0;
+    width: 25vw; max-width: 250px; height: auto; transition: 1s ease-in-out;
+}
+.footerRight { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
+.footerRight .nextBtn { margin: 0; }
+.footerBg { width: 100%; line-height: 0; }
+.footerBg img { width: 100%; display: block; }
+
+.error { display: block; color: #dc3545; font-size: 0.9rem; margin: 4px 0; }
+
+@media (max-width: 1024px) {
+    .stepCounter { grid-template-columns: repeat(5, 1fr); }
+    .stepContainer { font-size: 0.9rem; }
+    .line { display: none; }
+}
+@media (max-width: 768px) {
+    .stepCounter { width: 100%; padding: 0 10px; gap: 4px; }
+    .stepContainer { font-size: 0.75rem; }
+    .personalDetail { font-size: 1.5rem; }
+    .personalBox label, .contactInput { width: 80%; }
+    .box span { font-size: 1.4rem; }
+    .box label { font-size: 1.2rem; }
+    .footerContent { flex-direction: column; align-items: center; gap: 20px; }
+    .footerRight { align-items: center; }
+}
+@media (max-width: 480px) {
+    .stepCounter { gap: 2px; }
+    .stepContainer { font-size: 0.6rem; }
+}

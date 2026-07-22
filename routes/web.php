@@ -16,6 +16,11 @@ Route::get('/', [FrontendController::class, 'index'])->name('home');
 Route::get('/ministries', [FrontendController::class, 'ministries'])->name('ministries');
 Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
 
+// Assessment
+Route::get('/assessment', function () {
+    return view('assessment.index');
+})->name('assessment');
+
 // Admin auth (guest)
 Route::prefix('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
