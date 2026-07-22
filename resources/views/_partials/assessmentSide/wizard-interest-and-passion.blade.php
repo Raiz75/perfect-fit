@@ -1,6 +1,14 @@
 <form method="POST" action="{{ route('assessment.phase3.store') }}" id="interestForm">
     @csrf
 
+    @if($errors->any())
+        <div style="color:#dc3545; margin-bottom:1rem; padding:0.5rem; border:1px solid #dc3545; border-radius:4px;">
+            @foreach($errors->all() as $err)
+                <p style="margin:0;">{{ $err }}</p>
+            @endforeach
+        </div>
+    @endif
+
     <p style="font-weight:bold;">INSTRUCTION: Please read each statement carefully and answer honestly. Use the scale 1-6 — Strongly Agree(6) to Strongly Disagree(1).</p>
 
     @php

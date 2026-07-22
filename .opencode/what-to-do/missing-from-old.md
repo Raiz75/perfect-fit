@@ -98,8 +98,8 @@ app/Http/Controllers/
 | — | POST | `/admin/verify-code` | `Auth\RegisterController::verifyCode` | ✅ | Server-side code verification |
 | `php-sessionTest.php` | GET | `/admin/session-check` | `Auth\LoginController::checkSession` | ✅ | Returns admin or 401 |
 | `php-logout.php` | POST | `/admin/logout` | `Auth\LogoutController::logout` | ✅ | Redirects to admin.login |
-| `php-getDbData.php` | POST | `/api/assessment-data` | `AssessmentController::getData` | ❌ | Phase 2 |
-| `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | ❌ | Phase 2 |
+| `php-getDbData.php` | POST | `/api/assessment-data` | Replaced by session-based `AssessmentController::show()` | 🔧 | Handled server-side via session (church_code stored in session, not fetched via API) |
+| `php-createUserReport.php` | POST | `/api/user-reports` | `ReportController::store` | ❌ | Phase 3 |
 | `php-adminFilter.php` | GET | `/admin/dashboard/data` | `Admin\DashboardController::getData` | ✅ | Full filter support (search, date, demo, skills, ministries) |
 | `php-generateAdminReport.php` | GET | `/admin/reports/export` | `ReportController::export` | ❌ | Phase 3 |
 | `php-loadAdminPanel.php` | GET | `/admin/panel-data` | `AdminPanelController::load` | ❌ | Phase 3 |
@@ -179,7 +179,7 @@ app/Services/ (pending)
 | Page | Route | Old File | Status | Notes |
 |------|-------|----------|--------|-------|
 | Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
-| Assessment | `/assessment` | `assessment.html` | 🔧 | Phase 1 (Personal Details) built as Livewire Volt component. Header with banner + step counter. Footer with puzzle + buttons. CSS in app.css. |
+| Assessment | `/assessment` | `assessment.html` | ✅ | All 4 phases built as server-side POST forms. No Livewire, no JS submissions. Session-based. Puzzle animation. Dynamic step counter. |
 | Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. JS extracted to `resources/js/admin-login.js`. Password strength validation client-side. |
 | Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Full implementation with 7 Chart.js charts, filters (search, date, demographic, skills, ministries), and report table. Data endpoint: `/admin/dashboard/data`. JS: `resources/js/admin-dashboard.js`. |
 | Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ✅ | Top nav with 2 tabs (Demographics, Skills). Full CRUD with save/reset. |
@@ -188,53 +188,82 @@ app/Services/ (pending)
 | Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
 | Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
-### 3.2 Assessment Wizard (🔧 Phase 1 Complete)
+### 3.2 Assessment Wizard (✅ Phases 1-4 Complete)
 
-The assessment is a **5-phase wizard** with the following flow:
+The assessment is a **5-phase wizard** rebuilt from scratch — **no Livewire, no JS for submissions** (pure HTML form POSTs to the controller).
 
 ```
-Phase 1: Personal Details → Phase 2: Skill Profiling (40 Qs)
-→ Phase 3: Interest & Passion (30 Qs) → Phase 4: Behavioral Profiling (variable Qs)
-→ Phase 5: AI Results
+Phase 1: Personal Details   → POST /assessment/phase1 → session → Phase 2
+Phase 2: Skill Profiling    → POST /assessment/phase2 → session → Phase 3
+Phase 3: Interest & Passion → POST /assessment/phase3 → session → Phase 4
+Phase 4: Behavioral         → POST /assessment/phase4 → session → Phase 5
+Phase 5: AI Results         (not yet built)
 ```
 
-**What's built (Phase 1 — Personal Details):**
-- ✅ **Assessment route** (`/assessment`) added to `routes/web.php`
-- ✅ **Volt Livewire component** (`components/⚡demographic-wizard.blade.php`) — all personal detail fields: name, email, contact (+63), gender, age, status, baptized, time in faith. Validates and dispatches `demographics-completed` event.
-- ✅ **Header partial** (`_partials/assessmentSide/header.blade.php`) — banner image + ASSESSMENT title overlay + 5-step counter (step 1 active)
-- ✅ **Footer partial** (`_partials/assessmentSide/footer.blade.php`) — puzzle pieces (left) + review/next/submit buttons (right) + footer.png background
-- ✅ **CSS** moved to `resources/css/app.css` — purple theme (`--a: rgb(128, 65, 128)`)
-- ✅ **Mobile responsive** — clamp-based sizing, proper breakpoints
+**Architecture:**
+- `AssessmentController` at `app/Http/Controllers/Assessment/AssessmentController.php`
+- Church code set via `POST /assessment/set-church-code` → stored in `session('assessment.church_code')`
+- Each phase stores its data in `session('assessment.phaseN')` with `current_phase` pointer
+- `assessment/index.blade.php` renders the correct phase container based on `$currentPhase`
+- Footer NEXT button uses the HTML `form` attribute to target the active phase's form
+- Puzzle pieces (bottom/left/right/top) hidden by default; shown via JS on phase completion
+- Step counter in header dynamically highlights current/completed steps with `.currentStep` / `.completedStep` CSS
 
-**Still needed (Phase 2-5):**
-1. **`localStorage` persistence** — each phase saves to localStorage on completion. On reload, detect saved data and offer to continue from last incomplete phase.
-2. **Step counter** — visual progress indicator at top (5 steps with active state)
-3. **Progress bar** — sticky bar at top showing percentage
-4. **Puzzle animation** — puzzle pieces assemble per phase completion (4 pieces → complete image at phase 4)
-5. **Bilingual UI** — toggle between English/Tagalog. All UI text is in `uiTranslation` object in `textContent(questions).js`
-6. **Likert scale** — 6-option scale: Strongly Agree(6) → Strongly Disagree(1)
-7. **Church code input** — retrieved from `localStorage.getItem("churchCode")`, falls back to a modal on landing page
-8. **Session recovery** — check localStorage on load, show "Continue previous assessment?" prompt
+**Phase 1 — Personal Details** (`wizard-demographics.blade.php`):
+- Fields: name, email, contact, gender, age, status, baptized, timeInFaith
+- Validated via `StoreDemographicsRequest` Form Request
+- Submits to `POST /assessment/phase1` → `storePhase1()`
+- Saves `session('assessment.phase1')`, advances to phase 2
 
-**Data flow:**
+**Phase 2 — Skill Profiling** (`wizard-skills.blade.php`):
+- 40 Likert questions (5/skill × 8 skills), grouped by skill
+- Radio inputs 1-6: Strongly Agree(6) → Strongly Disagree(1)
+- Submits to `POST /assessment/phase2` → `storePhase2()`
+- Computes per-skill group totals, stores `session('assessment.phase2.scores')` + `groupTotals`
+- Skill ID → name mapping: 1=Music, 2=Technology, 3=Writing, 4=Technical, 5=Speaking, 6=Accounting, 7=Mentoring, 8=Bible Knowledge
+
+**Phase 3 — Interest & Passion** (`wizard-interest-and-passion.blade.php`):
+- Questions grouped by ministry category (6 categories: Core, Support, Outreach, Creative & Media, Care & Healing, Special Interest)
+- Same Likert 1-6 scale
+- Submits to `POST /assessment/phase3` → `storePhase3()`
+- Computes per-category group totals, stores `session('assessment.phase3')`
+
+**Phase 4 — Behavioral** (`wizard-behavioral.blade.php`):
+- Behavioral questions are **filtered** based on eligibility computation:
+  1. Find top-scoring ministry categories from Phase 3 interest scores
+  2. Filter ministries to those in top categories
+  3. Filter by demographic restrictions (gender, age, marital, baptized, time in faith) against Phase 1 data
+  4. Filter by skill restrictions (skill group total ≥ 10 = qualified) against Phase 2 data
+  5. Only behavioral questions for remaining eligible ministries are displayed
+- If no ministries pass all filters, a message is shown and NEXT advances to Phase 5
+- Submits to `POST /assessment/phase4` → `storePhase4()`
+
+**Session-based data flow:**
 ```
-Load: fetch(`/api/assessment-data?church_code=${code}`)
-  → ministries, demographicRestrictions, skillRestrictions, skillQuestions, 
-     interestAndPassionQuestions, behavioralQuestions
-
-Phase 1 → save to localStorage("phase1"): { fName, fEmail, fContactNo, gender, age, status, baptized, timeInFaith }
-Phase 2 → save to localStorage("phase2"): { music: [q1..q5], technology: [q6..q10], ... } (array of 40 scores)
-Phase 3 → save to localStorage("phase3"): { category1: [q1..q5], ... } (array of 30 scores)
-Phase 4 → save to localStorage("phase4"): { ministryId: [q1..q5], ... }
-Phase 5 → POST /api/user-reports → POST /api/generate-profile → display charts + AI text → PDF export
+Church code → session('assessment.church_code')
+Phase 1    → session('assessment.phase1')  = { name, email, contact, gender, age, status, baptized, timeInFaith, church_code }
+Phase 2    → session('assessment.phase2')  = { scores: {qId: score, ...}, groupTotals: {skillId: total, ...} }
+Phase 3    → session('assessment.phase3')  = { scores: {qId: score, ...}, groupTotals: {catId: total, ...} }
+Phase 4    → session('assessment.phase4')  = { scores: {qId: score, ...} }
+Phase 5    → TBD — store eligible_ministries, generate report, save to user_reports table
 ```
 
-**Ministry filtering logic (server-side or client-side):**
-1. Start with ALL ministries
-2. Filter by **interest categories**: rank 6 categories by average score, take top-scoring
-3. Filter by **demographic restrictions**: gender, age range, marital status, baptized, time in faith
-4. Filter by **skill requirements**: user must have all "Required" skills for a ministry
-5. The remaining ministries = behavioral questions shown in Phase 4
+**Puzzle animation:**
+- JS in `resources/js/assessment.js` handles puzzle piece display
+- On page load: pieces for completed phases shown (`bottom` for Phase 1, `left` for Phase 2, etc.)
+- On NEXT click: 3-second delay before form submission, with the current phase's puzzle piece animating in
+- Piece mapping: Phase 1→bottom, Phase 2→left, Phase 3→right, Phase 4→top
+- CSS transition: 1s ease-in-out scale + opacity, with a 1s purple drop-shadow highlight
+
+**Step counter:**
+- Dynamic CSS classes: `.currentStep` (purple, active) and `.completedStep` (green, ✓ checkmark)
+- Steps update on each phase completion based on `$currentPhase`
+
+**JS constraints respected:**
+- No AJAX/Livewire for form submission
+- No JS for form data handling
+- JS only used for: puzzle animation timing, 3s NEXT delay, step counter is server-rendered
+- HTML5 validation (`required` on radios) with `checkValidity()` + `reportValidity()` before delayed submit
 
 ### 3.3 Admin Layout & Sidebar (✅ Complete)
 
@@ -365,8 +394,19 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     POST /logout                           Auth\LogoutController@logout               admin.logout
 });
 
-// ❌ Still needed (Phase 2):
-// api/assessment-data, api/user-reports, api/generate-profile
+// Assessment — session-based (✅ 7 routes)
+Route::prefix('assessment')->name('assessment.')->group(function () {
+    POST /set-church-code   AssessmentController@setChurchCode   assessment.set-church-code
+    GET  /                  AssessmentController@show            assessment.index
+    POST /phase1            AssessmentController@storePhase1     assessment.phase1.store
+    POST /phase2            AssessmentController@storePhase2     assessment.phase2.store
+    POST /phase3            AssessmentController@storePhase3     assessment.phase3.store
+    POST /phase4            AssessmentController@storePhase4     assessment.phase4.store
+    GET  /reset             AssessmentController@reset           assessment.reset
+});
+
+// ❌ Still needed (Phase 5):
+// api/user-reports, api/generate-profile
 ```
 
 ---
@@ -419,11 +459,11 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 6. ✅ FrontendController + public routes (landing, ministries, privacy-policy)
 7. ✅ Landing page modals (user type, church code, language, bible verse) — all buttons wired
 
-### Phase 2: Core Assessment (🔧 In Progress)
-8. ❌ AssessmentController (data endpoint)
-9. ❌ Ministry matching logic (MinistryMatchingService)
-10. 🔧 Assessment wizard Phase 1 (Personal Details) — Livewire Volt component built. Header with banner + step counter. Footer with puzzle + buttons. CSS in app.css. Phases 2-5 pending.
-11. ❌ Report creation + storage
+### Phase 2: Core Assessment (✅ Phases 1-4 Complete)
+8. ✅ AssessmentController — `setChurchCode()`, `show()`, `storePhase1-4()`, `reset()`
+9. ✅ Ministry matching logic — `computeEligibleMinistries()` in AssessmentController (filters by interest category, demographics, skills)
+10. ✅ Assessment wizard — All 4 phases built as server-side POST forms (no Livewire, no JS submissions)
+11. ❌ Report creation + storage (Phase 5 — not yet built)
 
 ### Phase 3: Admin Panel (✅ Complete)
 12. ✅ Dashboard with Chart.js (filters: search, date, demographics, skills, ministries; 7 charts: gender, age, faith, skills, ministry, baptized, marital; report table)
@@ -476,7 +516,16 @@ See `perfit-old/perfit/` for complete source reference:
 9. **Time in faith values:** 1 = "1+ Week", 2 = "6+ Months", 3 = "1+ Year", 4 = "2+ Years"
 10. **Ministry ID mapping:** Ministries are indexed 1-29 and must stay in the same order as seeded — foreign keys depend on this order
 11. **Password strength rules:** Min 8 characters, at least 1 uppercase letter, 1 number, and 1 special character — enforced both client-side (admin-login.js) and server-side (RegisterRequest, ChangePasswordRequest)
-12. **Vite entry points:** `admin.js` (sidebar toggle), `admin-login.js` (auth forms), `admin-dashboard.js` (Chart.js dashboard) — all registered in `vite.config.js`
+12. **Vite entry points:** `admin.js` (sidebar toggle), `admin-login.js` (auth forms), `admin-dashboard.js` (Chart.js dashboard), `assessment.js` (puzzle animation + NEXT button delay) — all registered in `vite.config.js`
+13. **Assessment uses server-side session, not localStorage:** All phase data stored in `session('assessment.*')`. Church code set via `POST /assessment/set-church-code`, stored in session (not localStorage)
+14. **No Livewire on assessment page:** Removed Livewire. All forms use standard HTML `method="POST"` with hidden `@csrf` inputs
+15. **NEXT button uses HTML `form` attribute:** The footer button's `form="..."` attribute targets the active phase's form ID (`demographicForm`, `skillsForm`, `interestForm`, `behavioralForm`). JS intercepts click for 3s puzzle delay, then calls `form.submit()`
+16. **Form submission bypasses HTML5 validation via JS:** When `form.submit()` is called programmatically, HTML5 `required` validation is skipped. Fixed by calling `form.checkValidity()` before the delay, and `form.reportValidity()` at submit time
+17. **Phase 4 eligibility computation:** `computeEligibleMinistries()` evaluates all restrictions server-side: top interest categories → demographic filters → skill filters (group total ≥ 10 = qualified). If no ministries pass, a message is shown and submission advances to Phase 5
+18. **Skill group threshold:** A skill group total ≥ 10 (out of max 30 = 5 questions × 6 points) qualifies the user for that skill. Matches old system
+19. **Interest category ranking:** The top-scoring category/categories from Phase 3 determine which ministries are considered. Categories with the maximum total score (ties allowed) are kept
+20. **Demographic restriction values:** `gender` 0=any, 1=male, 2=female; `marital_status` 0=any, 1=single, 2=married; `baptized` 1=required, 2=no restriction; `time_in_faith` 1=1+wk, 2=6+mo, 3=1+yr, 4=2+yr
+21. **Reset clears entire assessment session:** `GET /assessment/reset` calls `session()->forget('assessment')` and redirects to landing page (`route('home')`). Church code must be re-entered
 
 ---
 

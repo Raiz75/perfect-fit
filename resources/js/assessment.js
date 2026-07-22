@@ -23,17 +23,29 @@ document.addEventListener('DOMContentLoaded', function () {
         var puzzleMap = { 1: 'bottom', 2: 'left', 3: 'right', 4: 'top' };
 
         nextBtn.addEventListener('click', function (e) {
+            var formId = nextBtn.getAttribute('form');
+            var form = document.getElementById(formId);
+            if (!form) return;
+
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
             e.preventDefault();
             nextBtn.disabled = true;
             nextBtn.textContent = 'Please wait...';
 
             showPuzzle(puzzleMap[currentPhase] || 'bottom');
 
-            var formId = nextBtn.getAttribute('form');
-            var form = document.getElementById(formId);
-            if (form) {
-                setTimeout(function () { form.submit(); }, 3000);
-            }
+            setTimeout(function () {
+                if (form.reportValidity()) {
+                    form.submit();
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.textContent = 'NEXT PHASE';
+                }
+            }, 3000);
         });
     }
 });

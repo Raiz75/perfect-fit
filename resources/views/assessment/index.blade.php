@@ -30,6 +30,10 @@
         @endif
     </div>
 
+    <div id="phase4" @if($cp != 4) style="display:none;" @endif>
+        @include('_partials.assessmentSide.wizard-behavioral')
+    </div>
+
     @include('_partials.assessmentSide.footer')
 
     @vite(['resources/js/assessment.js'])

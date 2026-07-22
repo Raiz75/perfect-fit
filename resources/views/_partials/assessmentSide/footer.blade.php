@@ -11,7 +11,7 @@
         <div class="footerRight">
             <button class="nextBtn" id="reviewBtn" style="display:none;">REVIEW ANSWER</button>
             <button type="submit" class="nextBtn" id="nextPhaseBtn"
-                form="{{ ($currentPhase ?? 1) == 1 ? 'demographicForm' : (($currentPhase ?? 1) == 2 ? 'skillsForm' : (($currentPhase ?? 1) == 3 ? 'interestForm' : 'demographicForm')) }}">
+                form="{{ ($currentPhase ?? 1) == 1 ? 'demographicForm' : (($currentPhase ?? 1) == 2 ? 'skillsForm' : (($currentPhase ?? 1) == 3 ? 'interestForm' : (($currentPhase ?? 1) == 4 ? 'behavioralForm' : 'demographicForm'))) }}">
                 NEXT PHASE
             </button>
             <button class="nextBtn" id="submitBtn" style="display:none;">SUBMIT</button>
