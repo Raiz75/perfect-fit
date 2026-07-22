@@ -179,7 +179,7 @@ app/Services/ (pending)
 | Page | Route | Old File | Status | Notes |
 |------|-------|----------|--------|-------|
 | Landing | `/` | `index.html` | ✅ | Refactored to `@extends('_layouts.master')`. Hero + how-it-works timeline + ministry carousel + 4 modals (user type, church code, language, bible verse) + dove trigger. All buttons wired up. |
-| Assessment | `/assessment` | `assessment.html` | ❌ | Phase 2 |
+| Assessment | `/assessment` | `assessment.html` | 🔧 | Phase 1 (Personal Details) built as Livewire Volt component. Header with banner + step counter. Footer with puzzle + buttons. CSS in app.css. |
 | Admin Login | `/admin/login` | `admin.html` | ✅ | Standalone page (no admin layout/sidebar). Login/signup sliding forms + verify popup + forgot password modal. JS extracted to `resources/js/admin-login.js`. Password strength validation client-side. |
 | Admin Dashboard | `/admin/dashboard` | `adminPanel.html` | ✅ | Full implementation with 7 Chart.js charts, filters (search, date, demographic, skills, ministries), and report table. Data endpoint: `/admin/dashboard/data`. JS: `resources/js/admin-dashboard.js`. |
 | Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ✅ | Top nav with 2 tabs (Demographics, Skills). Full CRUD with save/reset. |
@@ -188,7 +188,7 @@ app/Services/ (pending)
 | Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
 | Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
 
-### 3.2 Assessment Wizard (Highest Complexity — Phase 2)
+### 3.2 Assessment Wizard (🔧 Phase 1 Complete)
 
 The assessment is a **5-phase wizard** with the following flow:
 
@@ -198,9 +198,17 @@ Phase 1: Personal Details → Phase 2: Skill Profiling (40 Qs)
 → Phase 5: AI Results
 ```
 
-**Critical features to replicate:**
+**What's built (Phase 1 — Personal Details):**
+- ✅ **Assessment route** (`/assessment`) added to `routes/web.php`
+- ✅ **Volt Livewire component** (`components/⚡demographic-wizard.blade.php`) — all personal detail fields: name, email, contact (+63), gender, age, status, baptized, time in faith. Validates and dispatches `demographics-completed` event.
+- ✅ **Header partial** (`_partials/assessmentSide/header.blade.php`) — banner image + ASSESSMENT title overlay + 5-step counter (step 1 active)
+- ✅ **Footer partial** (`_partials/assessmentSide/footer.blade.php`) — puzzle pieces (left) + review/next/submit buttons (right) + footer.png background
+- ✅ **CSS** moved to `resources/css/app.css` — purple theme (`--a: rgb(128, 65, 128)`)
+- ✅ **Mobile responsive** — clamp-based sizing, proper breakpoints
+
+**Still needed (Phase 2-5):**
 1. **`localStorage` persistence** — each phase saves to localStorage on completion. On reload, detect saved data and offer to continue from last incomplete phase.
-2. **Step counter** — visual progress indicator at top (9 dots + labels)
+2. **Step counter** — visual progress indicator at top (5 steps with active state)
 3. **Progress bar** — sticky bar at top showing percentage
 4. **Puzzle animation** — puzzle pieces assemble per phase completion (4 pieces → complete image at phase 4)
 5. **Bilingual UI** — toggle between English/Tagalog. All UI text is in `uiTranslation` object in `textContent(questions).js`
@@ -230,14 +238,15 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 
 ### 3.3 Admin Layout & Sidebar (✅ Complete)
 
-- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with `<x-admin-sidebar />` + `<x-admin-top-nav />` + mobile hamburger + overlay. Sidebar JS extracted to `resources/js/admin.js` (loaded via Vite).
-- ✅ **Sidebar component** (`components/admin-sidebar.blade.php`) — class-backed `<x-admin-sidebar />` component. Fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only).
+- ✅ **Admin layout** (`_layouts/admin.blade.php`) — full page wrapper with `@include('_partials.adminSide.sideNav')` + `@include('_partials.adminSide.topNav')` + mobile hamburger + overlay. Sidebar JS extracted to `resources/js/admin.js` (loaded via Vite).
+- ✅ **Sidebar partial** (`_partials/adminSide/sideNav.blade.php`) — replaces former `<x-admin-sidebar />` component. Fixed left sidebar, toggles between 250px (expanded) and 70px (icon-only).
   - Nav links: Dashboard, Restriction Editor, Question Editor, Settings (all using route names)
   - Logout confirmation modal (glassmorphism, asks "Are you sure?")
   - Active link highlighted with purple left border
   - Uses **Tabler icons** (`@tabler/icons-webfont`) instead of image files
   - Desktop: toggle chevron button. Mobile: hamburger + overlay.
-- ✅ **Top nav component** (`components/admin-top-nav.blade.php`) — class-backed `<x-admin-top-nav />` component. Sticky top bar with page title via `@yield('pageTitle')`. Hamburger visible on mobile.
+- ✅ **Top nav partial** (`_partials/adminSide/topNav.blade.php`) — replaces former `<x-admin-top-nav />` component. Sticky top bar with page title. Hamburger visible on mobile.
+- ✅ Removed `components/admin-sidebar.blade.php`, `components/admin-top-nav.blade.php`, `app/View/Components/AdminSidebar.php`, `app/View/Components/AdminTopNav.php` (switched to simple `@include` partials)
 - ✅ **Login page made standalone** — no sidebar, no admin wrapper
 - ✅ **Admin layout structure** updated: `.adminPage` → `.adminSidebar` + `.adminRight` (`.adminTopNav` + `.adminContent`)
 
@@ -282,13 +291,15 @@ Phase 5 → POST /api/user-reports → POST /api/generate-profile → display ch
 
 **Images in `public/images/` (current state):**
 ```
-icn-logo.png, logo.png, banner.png, doveStatic.png    ← 4 files kept
+icn-logo.png, logo.png, banner.png, doveStatic.png,
+footer.png, footer copy.png,
+pzl-top.png, pzl-right.png, pzl-left.png, pzl-bottom.png    ← 11 files
 ```
 - All icon images replaced with **Tabler icons** (`@tabler/icons-webfont`)
 - Unused images removed: `bg.png`, `icn-closedEyes.png`, `icn-openEyes.png`, `icn-dashboard*`, `icn-restriction*`, `icn-question*`, `icn-settings*`, `icn-logout*`
 
 **Still to copy from old project when needed:**
-- `footer.png`, `howItWorks.webp`, `pzl-*` (puzzle pieces for assessment), `icn-userCount.png`, `icn-submissionCount.png`, `icn-export*`, `icn-find.png`, `icn-grow.png`, `icn-honesty.png`, `el1.jpg`, `banner-cut.png`
+- `howItWorks.webp`, `icn-userCount.png`, `icn-submissionCount.png`, `icn-export*`, `icn-find.png`, `icn-grow.png`, `icn-honesty.png`, `el1.jpg`, `banner-cut.png`
 
 **Landing page icons:** Inline SVGs replaced with Tabler icon classes (`ti ti-users`, `ti ti-key`, `ti ti-language`, `ti ti-clipboard-text`, `ti ti-send`, `ti ti-chart-bar`, `ti ti-chevron-*`)
 
@@ -408,10 +419,10 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 6. ✅ FrontendController + public routes (landing, ministries, privacy-policy)
 7. ✅ Landing page modals (user type, church code, language, bible verse) — all buttons wired
 
-### Phase 2: Core Assessment (❌ Not started)
+### Phase 2: Core Assessment (🔧 In Progress)
 8. ❌ AssessmentController (data endpoint)
 9. ❌ Ministry matching logic (MinistryMatchingService)
-10. ❌ Assessment wizard frontend (5 phases, localStorage, bilingual)
+10. 🔧 Assessment wizard Phase 1 (Personal Details) — Livewire Volt component built. Header with banner + step counter. Footer with puzzle + buttons. CSS in app.css. Phases 2-5 pending.
 11. ❌ Report creation + storage
 
 ### Phase 3: Admin Panel (✅ Complete)
@@ -466,3 +477,23 @@ See `perfit-old/perfit/` for complete source reference:
 10. **Ministry ID mapping:** Ministries are indexed 1-29 and must stay in the same order as seeded — foreign keys depend on this order
 11. **Password strength rules:** Min 8 characters, at least 1 uppercase letter, 1 number, and 1 special character — enforced both client-side (admin-login.js) and server-side (RegisterRequest, ChangePasswordRequest)
 12. **Vite entry points:** `admin.js` (sidebar toggle), `admin-login.js` (auth forms), `admin-dashboard.js` (Chart.js dashboard) — all registered in `vite.config.js`
+
+---
+
+## 9. ⚠️ Refactoring: Admin JavaScript → Controllers
+
+The admin JS files contain business logic that should be handled by Laravel controllers. JS should only be used for **enhancement/UX**, not as the primary driver of logic.
+
+### What to move to controllers:
+- Form validation (already partially done via Form Requests)
+- DOM manipulation for data display (use Blade + Livewire instead)
+- Business rules (ministry filtering, scoring, matching logic → `MinistryMatchingService`)
+- Data fetching logic (use Livewire or controller-backed endpoints)
+
+### What JS should keep doing:
+- Animations and transitions
+- Toast notifications
+- Sidebar toggle
+- Chart rendering (Chart.js)
+- Inline editing UX (contenteditable tables)
+- Clipboard copy
