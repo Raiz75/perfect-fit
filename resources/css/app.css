@@ -880,7 +880,7 @@ td.editable:focus {
 
 /* Sidebar active link glow */
 .sidebarLink.active {
-    box-shadow: inset 6px 0 0 #8c52ff, 0 0 20px rgba(140, 82, 255, 0.1) !important;
+    box-shadow: 0 0 20px rgba(140, 82, 255, 0.1) !important;
 }
 
 /* Admin section heading */

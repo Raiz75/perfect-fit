@@ -20,10 +20,14 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="admin-glass-stat">
+            <div class="admin-glass-stat" style="position:relative;">
                 <i class="ti ti-key stat-icon"></i>
-                <div class="stat-number">{{ Auth::user()->church_code }}</div>
+                <div class="stat-number" id="churchCodeDisplay" style="cursor:pointer;" onclick="copyChurchCode()">
+                    {{ Auth::user()->church_code }}
+                    <i class="ti ti-copy" id="copyIcon" style="font-size:1rem;margin-left:6px;opacity:0.5;vertical-align:middle;"></i>
+                </div>
                 <div class="stat-label">Church Code</div>
+                <span id="copyFeedback" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;color:#28a745;font-weight:600;opacity:0;transition:opacity 0.3s;">Copied!</span>
             </div>
         </div>
         <div class="col-md-3">
@@ -165,5 +169,15 @@
 @endsection
 
 @push('scripts')
+    <script>
+        function copyChurchCode() {
+            var code = document.getElementById('churchCodeDisplay').childNodes[0].textContent.trim();
+            navigator.clipboard.writeText(code).then(function() {
+                var fb = document.getElementById('copyFeedback');
+                fb.style.opacity = '1';
+                setTimeout(function() { fb.style.opacity = '0'; }, 1500);
+            });
+        }
+    </script>
     @vite(['resources/js/admin-dashboard.js'])
 @endpush
