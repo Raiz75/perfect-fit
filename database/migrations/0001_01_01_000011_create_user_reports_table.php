@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('mentoring')->default(false);
             $table->boolean('bible_knowledge')->default(false);
             $table->text('eligible_ministry')->nullable();
+            $table->text('ai_interpretation')->nullable()->after('eligible_ministry');
             $table->tinyInteger('gender');
             $table->integer('age');
             $table->tinyInteger('marital_status');

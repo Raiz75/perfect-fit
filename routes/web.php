@@ -26,6 +26,7 @@ Route::prefix('assessment')->name('assessment.')->group(function () {
     Route::post('/phase3', [AssessmentController::class, 'storePhase3'])->name('phase3.store');
     Route::post('/phase4', [AssessmentController::class, 'storePhase4'])->name('phase4.store');
     Route::get('/reset', [AssessmentController::class, 'reset'])->name('reset');
+    Route::post('/done', [AssessmentController::class, 'done'])->name('done');
 });
 
 // Admin auth (guest)

@@ -19,7 +19,7 @@ class QuestionController extends Controller
             ->orderBy('skill_id')
             ->orderBy('question_number')
             ->get()
-            ->groupBy(fn($q) => $q->skill->name);
+            ->groupBy(fn ($q) => $q->skill->name);
 
         return view('admin.questions.skill', compact('questions'));
     }
@@ -31,7 +31,7 @@ class QuestionController extends Controller
             ->orderBy('ministry_category_id')
             ->orderBy('question_number')
             ->get()
-            ->groupBy(fn($q) => $q->ministryCategory->name);
+            ->groupBy(fn ($q) => $q->ministryCategory->name);
 
         return view('admin.questions.interest', compact('questions'));
     }
@@ -43,7 +43,7 @@ class QuestionController extends Controller
             ->orderBy('ministry_id')
             ->orderBy('question_number')
             ->get()
-            ->groupBy(fn($q) => $q->ministry->name);
+            ->groupBy(fn ($q) => $q->ministry->name);
 
         return view('admin.questions.behavioral', compact('questions'));
     }
@@ -126,7 +126,7 @@ class QuestionController extends Controller
             ], 403);
         }
 
-        DB::transaction(function () use ($model, $userId, $adminId, $groupColumn) {
+        DB::transaction(function () use ($model, $userId, $adminId) {
             $model::where('user_id', $userId)->delete();
 
             $defaults = $model::where('user_id', $adminId)->get();

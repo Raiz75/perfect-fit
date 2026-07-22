@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Actions\CopyDefaults;
-use App\Mail\VerificationCodeMail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\SendVerificationRequest;
+use App\Mail\VerificationCodeMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +19,7 @@ class RegisterController extends Controller
         if (auth()->check()) {
             return redirect()->route('admin.dashboard');
         }
+
         return view('admin.register');
     }
 
@@ -45,7 +46,7 @@ class RegisterController extends Controller
         $email = session('verification_email');
         $password = session('verification_password');
 
-        if (!$storedCode || !$email || !$password) {
+        if (! $storedCode || ! $email || ! $password) {
             return redirect()->route('admin.register')
                 ->withErrors(['verify' => 'Session expired. Please sign up again.']);
         }
@@ -57,6 +58,7 @@ class RegisterController extends Controller
 
         if (User::where('email', $email)->exists()) {
             session()->forget(['verification_code', 'verification_email', 'verification_password']);
+
             return redirect()->route('admin.register')
                 ->withErrors(['email' => 'This email is already registered.']);
         }

@@ -11,10 +11,11 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             if ($request->expectsJson()) {
                 return response()->json(['success' => false, 'message' => 'Unauthenticated.'], 401);
             }
+
             return redirect()->route('admin.login');
         }
 

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Mail\TemporaryPasswordMail;
 use App\Http\Controllers\Controller;
+use App\Mail\TemporaryPasswordMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +23,7 @@ class ForgotPasswordController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('admin.login')
                 ->with('error', 'Email not found.');
         }

@@ -10,7 +10,8 @@ class UserReport extends Model
         'church_code', 'email', 'name', 'contact_no',
         'music', 'technology', 'writing', 'technical', 'speaking',
         'accounting', 'mentoring', 'bible_knowledge',
-        'eligible_ministry', 'gender', 'age', 'marital_status',
+        'eligible_ministry', 'ai_interpretation',
+        'gender', 'age', 'marital_status',
         'baptized', 'time_in_faith', 'time_of_submission',
     ];
 }

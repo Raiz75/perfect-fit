@@ -2,14 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\{
-    BehavioralQuestion,
-    DemographicRestriction,
-    InterestAndPassionQuestion,
-    SkillQuestion,
-    SkillRestriction,
-    User,
-};
+use App\Models\BehavioralQuestion;
+use App\Models\DemographicRestriction;
+use App\Models\InterestAndPassionQuestion;
+use App\Models\SkillQuestion;
+use App\Models\SkillRestriction;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DefaultDataSeeder extends Seeder

@@ -12,10 +12,6 @@
         <div class="assessment-float" style="width:350px;height:350px;background:radial-gradient(circle,#b388ff,transparent);bottom:-10%;right:-8%;animation:assessFloatB 20s ease-in-out infinite;"></div>
         <div class="assessment-float" style="width:220px;height:220px;background:radial-gradient(circle,#d4b3ff,transparent);top:38%;left:-5%;animation:assessFloatA 14s ease-in-out infinite reverse;"></div>
 
-        <a href="{{ route('assessment.reset') }}" class="assessment-reset">
-            <i class="ti ti-arrow-back-up"></i> Reset
-        </a>
-
         <div class="assessment-container">
             <div class="assessment-title">
                 <h1>PER<span>FIT</span></h1>
@@ -51,6 +47,10 @@
                 @elseif($cp == 4)
                     <p style="text-align:center;color:#5a35b0;">No behavioral questions available for your eligible ministries.</p>
                 @endif
+            </div>
+
+            <div id="phase5" class="phase-section" @if($cp != 5) style="display:none;" @endif>
+                @include('_partials.assessmentSide.wizard-results')
             </div>
 
             @include('_partials.assessmentSide.footer')

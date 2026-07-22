@@ -20,8 +20,11 @@ class DashboardController extends Controller
     ];
 
     const GENDER_MAP = [1 => 'Male', 2 => 'Female'];
+
     const MARITAL_MAP = [1 => 'Single', 2 => 'Married'];
+
     const BAPTIZED_MAP = [1 => 'Yes', 2 => 'No'];
+
     const FAITH_MAP = [1 => '1+ Week', 2 => '6+ Months', 3 => '1+ Year', 4 => '2+ Years'];
 
     public function index()
@@ -44,7 +47,7 @@ class DashboardController extends Controller
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 

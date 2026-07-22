@@ -14,6 +14,7 @@ class LoginController extends Controller
         if (Auth::check()) {
             return redirect()->route('admin.dashboard');
         }
+
         return view('admin.login');
     }
 
@@ -21,6 +22,7 @@ class LoginController extends Controller
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $request->session()->regenerate();
+
             return redirect()->intended(route('admin.dashboard'));
         }
 
@@ -35,6 +37,7 @@ class LoginController extends Controller
                 'user' => Auth::user(),
             ]);
         }
+
         return response()->json(['authenticated' => false], 401);
     }
 }

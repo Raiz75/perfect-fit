@@ -18,7 +18,7 @@
 
 
     @foreach($skillQuestions as $question)
-        <div class="question-card {{ $loop->first ? '' : 'blurred' }}">
+        <div class="question-card {{ $loop->first ? '' : 'blurred' }}" data-group="{{ $skills[$question->skill_id]->name ?? 'Unknown' }}">
             <p class="question-text" style="text-align:center;">
                 {{ $question->question_en }}
             </p>
