@@ -31,7 +31,11 @@
     </div>
 
     <div id="phase4" @if($cp != 4) style="display:none;" @endif>
-        @include('_partials.assessmentSide.wizard-behavioral')
+        @if($behavioralQuestions->isNotEmpty())
+            @include('_partials.assessmentSide.wizard-behavioral')
+        @elseif($cp == 4)
+            <p>No behavioral questions available for your eligible ministries.</p>
+        @endif
     </div>
 
     @include('_partials.assessmentSide.footer')

@@ -68,7 +68,8 @@ class AssessmentController extends Controller
                     $phase2 = session('assessment.phase2', []);
                     $phase3 = session('assessment.phase3', []);
                     $eligibleMinistries = $this->computeEligibleMinistries($admin, $phase1, $phase2, $phase3);
-                    $behavioralQuestions = BehavioralQuestion::whereIn('ministry_id', $eligibleMinistries->pluck('id'))
+                    $behavioralQuestions = BehavioralQuestion::where('user_id', $admin->id)
+                        ->whereIn('ministry_id', $eligibleMinistries->pluck('id'))
                         ->orderBy('ministry_id')
                         ->orderBy('question_number')
                         ->get();
