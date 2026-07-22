@@ -1054,6 +1054,12 @@ td.editable:focus {
     transition: .3s ease-in-out;
 }
 .nextBtn:hover { background: var(--b); color: var(--a); }
+.disable {
+    pointer-events: none;
+    border: 3px solid grey;
+    background-color: rgb(196, 171, 196);
+    color: white;
+}
 
 .assessmentFooter { position: relative; width: 100%; margin-top: 2rem; }
 .footerContent {
@@ -1066,7 +1072,19 @@ td.editable:focus {
 }
 .footerLeft .puzzle img {
     position: absolute; bottom: 0; left: 0;
-    width: 25vw; max-width: 250px; height: auto; transition: 1s ease-in-out;
+    width: 25vw; max-width: 250px; height: auto;
+    opacity: 0;
+    filter: drop-shadow(0vw 0vw 0vw rgb(128, 65, 128));
+    transform: scale(1.2);
+    transition: 1s ease-in-out;
+}
+.footerLeft .puzzle .showPiece {
+    transform: scale(1);
+    filter: drop-shadow(0vw 0vw 0vw rgb(128, 65, 128));
+    opacity: 1;
+}
+.footerLeft .puzzle .highlightPiece {
+    filter: drop-shadow(0vw 0vw 3vw rgb(128, 65, 128));
 }
 .footerRight { display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
 .footerRight .nextBtn { margin: 0; }
@@ -1074,6 +1092,46 @@ td.editable:focus {
 .footerBg img { width: 100%; display: block; }
 
 .error { display: block; color: #dc3545; font-size: 0.9rem; margin: 4px 0; }
+.success { display: block; color: #28a745; font-size: 0.9rem; margin: 4px 0; }
+.errorContainer { margin: 10px 0; }
+
+.overlayLoad {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px);
+    z-index: 101;
+}
+.overlayLoad .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 30px solid rgb(255, 223, 255);
+    border-top: 30px solid rgb(128, 65, 128);
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+.overlayLoad p {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgb(255, 223, 255);
+    width: 100%;
+    text-align: center;
+    font-size: 1.5em;
+}
 
 @media (max-width: 1024px) {
     .stepCounter { grid-template-columns: repeat(5, 1fr); }

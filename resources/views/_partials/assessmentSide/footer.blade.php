@@ -2,10 +2,10 @@
     <div class="footerContent">
         <div class="footerLeft">
             <div class="puzzle">
-                <img src="{{ asset('images/pzl-top.png') }}" class="pzl-top" alt="">
-                <img src="{{ asset('images/pzl-right.png') }}" class="pzl-right" alt="">
-                <img src="{{ asset('images/pzl-left.png') }}" class="pzl-left" alt="">
-                <img src="{{ asset('images/pzl-bottom.png') }}" class="pzl-bottom" alt="">
+                <img src="{{ asset('images/pzl-top.png') }}" class="top" id="top" alt="">
+                <img src="{{ asset('images/pzl-right.png') }}" class="right" id="right" alt="">
+                <img src="{{ asset('images/pzl-left.png') }}" class="left" id="left" alt="">
+                <img src="{{ asset('images/pzl-bottom.png') }}" class="bottom" id="bottom" alt="">
             </div>
         </div>
         <div class="footerRight">

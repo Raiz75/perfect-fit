@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assessment</title>
     @vite(['resources/css/app.css'])
-    @livewireStyles
 </head>
 <body>
     @include('_partials.assessmentSide.header')
 
-    <livewire:demographic-wizard />
+    <div id="phase1">
+        @include('components.⚡demographic-wizard')
+    </div>
+
+    <div id="phase2" style="display: none;">
+        <p>Phase 2: Skill Profiling (Coming soon)</p>
+    </div>
 
     @include('_partials.assessmentSide.footer')
 
-    @livewireScripts
+    @vite(['resources/js/assessment.js'])
 </body>
 </html>

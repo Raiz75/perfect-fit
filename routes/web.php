@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Assessment\DemographicsController;
 use App\Http\Controllers\FrontendController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,9 +18,8 @@ Route::get('/ministries', [FrontendController::class, 'ministries'])->name('mini
 Route::get('/privacy-policy', [FrontendController::class, 'privacyPolicy'])->name('privacy-policy');
 
 // Assessment
-Route::get('/assessment', function () {
-    return view('assessment.index');
-})->name('assessment');
+Route::get('/assessment', [DemographicsController::class, 'show'])->name('assessment');
+Route::post('/assessment', [DemographicsController::class, 'store'])->name('assessment.store');
 
 // Admin auth (guest)
 Route::prefix('admin')->group(function () {

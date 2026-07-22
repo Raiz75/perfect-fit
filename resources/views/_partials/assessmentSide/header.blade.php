@@ -5,27 +5,27 @@
 
 <div class="stepCounter">
     <div class="stepContainer">
-        <p class="step currentStep">1</p>
+        <p class="step currentStep" id="s1">1</p>
         <p>Personal Details</p>
     </div>
-    <p class="line"></p>
+    <p class="line" id="l1"></p>
     <div class="stepContainer">
-        <p class="step">2</p>
+        <p class="step" id="s2">2</p>
         <p>Skill Profiling</p>
     </div>
-    <p class="line"></p>
+    <p class="line" id="l2"></p>
     <div class="stepContainer">
-        <p class="step">3</p>
+        <p class="step" id="s3">3</p>
         <p>Interest & Passion Profiling</p>
     </div>
-    <p class="line"></p>
+    <p class="line" id="l3"></p>
     <div class="stepContainer">
-        <p class="step">4</p>
+        <p class="step" id="s4">4</p>
         <p>Behavioral Profiling</p>
     </div>
-    <p class="line"></p>
+    <p class="line" id="l4"></p>
     <div class="stepContainer">
-        <p class="step">5</p>
+        <p class="step" id="s5">5</p>
         <p>Result</p>
     </div>
 </div>
