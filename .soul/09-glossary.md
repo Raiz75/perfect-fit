@@ -20,7 +20,7 @@ last_updated: 2026-07-28
 | Phase 2 | Skills self-assessment (8 skills × 5 questions each, 1-6 Likert scale). |
 | Phase 3 | Interests & Passions (6 ministry categories × 5 questions each, 1-6 scale). Top-scoring categories filter eligible ministries. |
 | Phase 4 | Behavioral questions (5 per eligible ministry, filtered by interest categories + demographics + skills). |
-| Phase 5 | Results — compute eligible ministries, generate AI interpretation, save `UserReport`. Not yet built (session-only for now). |
+| Phase 5 | Results — compute eligible ministries (ranked & tiered), generate AI interpretation via DeepSeek, save `UserReport` to database. |
 | CopyDefaults | Action class that duplicates all restriction and question records from admin user ID=1 to a newly registered admin. |
 | Skill threshold | A skill group total ≥ 10 (out of max 30 = 5 questions × 6) qualifies the assessee for that skill area. |
 | baptized values | 1 = Baptized Only (required), 2 = No Restriction (not a boolean). |
