@@ -11,13 +11,13 @@
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav ms-auto align-items-center gap-1 gap-md-2">
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-2 rounded-pill nav-scroll" href="#home" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">Home</a>
+                    <a class="nav-link px-3 py-2 rounded-pill" href="{{ route('home') }}#home" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-2 rounded-pill nav-scroll" href="#how-it-works" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">How it Works</a>
+                    <a class="nav-link px-3 py-2 rounded-pill" href="{{ route('home') }}#how-it-works" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">How it Works</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-2 rounded-pill nav-scroll" href="#ministries" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">Ministries</a>
+                    <a class="nav-link px-3 py-2 rounded-pill" href="{{ route('home') }}#ministries" style="color: #1a1a2e; font-weight: 500; transition: all .2s;">Ministries</a>
                 </li>
                 <li class="nav-item ms-md-2">
                     <a class="btn primary-btn-perfit" onclick="openModal('overlayUser')">

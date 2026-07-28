@@ -22,9 +22,9 @@
             <div class="col-6 col-lg-2">
                 <h6 class="fw-semibold mb-3" style="color: #fff;">Quick Links</h6>
                 <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-                    <li><a href="#home" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Home</a></li>
-                    <li><a href="#how-it-works" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">How it Works</a></li>
-                    <li><a href="#ministries" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Ministries</a></li>
+                    <li><a href="{{ route('home') }}#home" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Home</a></li>
+                    <li><a href="{{ route('home') }}#how-it-works" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">How it Works</a></li>
+                    <li><a href="{{ route('home') }}#ministries" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Ministries</a></li>
                     <li><a onclick="openModal('overlayUser')" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Take Assessment</a></li>
                 </ul>
             </div>

@@ -300,53 +300,6 @@
     }
     .carousel-btn:hover i { color: #fff !important; }
 
-    .modal-overlay {
-        display: none; position: fixed; inset: 0;
-        background: rgba(0,0,0,0.4);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 100;
-        justify-content: center; align-items: center;
-        animation: overlayIn 0.3s ease;
-    }
-    .modal-overlay.show { display: flex; }
-    @keyframes overlayIn {
-        0% { opacity: 0; }
-        100% { opacity: 1; }
-    }
-    .modal-box {
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        padding: 2.5rem; border-radius: 24px; text-align: center;
-        width: 90%; max-width: 400px;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.2);
-        position: relative;
-        animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes modalPop {
-        0% { opacity: 0; transform: scale(0.9) translateY(20px); }
-        100% { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .modal-box h3 { color: #8c52ff; font-weight: 700; margin-bottom: 0.75rem; }
-    .modal-box p { color: #666; font-size: 0.95rem; margin-bottom: 1.5rem; }
-    .modal-btn { display: block; width: 80%; margin: 0.75rem auto; padding: 12px; }
-    .modal-close {
-        position: absolute; top: 12px; right: 16px; border: none; background: none;
-        font-size: 1.5rem; color: #999; cursor: pointer; line-height: 1; transition: color 0.2s, transform 0.2s;
-    }
-    .modal-close:hover { color: #333; transform: rotate(90deg); }
-    .modal-input {
-        width: 90%; padding: 12px; border: 2px solid #8c52ff; border-radius: 10px;
-        font-size: 1.3rem; text-align: center; letter-spacing: 4px; font-weight: bold;
-        color: #8c52ff; margin: 0.5rem auto 1rem; display: block; outline: none;
-        background: rgba(255,255,255,0.5);
-        transition: box-shadow 0.3s;
-    }
-    .modal-input:focus { box-shadow: 0 0 0 4px rgba(140,82,255,0.2); }
-    .privacy-row { font-size: 0.8rem; color: #999; margin-top: 1rem; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .privacy-row a { color: #8c52ff; cursor: pointer; text-decoration: underline; }
-
     .dove-trigger {
         position: fixed; bottom: 24px; left: 24px; z-index: 50;
         background: none; border: none; cursor: pointer; text-align: center; width: 100px;
@@ -503,35 +456,35 @@
 
             @php
                 $ministries = [
-                    ['name' => 'Worship — Singing', 'category' => 'Core', 'desc' => 'You love to sing and you want to use your voice to help people connect with God during service.', 'color' => '#8c52ff'],
-                    ['name' => 'Worship — Dancing', 'category' => 'Core', 'desc' => 'For those who feel closest to God when moving — dance as an offering, not a performance.', 'color' => '#8c52ff'],
-                    ['name' => 'Worship — Instrument', 'category' => 'Core', 'desc' => 'Guitar, piano, drums, or whatever you play — if music is how you worship, there\'s a place for you here.', 'color' => '#8c52ff'],
-                    ['name' => 'Prayer', 'category' => 'Core', 'desc' => 'Not everyone is loud about it, but if you carry people in your heart and talk to God for them, this is your tribe.', 'color' => '#8c52ff'],
-                    ['name' => 'Preaching', 'category' => 'Core', 'desc' => 'You have a gift for breaking down the Word in a way that lands in people\'s hearts, not just their heads.', 'color' => '#8c52ff'],
-                    ['name' => 'Discipleship', 'category' => 'Core', 'desc' => 'Walking with someone as they grow in faith — not teaching at them, but walking beside them.', 'color' => '#8c52ff'],
-                    ['name' => 'Youth', 'category' => 'Core', 'desc' => 'The next generation needs adults who actually listen, who show up, and who make faith feel real and relevant.', 'color' => '#8c52ff'],
-                    ['name' => 'Young Adults', 'category' => 'Core', 'desc' => 'Navigating life after school — career, relationships, purpose. This is a space to figure it out together.', 'color' => '#8c52ff'],
-                    ['name' => 'Men\'s', 'category' => 'Core', 'desc' => 'Real talk about faith, family, and leading well. No masks, just brothers sharpening brothers.', 'color' => '#8c52ff'],
-                    ['name' => 'Women\'s', 'category' => 'Core', 'desc' => 'A safe place for women to grow, share struggles, and encourage each other in every season of life.', 'color' => '#8c52ff'],
-                    ['name' => 'Family & Couples', 'category' => 'Core', 'desc' => 'Marriage is beautiful and hard. This ministry helps couples build homes rooted in grace and truth.', 'color' => '#8c52ff'],
-                    ['name' => 'Ushering', 'category' => 'Support', 'desc' => 'You\'re often the first face people see when they walk in. A warm smile and a helpful hand go a long way.', 'color' => '#2dce89'],
-                    ['name' => 'Administration', 'category' => 'Support', 'desc' => 'Behind every smooth-running church is someone who loves organization, spreadsheets, and making things work.', 'color' => '#2dce89'],
-                    ['name' => 'Finance', 'category' => 'Support', 'desc' => 'Stewardship matters. If you have a head for numbers and a heart for integrity, we need you.', 'color' => '#2dce89'],
-                    ['name' => 'Marshal', 'category' => 'Support', 'desc' => 'Keeping things safe and orderly so everyone can focus on worship without worry.', 'color' => '#2dce89'],
-                    ['name' => 'Facilities', 'category' => 'Support', 'desc' => 'Someone has to fix the leaking roof, set up chairs, and make sure the AC works. That someone matters.', 'color' => '#2dce89'],
-                    ['name' => 'Evangelism', 'category' => 'Outreach', 'desc' => 'You can\'t help telling people about Jesus. Not in a pushy way — just because the good news is too good to keep.', 'color' => '#fb6340'],
-                    ['name' => 'Missions', 'category' => 'Outreach', 'desc' => 'Whether across the street or across the world, you\'re ready to go where the Gospel hasn\'t reached yet.', 'color' => '#fb6340'],
-                    ['name' => 'Community Service', 'category' => 'Outreach', 'desc' => 'Faith without works is dead. You show God\'s love through feeding, clothing, and serving the community.', 'color' => '#fb6340'],
-                    ['name' => 'Visitation', 'category' => 'Outreach', 'desc' => 'The elderly, the sick, the shut-ins — you visit them not out of duty, but because you genuinely care.', 'color' => '#fb6340'],
-                    ['name' => 'Production Tech', 'category' => 'Creative', 'desc' => 'Sound, lights, slides — you make sure the technical side disappears so people can focus on encountering God.', 'color' => '#f5365c'],
-                    ['name' => 'Creative & Media', 'category' => 'Creative', 'desc' => 'You tell stories through design, video, and social media. You help the church\'s voice reach beyond its walls.', 'color' => '#f5365c'],
-                    ['name' => 'Counseling', 'category' => 'Care', 'desc' => 'People come to you with their heaviest burdens. You listen, you pray, and you point them to hope.', 'color' => '#11cdef'],
-                    ['name' => 'Healing & Deliverance', 'category' => 'Care', 'desc' => 'You believe God still heals and sets people free. You create space for the Holy Spirit to move.', 'color' => '#11cdef'],
-                    ['name' => 'Funeral', 'category' => 'Care', 'desc' => 'In the hardest moments of loss, you help families say goodbye with dignity, faith, and hope.', 'color' => '#11cdef'],
-                    ['name' => 'Addiction Recovery', 'category' => 'Care', 'desc' => 'You walk with people through the long, hard road to freedom. You don\'t give up on them.', 'color' => '#11cdef'],
-                    ['name' => 'Special Needs', 'category' => 'Care', 'desc' => 'Every person matters. You create a space where individuals with special needs are loved, included, and celebrated.', 'color' => '#11cdef'],
-                    ['name' => 'Seniors', 'category' => 'Fellowship', 'desc' => 'The titos and titas of the church have decades of wisdom and prayer. They are the backbone of every congregation.', 'color' => '#2dce89'],
-                    ['name' => 'Single Adults', 'category' => 'Fellowship', 'desc' => 'Not waiting around — living fully. This is a community for singles who want to grow, serve, and thrive.', 'color' => '#2dce89'],
+                    ['id' => 1, 'name' => 'Worship — Singing', 'category' => 'Core', 'desc' => 'You love to sing and you want to use your voice to help people connect with God during service.', 'color' => '#8c52ff'],
+                    ['id' => 2, 'name' => 'Worship — Dancing', 'category' => 'Core', 'desc' => 'For those who feel closest to God when moving — dance as an offering, not a performance.', 'color' => '#8c52ff'],
+                    ['id' => 3, 'name' => 'Worship — Instrument', 'category' => 'Core', 'desc' => 'Guitar, piano, drums, or whatever you play — if music is how you worship, there\'s a place for you here.', 'color' => '#8c52ff'],
+                    ['id' => 4, 'name' => 'Prayer', 'category' => 'Core', 'desc' => 'Not everyone is loud about it, but if you carry people in your heart and talk to God for them, this is your tribe.', 'color' => '#8c52ff'],
+                    ['id' => 5, 'name' => 'Preaching', 'category' => 'Core', 'desc' => 'You have a gift for breaking down the Word in a way that lands in people\'s hearts, not just their heads.', 'color' => '#8c52ff'],
+                    ['id' => 6, 'name' => 'Discipleship', 'category' => 'Core', 'desc' => 'Walking with someone as they grow in faith — not teaching at them, but walking beside them.', 'color' => '#8c52ff'],
+                    ['id' => 7, 'name' => 'Youth', 'category' => 'Core', 'desc' => 'The next generation needs adults who actually listen, who show up, and who make faith feel real and relevant.', 'color' => '#8c52ff'],
+                    ['id' => 8, 'name' => 'Young Adults', 'category' => 'Core', 'desc' => 'Navigating life after school — career, relationships, purpose. This is a space to figure it out together.', 'color' => '#8c52ff'],
+                    ['id' => 9, 'name' => 'Men\'s', 'category' => 'Core', 'desc' => 'Real talk about faith, family, and leading well. No masks, just brothers sharpening brothers.', 'color' => '#8c52ff'],
+                    ['id' => 10, 'name' => 'Women\'s', 'category' => 'Core', 'desc' => 'A safe place for women to grow, share struggles, and encourage each other in every season of life.', 'color' => '#8c52ff'],
+                    ['id' => 11, 'name' => 'Family & Couples', 'category' => 'Core', 'desc' => 'Marriage is beautiful and hard. This ministry helps couples build homes rooted in grace and truth.', 'color' => '#8c52ff'],
+                    ['id' => 12, 'name' => 'Ushering', 'category' => 'Support', 'desc' => 'You\'re often the first face people see when they walk in. A warm smile and a helpful hand go a long way.', 'color' => '#2dce89'],
+                    ['id' => 13, 'name' => 'Administration', 'category' => 'Support', 'desc' => 'Behind every smooth-running church is someone who loves organization, spreadsheets, and making things work.', 'color' => '#2dce89'],
+                    ['id' => 14, 'name' => 'Finance', 'category' => 'Support', 'desc' => 'Stewardship matters. If you have a head for numbers and a heart for integrity, we need you.', 'color' => '#2dce89'],
+                    ['id' => 15, 'name' => 'Marshal', 'category' => 'Support', 'desc' => 'Keeping things safe and orderly so everyone can focus on worship without worry.', 'color' => '#2dce89'],
+                    ['id' => 16, 'name' => 'Facilities', 'category' => 'Support', 'desc' => 'Someone has to fix the leaking roof, set up chairs, and make sure the AC works. That someone matters.', 'color' => '#2dce89'],
+                    ['id' => 17, 'name' => 'Evangelism', 'category' => 'Outreach', 'desc' => 'You can\'t help telling people about Jesus. Not in a pushy way — just because the good news is too good to keep.', 'color' => '#fb6340'],
+                    ['id' => 18, 'name' => 'Missions', 'category' => 'Outreach', 'desc' => 'Whether across the street or across the world, you\'re ready to go where the Gospel hasn\'t reached yet.', 'color' => '#fb6340'],
+                    ['id' => 19, 'name' => 'Community Service', 'category' => 'Outreach', 'desc' => 'Faith without works is dead. You show God\'s love through feeding, clothing, and serving the community.', 'color' => '#fb6340'],
+                    ['id' => 20, 'name' => 'Visitation', 'category' => 'Outreach', 'desc' => 'The elderly, the sick, the shut-ins — you visit them not out of duty, but because you genuinely care.', 'color' => '#fb6340'],
+                    ['id' => 21, 'name' => 'Production Tech', 'category' => 'Creative', 'desc' => 'Sound, lights, slides — you make sure the technical side disappears so people can focus on encountering God.', 'color' => '#f5365c'],
+                    ['id' => 22, 'name' => 'Creative & Media', 'category' => 'Creative', 'desc' => 'You tell stories through design, video, and social media. You help the church\'s voice reach beyond its walls.', 'color' => '#f5365c'],
+                    ['id' => 23, 'name' => 'Counseling', 'category' => 'Care', 'desc' => 'People come to you with their heaviest burdens. You listen, you pray, and you point them to hope.', 'color' => '#11cdef'],
+                    ['id' => 24, 'name' => 'Healing & Deliverance', 'category' => 'Care', 'desc' => 'You believe God still heals and sets people free. You create space for the Holy Spirit to move.', 'color' => '#11cdef'],
+                    ['id' => 25, 'name' => 'Funeral', 'category' => 'Care', 'desc' => 'In the hardest moments of loss, you help families say goodbye with dignity, faith, and hope.', 'color' => '#11cdef'],
+                    ['id' => 26, 'name' => 'Addiction Recovery', 'category' => 'Care', 'desc' => 'You walk with people through the long, hard road to freedom. You don\'t give up on them.', 'color' => '#11cdef'],
+                    ['id' => 27, 'name' => 'Special Needs', 'category' => 'Care', 'desc' => 'Every person matters. You create a space where individuals with special needs are loved, included, and celebrated.', 'color' => '#11cdef'],
+                    ['id' => 28, 'name' => 'Seniors', 'category' => 'Fellowship', 'desc' => 'The titos and titas of the church have decades of wisdom and prayer. They are the backbone of every congregation.', 'color' => '#2dce89'],
+                    ['id' => 29, 'name' => 'Single Adults', 'category' => 'Fellowship', 'desc' => 'Not waiting around — living fully. This is a community for singles who want to grow, serve, and thrive.', 'color' => '#2dce89'],
                 ];
 
                 $chunks = array_chunk($ministries, 3);
@@ -557,7 +510,7 @@
                                         <p class="card-text text-muted small flex-grow-1">{{ $m['desc'] }}</p>
                                         <div class="d-flex align-items-center justify-content-between pt-3 border-top">
                                             <span class="badge rounded-pill fw-normal" style="background: {{ $m['color'] }}20; color: {{ $m['color'] }}; font-size: .7rem;">{{ $m['category'] }}</span>
-                                            <a href="#" class="btn btn-sm" style="color: {{ $m['color'] }};">Learn More</a>
+                                            <a href="{{ route('ministries') }}#ministry-{{ $m['id'] }}" class="btn btn-sm" style="color: {{ $m['color'] }};">Learn More</a>
                                         </div>
                                     </div>
                                 </div>
@@ -577,38 +530,6 @@
             </div>
         </div>
     </section>
-
-    <div class="modal-overlay" id="overlayUser">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal('overlayUser')">&times;</button>
-            <h3>Choose User Type</h3>
-            <button class="modal-btn primary-btn-perfit" onclick="setUser('leader')">Leader</button>
-            <button class="modal-btn primary-btn-perfit" onclick="setUser('volunteer')">Volunteer</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="overlayChurch">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal('overlayChurch')">&times;</button>
-            <h3>Enter Church Code</h3>
-            <p>Enter your church code to apply your pastor's settings.</p>
-            <input type="text" class="modal-input" id="inputedChurchCode" placeholder="Code" maxlength="9">
-            <button class="modal-btn primary-btn-perfit" onclick="selectLang()">Next</button>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="overlayLang">
-        <div class="modal-box">
-            <button class="modal-close" onclick="closeModal('overlayLang')">&times;</button>
-            <h3>Choose Language</h3>
-            <button class="modal-btn primary-btn-perfit" onclick="setLang('en')">English</button>
-            <button class="modal-btn primary-btn-perfit" onclick="setLang('tl')">Tagalog</button>
-            <div class="privacy-row">
-                <input type="checkbox" id="privacyPolicy">
-                <label for="privacyPolicy">I accept the <a href="{{ route('privacy-policy') }}">Privacy Policy</a></label>
-            </div>
-        </div>
-    </div>
 
     <div class="modal-overlay verse-overlay" id="doveOverlay">
         <div class="modal-box">
@@ -647,60 +568,6 @@
         {title:"2 Timothy 1:6",text:"Fan into flame the gift of God, which is in you."},
         {title:"Joshua 1:9",text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."},
     ];
-
-    function openModal(id) { document.getElementById(id).classList.add('show'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
-
-    function setUser(type) {
-        if (type === 'leader') {
-            closeModal('overlayUser');
-            window.location.href = '/admin/login';
-        } else if (type === 'volunteer') {
-            closeModal('overlayUser');
-            openModal('overlayChurch');
-        }
-    }
-
-    function selectLang() {
-        const code = document.getElementById('inputedChurchCode').value.trim();
-        if (!code) {
-            alert('Please enter a church code.');
-            return;
-        }
-        fetch('/admin/validate-church-code', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-            body: JSON.stringify({ church_code: code })
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.exists) {
-                fetch('/assessment/set-church-code', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
-                    body: JSON.stringify({ church_code: code })
-                })
-                .then(function() {
-                    closeModal('overlayChurch');
-                    openModal('overlayLang');
-                    document.getElementById('inputedChurchCode').value = '';
-                });
-            } else {
-                alert('Invalid church code.');
-            }
-        })
-        .catch(function() { alert('Error validating church code.'); });
-    }
-
-    function setLang(lang) {
-        if (!document.getElementById('privacyPolicy').checked) {
-            document.querySelector('.privacy-row').style.color = 'red';
-            setTimeout(function() { document.querySelector('.privacy-row').style.color = '#999'; }, 2000);
-            return;
-        }
-        closeModal('overlayLang');
-        window.location.href = '/assessment';
-    }
 
     function generateRandomVerse() {
         const idx = Math.floor(Math.random() * verses.length);

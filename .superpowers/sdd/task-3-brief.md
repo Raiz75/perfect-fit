@@ -1,3 +1,24 @@
+### Task 3: Create the ministries Blade view
+
+**Files:**
+- Create: `resources/views/ministries.blade.php`
+
+**Context from earlier tasks:**
+- `Ministry` model has: `id`, `name`, `description` (TEXT), `ministry_category_id`, `timestamps`
+- `MinistryCategory` model has: `id`, `name`, `timestamps`, `ministries()` relation
+- `DemographicRestriction` has: `gender`, `age_min`, `age_max`, `marital_status`, `baptized` (boolean), `time_in_faith`
+- `SkillRestriction` has: `music`, `technology`, `writing`, `technical`, `speaking`, `accounting`, `mentoring`, `bible_knowledge` (all booleans)
+- `Skill` model has: `id`, `name`
+- Controller passes: `$categories` (Collection of MinistryCategory with ministries), `$demographicRestrictions` (keyed by ministry_id), `$skillRestrictions` (keyed by ministry_id), `$skills` (Collection of Skill)
+- This view extends `_layouts.master` which includes the topnav and footer
+- The master layout has `@stack('head')` in `<head>` and `@stack('scripts')` before `</body>`
+- The site uses Bootstrap 5, Tabler Icons (ti-* classes), and a purple (#8c52ff) design language
+
+**Full view code to create:**
+
+The file `resources/views/ministries.blade.php` should contain:
+
+```blade
 @extends('_layouts.master')
 
 @section('title', 'Ministries — PERFIT')
@@ -217,7 +238,7 @@ $categoryColors = [
 ];
 @endphp
 
-@foreach($categories as $category)
+@foreach($categories as $catIndex => $category)
 <section id="cat-{{ $category->id }}" class="ministry-section">
     <div class="container">
         <div class="section-fade">
@@ -255,7 +276,7 @@ $categoryColors = [
                             }
                         @endphp
 
-                        <div class="carousel-slide" id="ministry-{{ $ministry->id }}">
+                        <div class="carousel-slide">
                             <h3>{{ $ministry->name }}</h3>
                             @if($ministry->description)
                                 <p class="description">{{ $ministry->description }}</p>
@@ -362,26 +383,17 @@ $categoryColors = [
     }, { threshold: 0.15 });
 
     fadeEls.forEach(function (el) { observer.observe(el); });
-
-    var hash = window.location.hash;
-    if (hash && hash.startsWith('#ministry-')) {
-        var target = document.getElementById(hash.slice(1));
-        if (target) {
-            var container = target.closest('.carousel-container');
-            if (container) {
-                var slides = container.querySelectorAll('.carousel-slide');
-                var index = Array.prototype.indexOf.call(slides, target);
-                if (index > 0) {
-                    var track = container.querySelector('.carousel-track');
-                    var dots = container.querySelectorAll('.carousel-dot');
-                    track.style.transform = 'translateX(-' + (index * 100) + '%)';
-                    dots.forEach(function (d, i) { d.classList.toggle('active', i === index); });
-                }
-            }
-            setTimeout(function () {
-                target.closest('.ministry-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-        }
-    }
 </script>
 @endpush
+```
+
+**Important implementation notes:**
+- Do NOT add any comments
+- The empty `resources/views/ministries.blade.php` already exists — overwrite it entirely
+- The master layout already includes `@vite(['resources/css/app.css', 'resources/js/app.js'])` so no need to import CSS/JS separately
+- Use `\Illuminate\Support\Str::snake()` in the Blade @php block (fully qualified because no `use` statement in Blade)
+- The `categoryColors` array maps category ID 1-6 to CSS variables
+
+**Verification:**
+- Run `php artisan route:list` — no errors
+- The `/ministries` page should load without Blade errors (it will look unstyled until Task 4 is complete, but should not error)

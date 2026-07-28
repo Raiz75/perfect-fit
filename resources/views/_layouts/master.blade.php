@@ -16,6 +16,10 @@
 
     @include('_partials.footer')
 
+    @include('_partials.modal-user')
+    @include('_partials.modal-church')
+    @include('_partials.modal-lang')
+
     @stack('scripts')
 </body>
 </html>
