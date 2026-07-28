@@ -187,8 +187,8 @@ app/Services/ (pending)
 | Admin Restrictions | `/admin/restrictions` | `adminPanel.html` | ✅ | Top nav with 2 tabs (Demographics, Skills). Full CRUD with save/reset. |
 | Admin Questions | `/admin/questions` | `adminPanel.html` | ✅ | 3 tab pages (Skill, Interest & Passion, Behavioral). Inline editable cells. Save/reset with confirmation modal. |
 | Admin Settings | `/admin/settings` | `adminPanel.html` | ✅ | Church name save + church code copy + change password modal (custom overlay). Password rules: min 8 chars, 1 capital, 1 number, 1 special. Uses ChangePasswordRequest. |
-| Ministries Info | `/ministries` | `ministry.html` | ❌ | Phase 4 (view file exists, empty) |
-| Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | 🔧 | Placeholder (Phase 4 for full content) |
+| Ministries Info | `/ministries` | `ministry.html` | ✅ | Carousel with 29 ministries grouped by 6 categories, requirements tables from restrictions, hash-based navigation from Learn More buttons |
+| Privacy Policy | `/privacy-policy` | `privacyPolicy.html` | ✅ | Full content with glassmorphism styling, updated to reflect session+DB storage, DeepSeek AI, session cookie |
 
 ### 3.2 Assessment Wizard (✅ Phases 1-4 Complete)
 
@@ -474,9 +474,9 @@ npm install @tabler/icons-webfont                # ✅ Installed — replaced al
 16. ❌ PDF export
 
 ### Phase 4: Enhancement
-17. ❌ OpenAI profile generation (server-side)
-18. ❌ Ministry info page (static content from old `ministry.html`)
-19. ❌ Privacy policy page (full content)
+17. ❌ OpenAI profile generation (server-side) — using DeepSeek instead, see Phase 5
+18. ✅ Ministry info page (29 ministries grouped by 6 categories, carousels, requirements tables from restrictions, hash-scroll navigation)
+19. ✅ Privacy policy page (full content matching current project: session+DB storage, DeepSeek AI, session cookie, SMTP email)
 20. ❌ Image assets copy (remaining images)
 
 ### Phase 5: Polish (✅ In Progress)
