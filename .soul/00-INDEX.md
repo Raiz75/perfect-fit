@@ -71,5 +71,5 @@ covers:
 
 ## Reference
 - [[08-external-integrations]] — DeepSeek AI API (custom HTTP client)
-- [[09-glossary]] — 12 domain terms (PERFIT, church_code, eligible_ministry, etc.)
-- [[99-known-issues]] — Session-only limitation, missing queue supervisor config, 5 pending ADRs
+- [[09-glossary]] — 18 domain terms including field value mappings and thresholds
+- [[99-known-issues]] — Phase 5 not built, missing queue supervisor, no domain factories, OpenAI→DeepSeek migration

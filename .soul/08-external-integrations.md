@@ -15,6 +15,7 @@ last_updated: 2026-07-28
 - **Implementation**: Custom service class using Laravel's `Http` facade. API key and model name configured via `config/services.php` (reads from `.env`: `DEEPSEEK_API_KEY`, `DEEPSEEK_MODEL`).
 - **Binding**: Registered as a singleton in `AppServiceProvider::register()`.
 - **Webhook routes**: None. This is a request/response API call, not a webhook integration.
+- **History**: Originally planned to use OpenAI (gpt-4o-mini) with `openai-php/laravel` package. Migrated to DeepSeek mid-project to avoid the OpenAI dependency and move AI logic server-side (old `callApi.js` had the API key client-side, a security concern).
 
 ## Email (Laravel Mail)
 - **Mailer**: `log` in development (configurable via `MAIL_MAILER` in `.env`).

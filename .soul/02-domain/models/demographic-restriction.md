@@ -26,7 +26,12 @@ Defines demographic eligibility criteria (gender, age range, marital status, bap
 
 ## Notable behavior
 - Unique constraint on `(user_id, ministry_id)` — each admin defines one demographic restriction per ministry.
-- Default values are inclusive (age_min=1, age_max=99, gender=0=all) so that restrictions are opt-in exclusions rather than opt-in inclusions.
+- Default values are inclusive (age_min=1, age_max=99) so restrictions are opt-in exclusions.
+- Field value mappings:
+  - `gender`: 0=No Restriction, 1=Male, 2=Female
+  - `marital_status`: 0=No Restriction, 1=Single, 2=Married
+  - `baptized`: 1=Baptized Only, 2=No Restriction (NOT a boolean)
+  - `time_in_faith`: 1=1+ Week, 2=6+ Months, 3=1+ Year, 4=2+ Years
 - Copied from user ID=1 during new admin registration via `CopyDefaults`.
 
 ## References

@@ -44,11 +44,11 @@ Handles the 4-phase ministry fit assessment flow. All state is session-based —
 - `setChurchCode(Request)` — Validates and stores the church code in session.
 - `show()` — Displays the current assessment phase based on session state.
 - `storePhase1(StoreDemographicsRequest)` — Stores demographic data (name, email, contact, gender, age, marital status, baptized, time in faith).
-- `storePhase2(Request)` — Stores skill self-ratings (8 skills × 5 questions, 1-6 scale).
-- `storePhase3(Request)` — Stores interest & passion ratings (6 categories × 5 questions).
-- `storePhase4(Request)` — Stores behavioral responses (5 per eligible ministry).
-- `reset()` — Clears all assessment session data.
-- `done()` — Computes eligible ministries, calls DeepSeek AI for interpretation, saves `UserReport`, and shows results.
+- `storePhase2(Request)` — Stores skill self-ratings (8 skills × 5 questions, 1-6 Likert scale). Skill threshold: group total ≥ 10 out of 30 qualifies.
+- `storePhase3(Request)` — Stores interest & passion ratings (6 categories × 5 questions). Top-scoring categories determine eligible ministries.
+- `storePhase4(Request)` — Stores behavioral responses (5 per eligible ministry, filtered by interest categories + demographics + skills).
+- `reset()` — Clears all assessment session data, redirects to home.
+- `done()` — Computes eligible ministries, sorts by score into tiers, calls DeepSeek AI for interpretation, saves `UserReport`, shows results (Phase 5 — not yet fully built).
 
 ### Private helpers
 - `computeEligibleMinistries()` — Filters ministries based on demographic and skill restrictions.
