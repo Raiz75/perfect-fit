@@ -32,10 +32,8 @@
             <div class="col-6 col-lg-2">
                 <h6 class="fw-semibold mb-3" style="color: #fff;">Support</h6>
                 <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-                    <li><a onclick="alert('soon')" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">FAQ</a></li>
-                    <li><a onclick="alert('soon')" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Contact</a></li>
-                    <li><a onclick="alert('soon')" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Privacy Policy</a></li>
-                    <li><a onclick="alert('soon')" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Terms of Service</a></li>
+                    <li><a href="{{ route('privacy-policy') }}" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Privacy Policy</a></li>
+                    <li><a href="{{ route('ministries') }}" class="text-decoration-none" style="color: #a0a0b8; transition: color .2s;" onmouseover="this.style.color='#8c52ff'" onmouseout="this.style.color='#a0a0b8'">Ministries Profile</a></li>
                 </ul>
             </div>
 
