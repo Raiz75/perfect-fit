@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\QuestionController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RestrictionController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Assessment\AssessmentController;
@@ -44,6 +45,7 @@ Route::prefix('admin')->group(function () {
 Route::prefix('admin')->middleware('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('admin.dashboard.data');
+    Route::post('/dashboard/report', [ReportController::class, 'generate'])->name('admin.dashboard.report');
     Route::get('/restrictions', function () {
         return redirect()->route('admin.restrictions.demographics');
     })->name('admin.restrictions');

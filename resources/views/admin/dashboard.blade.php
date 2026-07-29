@@ -129,6 +129,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-2">
+            <button class="btn primary-btn-perfit btn-sm" id="generateReportBtn">Generate Report</button>
             <button class="btn primary-btn-perfit btn-sm" id="applyFilterBtn">Apply Filters</button>
             <button class="btn btn-outline-secondary btn-sm" id="resetFilterBtn">Reset</button>
         </div>
@@ -185,4 +186,5 @@
         }
     </script>
     @vite(['resources/js/admin-dashboard.js'])
+    @vite(['resources/js/report-button.js'])
 @endpush
