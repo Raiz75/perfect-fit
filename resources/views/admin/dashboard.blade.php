@@ -129,7 +129,7 @@
         </div>
 
         <div class="d-flex justify-content-end gap-2">
-            <button class="btn primary-btn-perfit btn-sm" id="generateReportBtn">Generate Report</button>
+            <button class="btn primary-btn-perfit btn-sm" id="generateReportBtn" data-report-url="{{ route('admin.dashboard.report') }}">Generate Report</button>
             <button class="btn primary-btn-perfit btn-sm" id="applyFilterBtn">Apply Filters</button>
             <button class="btn btn-outline-secondary btn-sm" id="resetFilterBtn">Reset</button>
         </div>

@@ -112,12 +112,13 @@ class ReportController extends Controller
             'tableRows' => $tableRows,
         ]);
 
-        // Clean up temp chart images AFTER loading view but BEFORE returning download
-        $chartService->cleanup();
-
         $filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $user->church_name ?? 'PERFIT') . '_Dashboard_Report.pdf';
 
-        return $pdf->download($filename);
+        // Clean up temp chart images AFTER download (Dompdf resolves <img> lazily)
+        $response = $pdf->download($filename);
+        $chartService->cleanup();
+
+        return $response;
     }
 
     private function buildFiltersList(GenerateReportRequest $request): array
@@ -168,7 +169,7 @@ class ReportController extends Controller
     {
         $ageBuckets = array_fill_keys(self::AGE_BUCKETS, 0);
         $faithBuckets = array_fill_keys(self::FAITH_ORDER, 0);
-        $skillBuckets = array_fill_keys(self::SKILL_ORDER, 0);
+        $skillBuckets = array_fill_keys(self::SKILL_LABELS, 0);
 
         $gender = [];
         $marital = [];
@@ -212,9 +213,10 @@ class ReportController extends Controller
             }
 
             // Skills
-            foreach (self::SKILL_ORDER as $col) {
+            foreach (self::SKILL_ORDER as $i => $col) {
                 if ($r->{$col} == 1) {
-                    $skills[$col]++;
+                    $label = self::SKILL_LABELS[$i];
+                    $skills[$label] = ($skills[$label] ?? 0) + 1;
                 }
             }
 
@@ -270,7 +272,7 @@ class ReportController extends Controller
             $chartImages['baptized'] = $chartService->renderDoughnut(
                 array_keys($chartData['baptized']),
                 array_values($chartData['baptized']),
-                ['#3CB44B', '#808080'],
+                ['#3CB44B', '#CCCCCC'],
                 'Baptized Status'
             );
         }
@@ -287,7 +289,7 @@ class ReportController extends Controller
         }
 
         // Skills — bar
-        $skillData = $this->orderedValues($chartData['skills'], self::SKILL_ORDER);
+        $skillData = $this->orderedValues($chartData['skills'], self::SKILL_LABELS);
         if (array_sum($skillData) > 0) {
             $chartImages['skills'] = $chartService->renderBar(
                 self::SKILL_LABELS,

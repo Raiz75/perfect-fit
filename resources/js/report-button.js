@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     generateBtn.addEventListener('click', function () {
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '/admin/dashboard/report';
+        form.action = generateBtn.dataset.reportUrl;
 
         // CSRF token
         const csrf = document.createElement('input');

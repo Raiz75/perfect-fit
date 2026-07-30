@@ -9,14 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ChartImageService
 {
-    private const COLORS = [
-        'gender' => ['#E6194B', '#F58231'],
-        'age' => ['#9A6324', '#FFD8B1', '#808000', '#AAFFC3', '#FF7F50'],
-        'baptized' => ['#3CB44B', '#808080'],
-        'faith' => ['#FFE119', '#BFEF45', '#3CB44B', '#46F0F0'],
-        'skills' => ['#E6194B', '#F58231', '#FFE119', '#BFEF45', '#3CB44B', '#46F0F0', '#4363D8', '#911EB4'],
-        'marital' => ['#800000', '#808080'],
-    ];
 
     public function renderPie(array $labels, array $data, array $colors, string $title): string
     {
@@ -62,7 +54,12 @@ class ChartImageService
         $this->drawTitle($image, $title, 600);
 
         $image->setGraphArea(60, 50, 560, 310);
-        $image->drawScale(['Mode' => SCALE_MODE_START0]);
+        $image->drawScale([
+            'Mode' => SCALE_MODE_START0,
+            'GridR' => 200, 'GridG' => 200, 'GridB' => 200,
+            'DrawSubTicks' => false,
+            'LabelRotation' => 45,
+        ]);
         $image->drawBarChart();
 
         return $this->saveImage($image);
