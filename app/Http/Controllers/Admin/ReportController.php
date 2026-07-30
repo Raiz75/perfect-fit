@@ -110,7 +110,25 @@ class ReportController extends Controller
             'chartImages' => $chartImages,
             'chartData' => $chartData,
             'tableRows' => $tableRows,
-        ])->setOption('isPhpEnabled', true);
+        ]);
+
+        // Register page numbering via Dompdf end_document callback
+        $pdf->getDomPDF()->setCallbacks([
+            [
+                'event' => 'end_document',
+                'f' => function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+                    $font = $fontMetrics->getFont('DejaVu Sans');
+                    $canvas->page_text(
+                        $canvas->get_width() - 100,
+                        $canvas->get_height() - 18,
+                        "Page {$pageNumber} of {$pageCount}",
+                        $font,
+                        8,
+                        [0.6, 0.6, 0.6]
+                    );
+                },
+            ],
+        ]);
 
         $filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $user->church_name ?? 'PERFIT') . '_Dashboard_Report.pdf';
 

@@ -303,9 +303,3 @@
 </body>
 </html>
 
-<script type="text/php">
-    $font = $fontMetrics->getFont('DejaVu Sans');
-    $w = $pdf->get_width();
-    $h = $pdf->get_height();
-    $pdf->page_text($w - 100, $h - 18, "Page $PAGE_NUM of $PAGE_COUNT", $font, 8, [0.6, 0.6, 0.6]);
-</script>
