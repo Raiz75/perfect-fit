@@ -110,7 +110,7 @@ class ReportController extends Controller
             'chartImages' => $chartImages,
             'chartData' => $chartData,
             'tableRows' => $tableRows,
-        ]);
+        ])->setOption('isPhpEnabled', true);
 
         $filename = preg_replace('/[^a-zA-Z0-9_-]/', '_', $user->church_name ?? 'PERFIT') . '_Dashboard_Report.pdf';
 
