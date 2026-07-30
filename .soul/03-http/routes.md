@@ -5,8 +5,8 @@ files:
 route_groups:
   - prefix: /admin (protected)
     middleware: [admin]
-route_count: ~40
-last_updated: 2026-07-28
+route_count: ~41
+last_updated: 2026-07-30
 ---
 
 # Routes
@@ -50,6 +50,7 @@ No API routes exist. All routes are web routes in `routes/web.php`. Console rout
 |---|---|---|
 | `/admin/dashboard` | `DashboardController@index` | `admin.dashboard` |
 | `/admin/dashboard/data` | `DashboardController@getData` | `admin.dashboard.data` |
+| `/admin/dashboard/report` POST | `ReportController@generate` | `admin.dashboard.report` |
 | `/admin/restrictions` | Redirect to demographics | `admin.restrictions` |
 | `/admin/restrictions/demographics` | `RestrictionController@demographics` | `admin.restrictions.demographics` |
 | `/admin/restrictions/demographics/update` POST | `RestrictionController@updateDemographics` | `admin.restrictions.demographics.update` |

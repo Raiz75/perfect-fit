@@ -5,7 +5,7 @@ entry_points: [public/index.php]
 service_providers:
   - AppServiceProvider
 boot_sequence_notes: false
-last_updated: 2026-07-28
+last_updated: 2026-07-30
 ---
 
 # Architecture Overview
@@ -17,6 +17,10 @@ Public pages (home, ministries, privacy policy) and the assessment flow (4 phase
 
 ## Service Container Bindings
 - **AppServiceProvider::register()** binds `DeepSeekService` as a singleton, injecting `HttpClient`, the DeepSeek API key from `config('services.deepseek.key')`, and the model from `config('services.deepseek.model')`.
+- **ChartImageService** is instantiated directly in `ReportController` via dependency injection (no binding needed).
+
+## PDF Report Flow
+`POST /admin/dashboard/report` → `ReportController::generate()` → `GenerateReportRequest` (validates filter params) → query `UserReport` with same filters as `DashboardController::getData()` → aggregate chart data (7 sections) → `ChartImageService` renders chart images via pChart → Dompdf renders Blade template to PDF → download response. Page numbering via Dompdf `end_document` callback + Canvas `text()`.
 
 ## Custom Providers
 - **AppServiceProvider** — registers the `DeepSeekService` singleton; `boot()` is empty.

@@ -5,7 +5,7 @@ services:
     purpose: Generate AI-based ministry assessment interpretations for user reports
     sdk: none (custom HTTP client via Laravel's Http facade)
     webhook_route: null
-last_updated: 2026-07-28
+last_updated: 2026-07-30
 ---
 
 # External Integrations
@@ -17,7 +17,18 @@ last_updated: 2026-07-28
 - **Webhook routes**: None. This is a request/response API call, not a webhook integration.
 - **History**: Originally planned to use OpenAI (gpt-4o-mini) with `openai-php/laravel` package. Migrated to DeepSeek mid-project to avoid the OpenAI dependency and move AI logic server-side (old `callApi.js` had the API key client-side, a security concern).
 
-## Email (Laravel Mail)
+## Dompdf (`barryvdh/laravel-dompdf`)
+- **Purpose**: Server-side PDF generation for admin dashboard reports.
+- **Implementation**: Laravel wrapper for Dompdf (PHP HTML → PDF converter). `ReportController::generate()` loads a Blade view, renders it to PDF via `Pdf::loadView()`, and returns a download response.
+- **Page numbering**: Uses Dompdf `setCallbacks()` API with `end_document` event → `Canvas::text()` called per page via `processPageScript()`.
+- **Config**: A4 portrait, 15mm margins (default). `isPhpEnabled` not needed — callbacks registered via API.
+
+## pChart/CpChart (`szymach/c-pchart`)
+- **Purpose**: Server-side chart image generation for PDF reports.
+- **Implementation**: Pure PHP charting library (no JS/browser required). Wrapped in `App\Services\ChartImageService`.
+- **Charts**: 7 chart types rendered as PNG images: pie (gender, age), doughnut (baptized), bar (faith, skills, ministry, marital).
+- **Storage**: Temporary PNGs in `storage/app/private/report-charts/`, cleaned up after PDF download via `ChartImageService::cleanup()`.
+- **Palette**: Colors match frontend `admin-dashboard.js` Chart.js colors exactly (hardcoded in `ReportController::getChartPalettes()`).
 - **Mailer**: `log` in development (configurable via `MAIL_MAILER` in `.env`).
 - **Drivers**: Postmark, Resend, SES are configured in `config/services.php` but not currently used.
 - **Queue**: Required for email delivery — database queue with `php artisan queue:listen`.

@@ -1,7 +1,7 @@
 ---
 type: index
 vault_version: 1.0
-last_updated: 2026-07-28
+last_updated: 2026-07-30
 covers:
   - app/
   - routes/
@@ -12,8 +12,8 @@ covers:
 # INDEX
 
 ## Architecture
-- [[01-architecture/overview]] — Request lifecycle, DeepSeekService singleton, AppServiceProvider
-- [[01-architecture/tech-stack]] — PHP 8.2, Laravel 12, SQLite, database-driven cache/queue/session, Livewire 4
+- [[01-architecture/overview]] — Request lifecycle, DeepSeekService singleton, ChartImageService (pChart), ReportController (Dompdf)
+- [[01-architecture/tech-stack]] — PHP 8.2, Laravel 12, SQLite, database-driven cache/queue/session, Livewire 4, Dompdf, pChart
 - [[01-architecture/deployment]] — Local env only, no Docker/CI-CD, queue worker not configured
 
 ## Domain
@@ -32,9 +32,9 @@ covers:
   - [[02-domain/models/user-report]] — Submitted assessment results with AI interpretation
 
 ## HTTP
-- [[03-http/routes]] — ~40 web routes, no API routes, admin routes protected by `admin` middleware
+- [[03-http/routes]] — ~41 web routes, no API routes, admin routes protected by `admin` middleware
 - [[03-http/middleware]] — Single custom middleware: AdminMiddleware (alias `admin`)
-- [[03-http/requests]] — 4 form requests (Login, SendVerification, ChangePassword, StoreDemographics)
+- [[03-http/requests]] — 5 form requests (Login, SendVerification, ChangePassword, StoreDemographics, GenerateReport)
 - [[03-http/resources]] — No API resources defined
 - Controllers:
   - [[03-http/controllers/frontend-controller]] — Public pages (home, ministries, privacy)
@@ -44,6 +44,7 @@ covers:
   - [[03-http/controllers/logout-controller]] — Session invalidation
   - [[03-http/controllers/forgot-password-controller]] — Temporary password by email
   - [[03-http/controllers/dashboard-controller]] — Admin dashboard with Chart.js stats
+  - [[03-http/controllers/report-controller]] — Admin PDF report export (Dompdf + pChart)
   - [[03-http/controllers/question-controller]] — Manage assessment questions (skill/interest/behavioral)
   - [[03-http/controllers/restriction-controller]] — Manage ministry restrictions (demographic/skill)
   - [[03-http/controllers/settings-controller]] — Church name and password settings
@@ -70,6 +71,6 @@ covers:
 - [[07-decisions/ADR-005-blade-vanilla-js-over-framework]] — Blade + vanilla JS for assessment over Livewire/Inertia
 
 ## Reference
-- [[08-external-integrations]] — DeepSeek AI API (custom HTTP client)
+- [[08-external-integrations]] — DeepSeek AI API, Dompdf (PDF rendering), pChart (chart images)
 - [[09-glossary]] — 18 domain terms including field value mappings and thresholds
-- [[99-known-issues]] — Phase 5 not built, missing queue supervisor, no domain factories, OpenAI→DeepSeek migration
+- [[99-known-issues]] — Phase 5 not built, missing queue supervisor, no domain factories, DeepSeek migration
