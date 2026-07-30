@@ -118,7 +118,7 @@ class ReportController extends Controller
                 'event' => 'end_document',
                 'f' => function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
                     $font = $fontMetrics->getFont('DejaVu Sans');
-                    $canvas->page_text(
+                    $canvas->text(
                         $canvas->get_width() - 100,
                         $canvas->get_height() - 18,
                         "Page {$pageNumber} of {$pageCount}",
