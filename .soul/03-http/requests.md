@@ -14,7 +14,7 @@ requests:
   - name: ChangePasswordRequest
     authorizes: true
     rules_summary: [current_password required current_password, new_password required string min:8 confirmed with regex (uppercase+number+special)]
-last_updated: 2026-07-28
+last_updated: 2026-07-30
 ---
 
 # Form Requests
@@ -25,6 +25,7 @@ last_updated: 2026-07-28
 | **LoginRequest** | `App\Http\Requests\Auth` | Email + password login | `LoginController@login` |
 | **SendVerificationRequest** | `App\Http\Requests\Auth` | Registration email + password (confirmed, strong) | `RegisterController@sendVerification` |
 | **ChangePasswordRequest** | `App\Http\Requests\Auth` | Current password + new password (confirmed, strong) | `SettingsController@updatePassword` |
+| **GenerateReportRequest** | `App\Http\Requests\Admin` | 11 optional filter params (search, dates, gender, marital, baptized, faith, age, skills, ministries) | `ReportController@generate` |
 
 All requests authorize to `true` (access is controlled by middleware instead).
 

@@ -11,13 +11,13 @@ key_packages:
   - @tabler/core: ^1.4.0
   - chart.js: ^4.5.1
 frontend: blade+livewire+vanilla-js
-last_updated: 2026-07-28
+last_updated: 2026-07-30
 ---
 
 # Tech Stack
 
 ## Backend
-PHP ^8.2, Laravel ^12.0. Key packages: Livewire 4 (toast component only), Laravel Tinker, Faker, Pint (linting), PHPUnit.
+PHP ^8.2, Laravel ^12.0. Key packages: Livewire 4 (toast component only), Laravel Tinker, Faker, Pint (linting), PHPUnit, barryvdh/laravel-dompdf (PDF generation), szymach/c-pchart (server-side chart images via CpChart).
 
 ## Frontend
 Blade templates + vanilla JS (assessment forms). Livewire 4 is used only for the `⚡toast-message` component. Tabler Core (Bootstrap 5 CSS framework) for admin dashboard UI. Chart.js + chartjs-plugin-datalabels for dashboard charts. Tabler Icons. Build tooling: Vite 7 + laravel-vite-plugin.
