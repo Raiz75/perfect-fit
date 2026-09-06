@@ -367,7 +367,7 @@
 
         <div class="hero-content text-center" style="position: relative; z-index: 10; padding: 0 20px;">
             <h1 class="display-1 fw-bold mb-5 hero-title" style="color: #8c52ff;">
-                PERFITqwe
+                PERFIT
             </h1>
             <p class="text-muted mb-4 hero-sub" style="font-size: 1.125rem; max-width: 500px; margin-left: auto; margin-right: auto; line-height: 1.8;">
                 Helping churches discover the right volunteers for every ministry through AI-powered matching.
